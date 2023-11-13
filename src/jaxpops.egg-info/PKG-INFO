@@ -6,3 +6,4 @@ Author: Mauro Rigo
 Author-email: mrigo@sissa.it
 Requires-Dist: jax>=0.4.16
 Requires-Dist: jaxlib>=0.4.16
+Requires-Dist: mpi4jax>=0.4.0

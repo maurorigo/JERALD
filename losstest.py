@@ -1,3 +1,4 @@
+# Testing package
 from model import LDLModel
 from pmesh import PMesh
 import numpy as np
@@ -11,40 +12,41 @@ import tracemalloc
 
 tracemalloc.start()
 
-size=100
+Ngrid=50
 
-pm = PMesh(size, 205.)
+pm = PMesh(Ngrid, 205.)
 comm = pm.comm
 rank = comm.rank
-sz = comm.size
+size = comm.size
 
 np.random.seed(19)
-parts = np.array(np.random.rand(size**3, 3)) * 205.
-randomvels = 20*np.cos(np.linalg.norm(parts, axis=1)/19).reshape((len(parts), 1))
-shparts = parts + randomvels
-shparts = jnp.array(shparts)
-shparts = shparts[int(size**3/sz*rank):int(size**3/sz*(rank+1))]
-print(f"Process {rank} from {int(size**3/sz*rank)} to {int(size**3/sz*(rank+1))} for a total of {size**3}")
+pos = jnp.array(np.random.rand(Ngrid**3, 3)) * 205.
+randomvels = 20*jnp.cos(jnp.linalg.norm(pos, axis=1)/19).reshape((len(pos), 1))
+pos = pos.at[:].add(randomvels)
+# Local positions
+pos = pos[int(Ngrid**3/size*rank):int(Ngrid**3/size*(rank+1))]
+print(f"Process {rank} from {int(Ngrid**3/size*rank)} to {int(Ngrid**3/size*(rank+1))} for a total of {Ngrid**3} particles")
 
+# Parameters for LDL
 Nstep = 2
 param = jnp.array([100000., 0.5, 1., 8., 0.]*Nstep + [1., 1., 0.])
-target = jnp.array(np.random.rand(size, size, size))
-# LOCAL TARGET
+target = jnp.array(np.random.rand(Ngrid, Ngrid, Ngrid))
+# Local target
 target = target[pm.localS:pm.localS+pm.localL, :, :]
 model = LDLModel(pm=pm)
 
 model.set_loss_params(Nstep, baryon=True)
-loss = model.loss(param, shparts, target)
+loss = model.loss(param, pos, target)
 
 tim = time.time()
-loss = model.loss(param, shparts, target)
+loss = model.loss(param, pos, target)
 if rank==0:
     print(f"Loss computed in {((time.time()-tim)*1000):.3f}ms")
     print(f"Loss: {loss}")
 
-grad = model.loss_gradient(param, shparts, target)
+grad = model.loss_gradient(param, pos, target)
 tim = time.time()
-grad = model.loss_gradient(param, shparts, target)
+grad = model.loss_gradient(param, pos, target)
 if rank==0:
     print(f"Gradient computed in {((time.time()-tim)*1000):.3f}ms")
     print(grad)

@@ -470,3 +470,70 @@ events:
         
       exitCode: 0
 ...
+
+---
+events:
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/scratch_local/pip-build-env-jx8mr87o/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/FindMPI.cmake:1278 (try_compile)"
+      - "/scratch_local/pip-build-env-jx8mr87o/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/FindMPI.cmake:1322 (_MPI_try_staged_settings)"
+      - "/scratch_local/pip-build-env-jx8mr87o/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/FindMPI.cmake:1645 (_MPI_check_lang_works)"
+      - "CMakeLists.txt:10 (find_package)"
+    description: "The MPI test test_mpi for CXX in mode normal"
+    directories:
+      source: "/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-RwEcV8"
+      binary: "/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-RwEcV8"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi"
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "MPI_RESULT_CXX_test_mpi_normal"
+      cached: true
+      stdout: |
+        Change Dir: '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-RwEcV8'
+        
+        Run Build Command(s): /scratch_local/pip-build-env-jx8mr87o/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_c362e/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_c362e.dir/build.make CMakeFiles/cmTC_c362e.dir/build
+        gmake[1]: Entering directory '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-RwEcV8'
+        Building CXX object CMakeFiles/cmTC_c362e.dir/test_mpi.cpp.o
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -isystem /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/include -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi  -pthread -o CMakeFiles/cmTC_c362e.dir/test_mpi.cpp.o -c /leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-RwEcV8/test_mpi.cpp
+        Linking CXX executable cmTC_c362e
+        /scratch_local/pip-build-env-jx8mr87o/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c362e.dir/link.txt --verbose=1
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi  -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0 -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64 -Wl,-rpath -Wl,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib -pthread CMakeFiles/cmTC_c362e.dir/test_mpi.cpp.o -o cmTC_c362e  /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib/libmpi.so 
+        gmake[1]: Leaving directory '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-RwEcV8'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/scratch_local/pip-build-env-jx8mr87o/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/FindMPI.cmake:1278 (try_compile)"
+      - "/scratch_local/pip-build-env-jx8mr87o/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/FindMPI.cmake:1672 (_MPI_try_staged_settings)"
+      - "CMakeLists.txt:10 (find_package)"
+    description: "The MPI test test_mpi for CXX in mode MPICXX"
+    directories:
+      source: "/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-OiePLQ"
+      binary: "/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-OiePLQ"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi"
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "MPI_RESULT_CXX_test_mpi_MPICXX"
+      cached: true
+      stdout: |
+        Change Dir: '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-OiePLQ'
+        
+        Run Build Command(s): /scratch_local/pip-build-env-jx8mr87o/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_7d099/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_7d099.dir/build.make CMakeFiles/cmTC_7d099.dir/build
+        gmake[1]: Entering directory '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-OiePLQ'
+        Building CXX object CMakeFiles/cmTC_7d099.dir/test_mpi.cpp.o
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -isystem /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/include -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi  -pthread -o CMakeFiles/cmTC_7d099.dir/test_mpi.cpp.o -c /leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-OiePLQ/test_mpi.cpp
+        Linking CXX executable cmTC_7d099
+        /scratch_local/pip-build-env-jx8mr87o/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7d099.dir/link.txt --verbose=1
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi  -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0 -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64 -Wl,-rpath -Wl,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib -pthread CMakeFiles/cmTC_7d099.dir/test_mpi.cpp.o -o cmTC_7d099  /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib/libmpi.so 
+        gmake[1]: Leaving directory '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-OiePLQ'
+        
+      exitCode: 0
+...

@@ -108,7 +108,8 @@ setup(
     include_package_data=True,
     install_requires=[
         "jax>=0.4.16",
-        "jaxlib>=0.4.16"
+        "jaxlib>=0.4.16",
+        "mpi4jax>=0.4.0"
     ],
     ext_modules=extensions,
     cmdclass={"build_ext": CMakeBuildExt},
