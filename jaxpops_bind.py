@@ -1,3 +1,4 @@
+# JAX BINDINGS FOR PARALLEL OPERATIONS
 # Big thanks to https://github.com/dfm/extending-jax/tree/main
 
 __all__ = ["ppaint", "preadout", "buildplan", "pfft", "pifft"]
@@ -55,10 +56,26 @@ class HashableMPIType:
 @partial(custom_vjp, nondiff_argnums=(2, 3, 4, 5, 6, 7))
 def ppaint(pos, mass, Nmesh, BoxSize, edges, dims, comm, lyidx=0):
     """
-        JAX binding of parallel CIC painter in C++.
-        Will write more in detail at some point
-        lyidx is the layout decomposition index (in case there are multiple)
+    JAX binding of parallel Cloud-In-Cell (CIC) painter in C++.
+    Could do the type hinting at some point
+
+    Parameters:
+        pos (rrayLike): Local positions (Nparts/Nranks, 3) to paint
+        mass (ArrayLike): Local masses (Nparts/Nranks, ) associated to the particles
+        Nmesh (ArrayLike): Mesh sizes along x, y and z
+        BoxSize (ArrayLike): Simulation box size along x, y and z
+        edges (Array-like): (3, Nranks, 2) array specifying lower and upper limit along
+            each direction for each rank
+        dims (ArrayLike): Local dimensions of the output field
+        comm (MPI_Comm): MPI communicator
+        lyidx (int): Layout decomposition index (in case there are multiple, up to 4)
+    
+    Returns:
+        out (ArrayLike): Local painted field
     """
+    if lyidx > 4:
+        raise Exception("lyidx needs to be smaller than 5")
+
     # To make it possible to broadcast for constants
     mass = jnp.ones((pos.shape[0], )) * mass
     
@@ -79,20 +96,21 @@ def ppaint(pos, mass, Nmesh, BoxSize, edges, dims, comm, lyidx=0):
     
     return out.reshape((dims[0], dims[1], dims[2])) # Make it 3D
 
-
+# Abstract evaluation rule
 def _ppaint_abstract(pos, mass, Nmesh, edgesx, edgesy, edgesz, dims, comm, lyidx):
     return (ShapedArray((dims[0]*dims[1]*dims[2],), mass.dtype))
 
-
+# Lowering rule
 def _ppaint_lowering(ctx, pos, mass, Nmesh, edgesx, edgesy, edgesz, dims, comm, lyidx):
 
-    # Get values of hashables
+    # Get value of hashable
     comm = comm.wrapped
 
     # Extract the numpy type of the inputs
     pos_aval = ctx.avals_in[0]
     np_dtype = np.dtype(pos_aval.dtype)
-
+    
+    # Type of the output
     out_type = mlir.aval_to_ir_type(ctx.avals_out[0])
 
     # Number of particles is length of pos / 3
@@ -154,9 +172,28 @@ ppaint.defvjp(ppaint_fwd, ppaint_bwd)
 @partial(custom_vjp, nondiff_argnums=(2, 3, 4, 5, 6, 7, 8))
 def preadout(pos, field, Nmesh, BoxSize, edges, dims, comm, lyidx=0, vjpdim=-1):
     """
-        JAX binding of parallel CIC readout in C++.
-        Will write at some point
+    JAX binding of parallel Cloud-In-Cell (CIC) readout in C++.
+
+    Parameters:
+        pos (rrayLike): Local positions (Nparts/Nranks, 3) to readout at
+        field (ArrayLike): Local field to readout from
+        Nmesh (ArrayLike): Mesh sizes along x, y and z
+        BoxSize (ArrayLike): Simulation box size along x, y and z
+        edges (Array-like): (3, Nranks, 2) array specifying lower and upper limit along
+            each direction for each rank
+        dims (ArrayLike): Local dimensions of the field (mostly for consistency with ppaint)
+        comm (MPI_Comm): MPI communicator
+        lyidx (int): Layout decomposition index (in case there are multiple, up to 4)
+        vjpdim (int): Dimension of the gradient, see notes for an explanation
+    
+    Returns:
+        out (ArrayLike): (Nparts/Nranks, ) array representing the local read-out values
     """
+    if lyidx > 4:
+        raise Exception("lyidx needs to be smaller than 5")
+    if vjpdim > 2:
+        raise Exception("vjpdim must be between 0 and 2")
+
     pos = pos % BoxSize; # PBC
     pos /= (BoxSize / Nmesh) # Mesh coordinates
     # Flatten everything for simplicity
@@ -167,22 +204,20 @@ def preadout(pos, field, Nmesh, BoxSize, edges, dims, comm, lyidx=0, vjpdim=-1):
     edgesy = edges[1, :, :].flatten()
     edgesz = edges[2, :, :].flatten()
 
-    if vjpdim > 2:
-        raise Exception("vjpdim must be between 0 and 2")
     # From https://github.com/google/jax/issues/3221
     # Actually check mpi4jax, for instance in collective_ops (in _src), barrier
     comm = HashableMPIType(comm)
 
     return _preadout_prim.bind(pos, field, Nmesh, BoxSize, edgesx, edgesy, edgesz, comm=comm, lyidx=lyidx, vjpdim=vjpdim)
 
-
+# Abstract evaluation rules
 def _preadout_abstract(pos, field, Nmesh, BoxSize, edgesx, edgesy, edgesz, comm, lyidx, vjpdim):
     return (ShapedArray((int(pos.shape[0]/3), ), pos.dtype))
 
-
+# Lowering rules
 def _preadout_lowering(ctx, pos, field, Nmesh, BoxSize, edgesx, edgesy, edgesz, comm, lyidx, vjpdim):
 
-    # Get values of hashables
+    # Get value of hashable
     comm = comm.wrapped
 
     # Extract the numpy type of the inputs
@@ -194,13 +229,12 @@ def _preadout_lowering(ctx, pos, field, Nmesh, BoxSize, edgesx, edgesy, edgesz, 
     # Number of particles is length of pos / 3
     Nparts = (np.prod(pos_aval.shape) / 3).astype(np.int64)
     lyidx = as_mhlo_constant(lyidx, np.int32)
+    vjpdim = as_mhlo_constant(vjpdim, np.int32)
     # This dtype is int64 only for Nparts and int32 only for lyidx and vjpdim, all the
     # other ints are int32_t or int64_t in C++ based on np_dtype (could also make more general)
 
     # Dealing with comm as in mpi4jax, see for instance barrier.py in collective ops
     comm = as_mhlo_constant(to_mpi_handle(comm), np.uintp)
-
-    vjpdim = as_mhlo_constant(vjpdim, np.int32)
 
     # Different call based on dtype
     if np_dtype == np.float32:
@@ -251,7 +285,7 @@ preadout.defvjp(preadout_fwd, preadout_bwd)
 # Buildplan doesn't actually need a primitive, but for consistency
 def buildplan(Nmesh, comm):
     """
-        Creates plans for forward and backward ffts, returning partition
+        Creates plans for forward and backward ffts, returning partition specs
         Binds FFTW, which only splits 1st axis, so returns local x size and offset.
     """
     # From https://github.com/google/jax/issues/3221
@@ -260,19 +294,15 @@ def buildplan(Nmesh, comm):
 
     return _buildplan_prim.bind(Nmesh.astype(np.int32), comm=comm)
 
-
 def _buildplan_abstract(Nmesh, comm):
     return (ShapedArray((2, ), np.int32))
 
-
 def _buildplan_lowering(ctx, Nmesh, comm):
 
-    # Get values of hashables
     comm = comm.wrapped
 
     out_type = mlir.aval_to_ir_type(ctx.avals_out[0])
 
-    # Dealing with comm as in mpi4jax, see for instance barrier.py in collective ops
     comm = as_mhlo_constant(to_mpi_handle(comm), np.uintp)
 
     # Different call based on dtype
@@ -297,6 +327,7 @@ _buildplan_prim.def_abstract_eval(_buildplan_abstract)
 
 # Connect the XLA translation rules for JIT compilation
 mlir.register_lowering(_buildplan_prim, _buildplan_lowering, platform="cpu")
+# No need for vjp
 
 
 # |######|
@@ -305,19 +336,17 @@ mlir.register_lowering(_buildplan_prim, _buildplan_lowering, platform="cpu")
 @partial(custom_vjp, nondiff_argnums=(1,))
 def pfft(data, dims):
     """
-        Computes parallel forward fft of data (localL, M, N), returning
-        the real and imaginary parts in two arrays of size (localL, M, int(N/2)+1)
+        Computes parallel forward FFT of data (localL, M, N), returning
+        the FT as a complex array of size (localL, M, int(N/2)+1)
     """
     real, imag = _pfft_prim.bind(data.flatten(), dims=dims)
 
     return real.reshape((dims[0], dims[1], int(dims[2]/2)+1)) +\
             1j*imag.reshape((dims[0], dims[1], int(dims[2]/2)+1))
 
-
 def _pfft_abstract(data, dims):
     return (ShapedArray((dims[0] * dims[1] * (int(dims[2]/2)+1), ), data.dtype),
             ShapedArray((dims[0] * dims[1] * (int(dims[2]/2)+1), ), data.dtype))
-
 
 def _pfft_lowering(ctx, data, dims):
     
@@ -352,7 +381,7 @@ _pfft_prim.def_abstract_eval(_pfft_abstract)
 # Connect the XLA translation rules for JIT compilation
 mlir.register_lowering(_pfft_prim, _pfft_lowering, platform="cpu")
 
-# VJP definition for pfft (easy)
+# VJP definition for pfft (see notes for details)
 def pfft_fwd(data, dims):
     return pfft(data, dims), ()
 
@@ -369,17 +398,15 @@ pfft.defvjp(pfft_fwd, pfft_bwd)
 @partial(custom_vjp, nondiff_argnums=(1,))
 def pifft(data, dims):
     """
-        Computes parallel backward fft of complex data (localL, M, int(N/2)+1),
-        returning the inverse ft with size (localL, M, N)
+        Computes parallel backward FFT of complex data (localL, M, int(N/2)+1),
+        returning the inverse FT with size (localL, M, N)
     """
     out = _pifft_prim.bind(data.real.flatten(), data.imag.flatten(), dims=dims)
 
     return out.reshape((dims[0], dims[1], dims[2]))
 
-
 def _pifft_abstract(real, imag, dims):
     return (ShapedArray((dims[0]*dims[1]*dims[2], ), real.dtype))
-
 
 def _pifft_lowering(ctx, real, imag, dims):
 
@@ -413,7 +440,7 @@ _pifft_prim.def_abstract_eval(_pifft_abstract)
 # Connect the XLA translation rules for JIT compilation
 mlir.register_lowering(_pifft_prim, _pifft_lowering, platform="cpu")
 
-# VJP definition for pifft (easy)
+# VJP definition for pifft (also see notes)
 def pifft_fwd(data, dims):
     return pifft(data, dims), ()
 
