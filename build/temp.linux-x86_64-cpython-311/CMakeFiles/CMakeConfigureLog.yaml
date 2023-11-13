@@ -1,0 +1,472 @@
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeDetermineSystem.cmake:211 (message)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      The system is: Linux - 4.18.0-372.32.1.el8_6.x86_64 - x86_64
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+      Compiler: /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++ 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      0
+      
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.out"
+      
+      The CXX compiler identification is GNU, found in:
+        /leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/3.27.7/CompilerIdCXX/a.out
+      
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake:57 (try_compile)"
+      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    checks:
+      - "Detecting CXX compiler ABI info"
+    directories:
+      source: "/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-weGWoL"
+      binary: "/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-weGWoL"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "CMAKE_CXX_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-weGWoL'
+        
+        Run Build Command(s): /scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_e716e/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_e716e.dir/build.make CMakeFiles/cmTC_e716e.dir/build
+        gmake[1]: Entering directory '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-weGWoL'
+        Building CXX object CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++   -v -o CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o -c /scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp
+        Using built-in specs.
+        COLLECT_GCC=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++
+        OFFLOAD_TARGET_NAMES=nvptx-none
+        Target: x86_64-pc-linux-gnu
+        Configured with: /dev/shm/propro01/spack-stage-gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/spack-src/configure --prefix=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza --with-pkgversion='Spack GCC' --with-bugurl=https://github.com/spack/spack/issues --disable-multilib --enable-languages=c,c++,fortran --disable-nls --disable-canonical-system-headers --with-system-zlib --with-zstd-include=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/zstd-1.5.2-ts4mobmfhwj3unk3mll2v272ima23kmr/include --with-zstd-lib=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/zstd-1.5.2-ts4mobmfhwj3unk3mll2v272ima23kmr/lib --disable-bootstrap --with-mpfr-include=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/include --with-mpfr-lib=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib --with-gmp-include=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/include --with-gmp-lib=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib --with-mpc-include=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/include --with-mpc-lib=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib --without-isl --enable-offload-targets=nvptx-none --with-cuda-driver-include=/leonardo/prod/opt/compilers/cuda/11.8/none/include --with-cuda-driver-lib=/leonardo/prod/opt/compilers/cuda/11.8/none/lib64 --disable-bootstrap --disable-multilib --with-stage1-ldflags='-Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64 -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/zlib-1.2.13-dwt7j4ikoydkxmb32j56vrlwa36rmics/lib -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/zstd-1.5.2-ts4mobmfhwj3unk3mll2v272ima23kmr/lib -Wl,-rpath,/leonardo/prod/opt/compilers/cuda/11.8/none/lib64' --with-boot-ldflags='-Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64 -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/zlib-1.2.13-dwt7j4ikoydkxmb32j56vrlwa36rmics/lib -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/zstd-1.5.2-ts4mobmfhwj3unk3mll2v272ima23kmr/lib -Wl,-rpath,/leonardo/prod/opt/compilers/cuda/11.8/none/lib64 -static-libstdc++ -static-libgcc' --with-build-config=spack
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 11.3.0 (Spack GCC) 
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_e716e.dir/'
+         /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/cc1plus -quiet -v -D_GNU_SOURCE /scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_e716e.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -o /scratch_local/ccnGDD31.s
+        GNU C++17 (Spack GCC) version 11.3.0 (x86_64-pc-linux-gnu)
+        	compiled by GNU C version 8.5.0 20210514 (Red Hat 8.5.0-10), GMP version 6.2.1, MPFR version 4.1.0, MPC version 1.2.1, isl version none
+        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+        ignoring duplicate directory "/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/include"
+        ignoring nonexistent directory "/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../x86_64-pc-linux-gnu/include"
+        ignoring duplicate directory "/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/include"
+          as it is a non-system directory that duplicates a system directory
+        ignoring duplicate directory "/leonardo/prod/opt/compilers/cuda/11.8/none/include"
+          as it is a non-system directory that duplicates a system directory
+        ignoring duplicate directory "/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/include"
+          as it is a non-system directory that duplicates a system directory
+        ignoring duplicate directory "/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/zlib-1.2.13-noknejuy3uxqyxfetsmtnvb6zna3zaxk/include"
+          as it is a non-system directory that duplicates a system directory
+        ignoring duplicate directory "/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/include"
+          as it is a non-system directory that duplicates a system directory
+        ignoring duplicate directory "/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/include"
+          as it is a non-system directory that duplicates a system directory
+        ignoring duplicate directory "/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/include"
+          as it is a non-system directory that duplicates a system directory
+        ignoring duplicate directory "/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/include"
+          as it is a non-system directory that duplicates a system directory
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/include
+         /leonardo/prod/opt/compilers/cuda/11.8/none/include
+         /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/include
+         /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/zlib-1.2.13-noknejuy3uxqyxfetsmtnvb6zna3zaxk/include
+         /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/include
+         /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/include
+         /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/include
+         /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/include
+         /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../include/c++/11.3.0
+         /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../include/c++/11.3.0/x86_64-pc-linux-gnu
+         /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../include/c++/11.3.0/backward
+         /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/include
+         /usr/local/include
+         /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/include-fixed
+         /usr/include
+        End of search list.
+        GNU C++17 (Spack GCC) version 11.3.0 (x86_64-pc-linux-gnu)
+        	compiled by GNU C version 8.5.0 20210514 (Red Hat 8.5.0-10), GMP version 6.2.1, MPFR version 4.1.0, MPC version 1.2.1, isl version none
+        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+        Compiler executable checksum: 7f54fa14cd781079d8647a434f86e1e4
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_e716e.dir/'
+         as -v --64 -o CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o /scratch_local/ccnGDD31.s
+        GNU assembler version 2.30 (x86_64-redhat-linux) using BFD version version 2.30-113.el8
+        COMPILER_PATH=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/
+        LIBRARY_PATH=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64/../lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/../lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/:/leonardo/prod/opt/compilers/cuda/11.8/none/lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/zlib-1.2.13-noknejuy3uxqyxfetsmtnvb6zna3zaxk/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../:/lib/:/usr/lib/
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.'
+        Linking CXX executable cmTC_e716e
+        /scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e716e.dir/link.txt --verbose=1
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -v CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_e716e 
+        Using built-in specs.
+        COLLECT_GCC=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++
+        COLLECT_LTO_WRAPPER=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/lto-wrapper
+        OFFLOAD_TARGET_NAMES=nvptx-none
+        Target: x86_64-pc-linux-gnu
+        Configured with: /dev/shm/propro01/spack-stage-gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/spack-src/configure --prefix=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza --with-pkgversion='Spack GCC' --with-bugurl=https://github.com/spack/spack/issues --disable-multilib --enable-languages=c,c++,fortran --disable-nls --disable-canonical-system-headers --with-system-zlib --with-zstd-include=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/zstd-1.5.2-ts4mobmfhwj3unk3mll2v272ima23kmr/include --with-zstd-lib=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/zstd-1.5.2-ts4mobmfhwj3unk3mll2v272ima23kmr/lib --disable-bootstrap --with-mpfr-include=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/include --with-mpfr-lib=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib --with-gmp-include=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/include --with-gmp-lib=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib --with-mpc-include=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/include --with-mpc-lib=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib --without-isl --enable-offload-targets=nvptx-none --with-cuda-driver-include=/leonardo/prod/opt/compilers/cuda/11.8/none/include --with-cuda-driver-lib=/leonardo/prod/opt/compilers/cuda/11.8/none/lib64 --disable-bootstrap --disable-multilib --with-stage1-ldflags='-Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64 -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/zlib-1.2.13-dwt7j4ikoydkxmb32j56vrlwa36rmics/lib -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/zstd-1.5.2-ts4mobmfhwj3unk3mll2v272ima23kmr/lib -Wl,-rpath,/leonardo/prod/opt/compilers/cuda/11.8/none/lib64' --with-boot-ldflags='-Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64 -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/zlib-1.2.13-dwt7j4ikoydkxmb32j56vrlwa36rmics/lib -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/zstd-1.5.2-ts4mobmfhwj3unk3mll2v272ima23kmr/lib -Wl,-rpath,/leonardo/prod/opt/compilers/cuda/11.8/none/lib64 -static-libstdc++ -static-libgcc' --with-build-config=spack
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 11.3.0 (Spack GCC) 
+        COMPILER_PATH=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/
+        LIBRARY_PATH=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64/../lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/../lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/:/leonardo/prod/opt/compilers/cuda/11.8/none/lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/zlib-1.2.13-noknejuy3uxqyxfetsmtnvb6zna3zaxk/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../:/lib/:/usr/lib/
+        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_e716e' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_e716e.'
+         /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/collect2 -plugin /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/liblto_plugin.so -plugin-opt=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/lto-wrapper -plugin-opt=-fresolution=/scratch_local/cclh4meS.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --eh-frame-hdr -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_e716e /lib/../lib64/crt1.o /lib/../lib64/crti.o /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/crtbegin.o -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64/../lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/../lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib -L/leonardo/prod/opt/compilers/cuda/11.8/none/lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/zlib-1.2.13-noknejuy3uxqyxfetsmtnvb6zna3zaxk/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../.. CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/crtend.o /lib/../lib64/crtn.o
+        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_e716e' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_e716e.'
+        gmake[1]: Leaving directory '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-weGWoL'
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake:127 (message)"
+      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Parsed CXX implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/include]
+          add: [/leonardo/prod/opt/compilers/cuda/11.8/none/include]
+          add: [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/include]
+          add: [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/zlib-1.2.13-noknejuy3uxqyxfetsmtnvb6zna3zaxk/include]
+          add: [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/include]
+          add: [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/include]
+          add: [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/include]
+          add: [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/include]
+          add: [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../include/c++/11.3.0]
+          add: [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../include/c++/11.3.0/x86_64-pc-linux-gnu]
+          add: [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../include/c++/11.3.0/backward]
+          add: [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/include]
+          add: [/usr/local/include]
+          add: [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/include-fixed]
+          add: [/usr/include]
+        end of search list found
+        collapse include dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/include] ==> [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/include]
+        collapse include dir [/leonardo/prod/opt/compilers/cuda/11.8/none/include] ==> [/leonardo/prod/opt/compilers/cuda/11.8/none/include]
+        collapse include dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/include] ==> [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/include]
+        collapse include dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/zlib-1.2.13-noknejuy3uxqyxfetsmtnvb6zna3zaxk/include] ==> [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/zlib-1.2.13-noknejuy3uxqyxfetsmtnvb6zna3zaxk/include]
+        collapse include dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/include] ==> [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/include]
+        collapse include dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/include] ==> [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/include]
+        collapse include dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/include] ==> [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/include]
+        collapse include dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/include] ==> [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/include]
+        collapse include dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../include/c++/11.3.0] ==> [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/include/c++/11.3.0]
+        collapse include dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../include/c++/11.3.0/x86_64-pc-linux-gnu] ==> [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/include/c++/11.3.0/x86_64-pc-linux-gnu]
+        collapse include dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../include/c++/11.3.0/backward] ==> [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/include/c++/11.3.0/backward]
+        collapse include dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/include] ==> [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/include]
+        collapse include dir [/usr/local/include] ==> [/usr/local/include]
+        collapse include dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/include-fixed] ==> [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/include-fixed]
+        collapse include dir [/usr/include] ==> [/usr/include]
+        implicit include dirs: [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/include;/leonardo/prod/opt/compilers/cuda/11.8/none/include;/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/include;/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/zlib-1.2.13-noknejuy3uxqyxfetsmtnvb6zna3zaxk/include;/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/include;/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/include;/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/include;/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/include;/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/include/c++/11.3.0;/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/include/c++/11.3.0/x86_64-pc-linux-gnu;/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/include/c++/11.3.0/backward;/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/include;/usr/local/include;/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/include-fixed;/usr/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake:152 (message)"
+      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Parsed CXX implicit link information:
+        link line regex: [^( *|.*[/\\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        ignore line: [Change Dir: '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-weGWoL']
+        ignore line: []
+        ignore line: [Run Build Command(s): /scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_e716e/fast]
+        ignore line: [/usr/bin/gmake  -f CMakeFiles/cmTC_e716e.dir/build.make CMakeFiles/cmTC_e716e.dir/build]
+        ignore line: [gmake[1]: Entering directory '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-weGWoL']
+        ignore line: [Building CXX object CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o]
+        ignore line: [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++   -v -o CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o -c /scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++]
+        ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none]
+        ignore line: [Target: x86_64-pc-linux-gnu]
+        ignore line: [Configured with: /dev/shm/propro01/spack-stage-gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/spack-src/configure --prefix=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza --with-pkgversion='Spack GCC' --with-bugurl=https://github.com/spack/spack/issues --disable-multilib --enable-languages=c c++ fortran --disable-nls --disable-canonical-system-headers --with-system-zlib --with-zstd-include=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/zstd-1.5.2-ts4mobmfhwj3unk3mll2v272ima23kmr/include --with-zstd-lib=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/zstd-1.5.2-ts4mobmfhwj3unk3mll2v272ima23kmr/lib --disable-bootstrap --with-mpfr-include=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/include --with-mpfr-lib=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib --with-gmp-include=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/include --with-gmp-lib=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib --with-mpc-include=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/include --with-mpc-lib=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib --without-isl --enable-offload-targets=nvptx-none --with-cuda-driver-include=/leonardo/prod/opt/compilers/cuda/11.8/none/include --with-cuda-driver-lib=/leonardo/prod/opt/compilers/cuda/11.8/none/lib64 --disable-bootstrap --disable-multilib --with-stage1-ldflags='-Wl -rpath /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib -Wl -rpath /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64 -Wl -rpath /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib -Wl -rpath /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib -Wl -rpath /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib -Wl -rpath /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/zlib-1.2.13-dwt7j4ikoydkxmb32j56vrlwa36rmics/lib -Wl -rpath /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/zstd-1.5.2-ts4mobmfhwj3unk3mll2v272ima23kmr/lib -Wl -rpath /leonardo/prod/opt/compilers/cuda/11.8/none/lib64' --with-boot-ldflags='-Wl -rpath /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib -Wl -rpath /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64 -Wl -rpath /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib -Wl -rpath /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib -Wl -rpath /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib -Wl -rpath /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/zlib-1.2.13-dwt7j4ikoydkxmb32j56vrlwa36rmics/lib -Wl -rpath /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/zstd-1.5.2-ts4mobmfhwj3unk3mll2v272ima23kmr/lib -Wl -rpath /leonardo/prod/opt/compilers/cuda/11.8/none/lib64 -static-libstdc++ -static-libgcc' --with-build-config=spack]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 11.3.0 (Spack GCC) ]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_e716e.dir/']
+        ignore line: [ /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/cc1plus -quiet -v -D_GNU_SOURCE /scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_e716e.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -o /scratch_local/ccnGDD31.s]
+        ignore line: [GNU C++17 (Spack GCC) version 11.3.0 (x86_64-pc-linux-gnu)]
+        ignore line: [	compiled by GNU C version 8.5.0 20210514 (Red Hat 8.5.0-10)  GMP version 6.2.1  MPFR version 4.1.0  MPC version 1.2.1  isl version none]
+        ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+        ignore line: [ignoring duplicate directory "/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/include"]
+        ignore line: [ignoring nonexistent directory "/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../x86_64-pc-linux-gnu/include"]
+        ignore line: [ignoring duplicate directory "/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/include"]
+        ignore line: [  as it is a non-system directory that duplicates a system directory]
+        ignore line: [ignoring duplicate directory "/leonardo/prod/opt/compilers/cuda/11.8/none/include"]
+        ignore line: [  as it is a non-system directory that duplicates a system directory]
+        ignore line: [ignoring duplicate directory "/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/include"]
+        ignore line: [  as it is a non-system directory that duplicates a system directory]
+        ignore line: [ignoring duplicate directory "/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/zlib-1.2.13-noknejuy3uxqyxfetsmtnvb6zna3zaxk/include"]
+        ignore line: [  as it is a non-system directory that duplicates a system directory]
+        ignore line: [ignoring duplicate directory "/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/include"]
+        ignore line: [  as it is a non-system directory that duplicates a system directory]
+        ignore line: [ignoring duplicate directory "/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/include"]
+        ignore line: [  as it is a non-system directory that duplicates a system directory]
+        ignore line: [ignoring duplicate directory "/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/include"]
+        ignore line: [  as it is a non-system directory that duplicates a system directory]
+        ignore line: [ignoring duplicate directory "/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/include"]
+        ignore line: [  as it is a non-system directory that duplicates a system directory]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/include]
+        ignore line: [ /leonardo/prod/opt/compilers/cuda/11.8/none/include]
+        ignore line: [ /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/include]
+        ignore line: [ /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/zlib-1.2.13-noknejuy3uxqyxfetsmtnvb6zna3zaxk/include]
+        ignore line: [ /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/include]
+        ignore line: [ /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/include]
+        ignore line: [ /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/include]
+        ignore line: [ /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/include]
+        ignore line: [ /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../include/c++/11.3.0]
+        ignore line: [ /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../include/c++/11.3.0/x86_64-pc-linux-gnu]
+        ignore line: [ /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../include/c++/11.3.0/backward]
+        ignore line: [ /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/include]
+        ignore line: [ /usr/local/include]
+        ignore line: [ /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/include-fixed]
+        ignore line: [ /usr/include]
+        ignore line: [End of search list.]
+        ignore line: [GNU C++17 (Spack GCC) version 11.3.0 (x86_64-pc-linux-gnu)]
+        ignore line: [	compiled by GNU C version 8.5.0 20210514 (Red Hat 8.5.0-10)  GMP version 6.2.1  MPFR version 4.1.0  MPC version 1.2.1  isl version none]
+        ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+        ignore line: [Compiler executable checksum: 7f54fa14cd781079d8647a434f86e1e4]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_e716e.dir/']
+        ignore line: [ as -v --64 -o CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o /scratch_local/ccnGDD31.s]
+        ignore line: [GNU assembler version 2.30 (x86_64-redhat-linux) using BFD version version 2.30-113.el8]
+        ignore line: [COMPILER_PATH=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/]
+        ignore line: [LIBRARY_PATH=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64/../lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/../lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/:/leonardo/prod/opt/compilers/cuda/11.8/none/lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/zlib-1.2.13-noknejuy3uxqyxfetsmtnvb6zna3zaxk/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../:/lib/:/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.']
+        ignore line: [Linking CXX executable cmTC_e716e]
+        ignore line: [/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e716e.dir/link.txt --verbose=1]
+        ignore line: [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -v CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_e716e ]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++]
+        ignore line: [COLLECT_LTO_WRAPPER=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/lto-wrapper]
+        ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none]
+        ignore line: [Target: x86_64-pc-linux-gnu]
+        ignore line: [Configured with: /dev/shm/propro01/spack-stage-gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/spack-src/configure --prefix=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza --with-pkgversion='Spack GCC' --with-bugurl=https://github.com/spack/spack/issues --disable-multilib --enable-languages=c c++ fortran --disable-nls --disable-canonical-system-headers --with-system-zlib --with-zstd-include=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/zstd-1.5.2-ts4mobmfhwj3unk3mll2v272ima23kmr/include --with-zstd-lib=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/zstd-1.5.2-ts4mobmfhwj3unk3mll2v272ima23kmr/lib --disable-bootstrap --with-mpfr-include=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/include --with-mpfr-lib=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib --with-gmp-include=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/include --with-gmp-lib=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib --with-mpc-include=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/include --with-mpc-lib=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib --without-isl --enable-offload-targets=nvptx-none --with-cuda-driver-include=/leonardo/prod/opt/compilers/cuda/11.8/none/include --with-cuda-driver-lib=/leonardo/prod/opt/compilers/cuda/11.8/none/lib64 --disable-bootstrap --disable-multilib --with-stage1-ldflags='-Wl -rpath /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib -Wl -rpath /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64 -Wl -rpath /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib -Wl -rpath /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib -Wl -rpath /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib -Wl -rpath /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/zlib-1.2.13-dwt7j4ikoydkxmb32j56vrlwa36rmics/lib -Wl -rpath /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/zstd-1.5.2-ts4mobmfhwj3unk3mll2v272ima23kmr/lib -Wl -rpath /leonardo/prod/opt/compilers/cuda/11.8/none/lib64' --with-boot-ldflags='-Wl -rpath /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib -Wl -rpath /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64 -Wl -rpath /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib -Wl -rpath /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib -Wl -rpath /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib -Wl -rpath /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/zlib-1.2.13-dwt7j4ikoydkxmb32j56vrlwa36rmics/lib -Wl -rpath /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/zstd-1.5.2-ts4mobmfhwj3unk3mll2v272ima23kmr/lib -Wl -rpath /leonardo/prod/opt/compilers/cuda/11.8/none/lib64 -static-libstdc++ -static-libgcc' --with-build-config=spack]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 11.3.0 (Spack GCC) ]
+        ignore line: [COMPILER_PATH=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/]
+        ignore line: [LIBRARY_PATH=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64/../lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/../lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/:/leonardo/prod/opt/compilers/cuda/11.8/none/lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/zlib-1.2.13-noknejuy3uxqyxfetsmtnvb6zna3zaxk/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../:/lib/:/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_e716e' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_e716e.']
+        link line: [ /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/collect2 -plugin /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/liblto_plugin.so -plugin-opt=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/lto-wrapper -plugin-opt=-fresolution=/scratch_local/cclh4meS.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --eh-frame-hdr -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_e716e /lib/../lib64/crt1.o /lib/../lib64/crti.o /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/crtbegin.o -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64/../lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/../lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib -L/leonardo/prod/opt/compilers/cuda/11.8/none/lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/zlib-1.2.13-noknejuy3uxqyxfetsmtnvb6zna3zaxk/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../.. CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/crtend.o /lib/../lib64/crtn.o]
+          arg [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/collect2] ==> ignore
+          arg [-plugin] ==> ignore
+          arg [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/liblto_plugin.so] ==> ignore
+          arg [-plugin-opt=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/lto-wrapper] ==> ignore
+          arg [-plugin-opt=-fresolution=/scratch_local/cclh4meS.res] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [--eh-frame-hdr] ==> ignore
+          arg [-m] ==> ignore
+          arg [elf_x86_64] ==> ignore
+          arg [-dynamic-linker] ==> ignore
+          arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+          arg [-o] ==> ignore
+          arg [cmTC_e716e] ==> ignore
+          arg [/lib/../lib64/crt1.o] ==> obj [/lib/../lib64/crt1.o]
+          arg [/lib/../lib64/crti.o] ==> obj [/lib/../lib64/crti.o]
+          arg [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/crtbegin.o] ==> obj [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/crtbegin.o]
+          arg [-L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64/../lib64] ==> dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64/../lib64]
+          arg [-L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/../lib64] ==> dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/../lib64]
+          arg [-L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0] ==> dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0]
+          arg [-L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../lib64] ==> dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../lib64]
+          arg [-L/lib/../lib64] ==> dir [/lib/../lib64]
+          arg [-L/usr/lib/../lib64] ==> dir [/usr/lib/../lib64]
+          arg [-L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib] ==> dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib]
+          arg [-L/leonardo/prod/opt/compilers/cuda/11.8/none/lib64] ==> dir [/leonardo/prod/opt/compilers/cuda/11.8/none/lib64]
+          arg [-L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib] ==> dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib]
+          arg [-L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/zlib-1.2.13-noknejuy3uxqyxfetsmtnvb6zna3zaxk/lib] ==> dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/zlib-1.2.13-noknejuy3uxqyxfetsmtnvb6zna3zaxk/lib]
+          arg [-L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64] ==> dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64]
+          arg [-L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib] ==> dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib]
+          arg [-L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib] ==> dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib]
+          arg [-L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib] ==> dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib]
+          arg [-L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib] ==> dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib]
+          arg [-L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../..] ==> dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../..]
+          arg [CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+          arg [-lstdc++] ==> lib [stdc++]
+          arg [-lm] ==> lib [m]
+          arg [-lgcc_s] ==> lib [gcc_s]
+          arg [-lgcc] ==> lib [gcc]
+          arg [-lc] ==> lib [c]
+          arg [-lgcc_s] ==> lib [gcc_s]
+          arg [-lgcc] ==> lib [gcc]
+          arg [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/crtend.o] ==> obj [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/crtend.o]
+          arg [/lib/../lib64/crtn.o] ==> obj [/lib/../lib64/crtn.o]
+        collapse obj [/lib/../lib64/crt1.o] ==> [/lib64/crt1.o]
+        collapse obj [/lib/../lib64/crti.o] ==> [/lib64/crti.o]
+        collapse obj [/lib/../lib64/crtn.o] ==> [/lib64/crtn.o]
+        collapse library dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64/../lib64] ==> [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64]
+        collapse library dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/../lib64] ==> [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64]
+        collapse library dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0] ==> [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0]
+        collapse library dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../lib64] ==> [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64]
+        collapse library dir [/lib/../lib64] ==> [/lib64]
+        collapse library dir [/usr/lib/../lib64] ==> [/usr/lib64]
+        collapse library dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib] ==> [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib]
+        collapse library dir [/leonardo/prod/opt/compilers/cuda/11.8/none/lib64] ==> [/leonardo/prod/opt/compilers/cuda/11.8/none/lib64]
+        collapse library dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib] ==> [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib]
+        collapse library dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/zlib-1.2.13-noknejuy3uxqyxfetsmtnvb6zna3zaxk/lib] ==> [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/zlib-1.2.13-noknejuy3uxqyxfetsmtnvb6zna3zaxk/lib]
+        collapse library dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64] ==> [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64]
+        collapse library dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib] ==> [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib]
+        collapse library dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib] ==> [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib]
+        collapse library dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib] ==> [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib]
+        collapse library dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib] ==> [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib]
+        collapse library dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../..] ==> [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib]
+        implicit libs: [stdc++;m;gcc_s;gcc;c;gcc_s;gcc]
+        implicit objs: [/lib64/crt1.o;/lib64/crti.o;/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/crtbegin.o;/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/crtend.o;/lib64/crtn.o]
+        implicit dirs: [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64;/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0;/lib64;/usr/lib64;/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib;/leonardo/prod/opt/compilers/cuda/11.8/none/lib64;/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib;/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/zlib-1.2.13-noknejuy3uxqyxfetsmtnvb6zna3zaxk/lib;/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib;/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib;/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib;/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib]
+        implicit fwks: []
+      
+      
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CheckCXXCompilerFlag.cmake:34 (cmake_check_compiler_flag)"
+      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/pybind11/share/cmake/pybind11/pybind11Common.cmake:276 (check_cxx_compiler_flag)"
+      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/pybind11/share/cmake/pybind11/pybind11Common.cmake:318 (_pybind11_return_if_cxx_and_linker_flags_work)"
+      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/pybind11/share/cmake/pybind11/pybind11Common.cmake:385 (_pybind11_generate_lto)"
+      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/pybind11/share/cmake/pybind11/pybind11Config.cmake:250 (include)"
+      - "CMakeLists.txt:9 (find_package)"
+    checks:
+      - "Performing Test HAS_FLTO"
+    directories:
+      source: "/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-ghaMan"
+      binary: "/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-ghaMan"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi"
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "HAS_FLTO"
+      cached: true
+      stdout: |
+        Change Dir: '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-ghaMan'
+        
+        Run Build Command(s): /scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_743e9/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_743e9.dir/build.make CMakeFiles/cmTC_743e9.dir/build
+        gmake[1]: Entering directory '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-ghaMan'
+        Building CXX object CMakeFiles/cmTC_743e9.dir/src.cxx.o
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++ -DHAS_FLTO  -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi    -flto -fno-fat-lto-objects -o CMakeFiles/cmTC_743e9.dir/src.cxx.o -c /leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-ghaMan/src.cxx
+        Linking CXX executable cmTC_743e9
+        /scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_743e9.dir/link.txt --verbose=1
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi  CMakeFiles/cmTC_743e9.dir/src.cxx.o -o cmTC_743e9  -flto 
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `ompi_mpi_op_sum'
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `ompi_mpi_char'
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `MPI_Bcast'
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `ompi_mpi_op_lor'
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `MPI_Send'
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `MPI_Alltoall'
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `ompi_mpi_op_max'
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `ompi_mpi_op_land'
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `ompi_mpi_unsigned'
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `MPI_Sendrecv'
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `MPI_Recv'
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `ompi_mpi_double'
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3f_mpi.so: undefined reference to `ompi_mpi_float'
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `MPI_Abort'
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `MPI_Comm_size'
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `MPI_Allreduce'
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `ompi_mpi_comm_null'
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `ompi_mpi_int'
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `MPI_Comm_dup'
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `MPI_Comm_f2c'
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `ompi_mpi_unsigned_long'
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `MPI_Comm_rank'
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `MPI_Alltoallv'
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `MPI_Comm_free'
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `MPI_Comm_split'
+        collect2: error: ld returned 1 exit status
+        gmake[1]: *** [CMakeFiles/cmTC_743e9.dir/build.make:99: cmTC_743e9] Error 1
+        gmake[1]: Leaving directory '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-ghaMan'
+        gmake: *** [Makefile:127: cmTC_743e9/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/FindMPI.cmake:1278 (try_compile)"
+      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/FindMPI.cmake:1322 (_MPI_try_staged_settings)"
+      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/FindMPI.cmake:1645 (_MPI_check_lang_works)"
+      - "CMakeLists.txt:10 (find_package)"
+    description: "The MPI test test_mpi for CXX in mode normal"
+    directories:
+      source: "/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-kdCsYn"
+      binary: "/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-kdCsYn"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi"
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "MPI_RESULT_CXX_test_mpi_normal"
+      cached: true
+      stdout: |
+        Change Dir: '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-kdCsYn'
+        
+        Run Build Command(s): /scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_674e1/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_674e1.dir/build.make CMakeFiles/cmTC_674e1.dir/build
+        gmake[1]: Entering directory '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-kdCsYn'
+        Building CXX object CMakeFiles/cmTC_674e1.dir/test_mpi.cpp.o
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -isystem /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/include -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi  -pthread -o CMakeFiles/cmTC_674e1.dir/test_mpi.cpp.o -c /leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-kdCsYn/test_mpi.cpp
+        Linking CXX executable cmTC_674e1
+        /scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_674e1.dir/link.txt --verbose=1
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi  -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0 -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64 -Wl,-rpath -Wl,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib -pthread CMakeFiles/cmTC_674e1.dir/test_mpi.cpp.o -o cmTC_674e1  /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib/libmpi.so 
+        gmake[1]: Leaving directory '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-kdCsYn'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/FindMPI.cmake:1278 (try_compile)"
+      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/FindMPI.cmake:1672 (_MPI_try_staged_settings)"
+      - "CMakeLists.txt:10 (find_package)"
+    description: "The MPI test test_mpi for CXX in mode MPICXX"
+    directories:
+      source: "/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-15wKNy"
+      binary: "/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-15wKNy"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi"
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "MPI_RESULT_CXX_test_mpi_MPICXX"
+      cached: true
+      stdout: |
+        Change Dir: '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-15wKNy'
+        
+        Run Build Command(s): /scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_2130a/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_2130a.dir/build.make CMakeFiles/cmTC_2130a.dir/build
+        gmake[1]: Entering directory '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-15wKNy'
+        Building CXX object CMakeFiles/cmTC_2130a.dir/test_mpi.cpp.o
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -isystem /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/include -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi  -pthread -o CMakeFiles/cmTC_2130a.dir/test_mpi.cpp.o -c /leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-15wKNy/test_mpi.cpp
+        Linking CXX executable cmTC_2130a
+        /scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2130a.dir/link.txt --verbose=1
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi  -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0 -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64 -Wl,-rpath -Wl,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib -pthread CMakeFiles/cmTC_2130a.dir/test_mpi.cpp.o -o cmTC_2130a  /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib/libmpi.so 
+        gmake[1]: Leaving directory '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-15wKNy'
+        
+      exitCode: 0
+...

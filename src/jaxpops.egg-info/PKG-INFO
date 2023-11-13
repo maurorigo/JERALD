@@ -1,0 +1,8 @@
+Metadata-Version: 2.1
+Name: jaxpops
+Version: 0.0.1
+Summary: Parallel CIC painter and readout and parallel FFT and inverseusing FFTW, written to be used in JAX.
+Author: Mauro Rigo
+Author-email: mrigo@sissa.it
+Requires-Dist: jax>=0.4.16
+Requires-Dist: jaxlib>=0.4.16

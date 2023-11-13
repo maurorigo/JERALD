@@ -1,0 +1,8 @@
+pyproject.toml
+setup.py
+lib/cpu.cc
+src/jaxpops.egg-info/PKG-INFO
+src/jaxpops.egg-info/SOURCES.txt
+src/jaxpops.egg-info/dependency_links.txt
+src/jaxpops.egg-info/requires.txt
+src/jaxpops.egg-info/top_level.txt
