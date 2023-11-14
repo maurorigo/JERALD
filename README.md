@@ -2,6 +2,7 @@
 
 * [**Installation**](#installation)
 * [**Testing**](#testing)
+* [**Documentation**](#documentation)
 
 jaxLDL is the [JAX](https://github.com/google/jax) implementation of the [code](https://github.com/biweidai/LDL) performing [Lagrangian Deep Learning](https://arxiv.org/abs/2010.02926), a machine learning method to paint baryons and related quantities on top of N-body only simulations.
 
@@ -25,4 +26,7 @@ Otherwise, to run it with ```Nproc``` processes, use
 ```
 mpirun -n Nproc python losstest.py
 ```
+
+## Documentation
+For now, the documentation for each method is in the code (and it should be pretty complete).
 
