@@ -62,7 +62,6 @@ class LDLModel(object):
         self.pm = pm
         self.ready = False
 
-    #@partial(jit, static_argnums=(0,))
     def potential_gradient(self, params, X):
         """
         Computes gradient of LDL potential following code from https://github.com/biweidai/LDL/tree/master

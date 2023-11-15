@@ -1,8 +1,8 @@
-# Install script for directory: /leonardo/home/userexternal/mrigo000/jaxLDL
+# Install script for directory: /leonardo/home/userexternal/mrigo000/jaxLDL/online
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/leonardo/home/userexternal/mrigo000/jaxLDL/build/lib.linux-x86_64-cpython-311")
+  set(CMAKE_INSTALL_PREFIX "/leonardo/home/userexternal/mrigo000/jaxLDL/online/build/lib.linux-x86_64-cpython-311")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -49,7 +49,7 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/jaxpops/cpu.cpython-311-x86_64-linux-gnu.so"
          RPATH "")
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/jaxpops" TYPE MODULE FILES "/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/cpu.cpython-311-x86_64-linux-gnu.so")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/jaxpops" TYPE MODULE FILES "/leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/cpu.cpython-311-x86_64-linux-gnu.so")
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/jaxpops/cpu.cpython-311-x86_64-linux-gnu.so" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/jaxpops/cpu.cpython-311-x86_64-linux-gnu.so")
     if(CMAKE_INSTALL_DO_STRIP)
@@ -66,5 +66,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

@@ -13,6 +13,7 @@ The package can be built using
 ```
 pip install .
 ```
+You may need to remove the current build folder first.
 On the C++ side, installation requires FFTW with MPI support (which should generally be available on clusters), while on the Python side it requires JAX and mpi4jax (see the related READMEs for installation), as well as [pybind11](https://github.com/pybind/pybind11) for binding C++ code to Python.
 CUDA support isn't required, as for the time being the package only runs on CPU. In the future this may change.
 On a cluster, I suggest loading any MPI modules and then installing mpi4jax via pip, to allow mpi4py to build on the existing MPI installation.

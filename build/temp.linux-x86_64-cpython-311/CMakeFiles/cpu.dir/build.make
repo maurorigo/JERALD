@@ -44,19 +44,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /scratch_local/pip-build-env-jx8mr87o/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake
+CMAKE_COMMAND = /scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake
 
 # The command to remove a file.
-RM = /scratch_local/pip-build-env-jx8mr87o/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E rm -f
+RM = /scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /leonardo/home/userexternal/mrigo000/jaxLDL
+CMAKE_SOURCE_DIR = /leonardo/home/userexternal/mrigo000/jaxLDL/online
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311
+CMAKE_BINARY_DIR = /leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311
 
 # Include any dependencies generated for this target.
 include CMakeFiles/cpu.dir/depend.make
@@ -70,18 +70,18 @@ include CMakeFiles/cpu.dir/progress.make
 include CMakeFiles/cpu.dir/flags.make
 
 CMakeFiles/cpu.dir/lib/cpu.cc.o: CMakeFiles/cpu.dir/flags.make
-CMakeFiles/cpu.dir/lib/cpu.cc.o: /leonardo/home/userexternal/mrigo000/jaxLDL/lib/cpu.cc
+CMakeFiles/cpu.dir/lib/cpu.cc.o: /leonardo/home/userexternal/mrigo000/jaxLDL/online/lib/cpu.cc
 CMakeFiles/cpu.dir/lib/cpu.cc.o: CMakeFiles/cpu.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/cpu.dir/lib/cpu.cc.o"
-	/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/cpu.dir/lib/cpu.cc.o -MF CMakeFiles/cpu.dir/lib/cpu.cc.o.d -o CMakeFiles/cpu.dir/lib/cpu.cc.o -c /leonardo/home/userexternal/mrigo000/jaxLDL/lib/cpu.cc
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/cpu.dir/lib/cpu.cc.o"
+	/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/cpu.dir/lib/cpu.cc.o -MF CMakeFiles/cpu.dir/lib/cpu.cc.o.d -o CMakeFiles/cpu.dir/lib/cpu.cc.o -c /leonardo/home/userexternal/mrigo000/jaxLDL/online/lib/cpu.cc
 
 CMakeFiles/cpu.dir/lib/cpu.cc.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/cpu.dir/lib/cpu.cc.i"
-	/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /leonardo/home/userexternal/mrigo000/jaxLDL/lib/cpu.cc > CMakeFiles/cpu.dir/lib/cpu.cc.i
+	/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /leonardo/home/userexternal/mrigo000/jaxLDL/online/lib/cpu.cc > CMakeFiles/cpu.dir/lib/cpu.cc.i
 
 CMakeFiles/cpu.dir/lib/cpu.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/cpu.dir/lib/cpu.cc.s"
-	/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /leonardo/home/userexternal/mrigo000/jaxLDL/lib/cpu.cc -o CMakeFiles/cpu.dir/lib/cpu.cc.s
+	/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /leonardo/home/userexternal/mrigo000/jaxLDL/online/lib/cpu.cc -o CMakeFiles/cpu.dir/lib/cpu.cc.s
 
 # Object files for target cpu
 cpu_OBJECTS = \
@@ -94,9 +94,9 @@ cpu.cpython-311-x86_64-linux-gnu.so: CMakeFiles/cpu.dir/lib/cpu.cc.o
 cpu.cpython-311-x86_64-linux-gnu.so: CMakeFiles/cpu.dir/build.make
 cpu.cpython-311-x86_64-linux-gnu.so: /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3.so
 cpu.cpython-311-x86_64-linux-gnu.so: CMakeFiles/cpu.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX shared module cpu.cpython-311-x86_64-linux-gnu.so"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX shared module cpu.cpython-311-x86_64-linux-gnu.so"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/cpu.dir/link.txt --verbose=$(VERBOSE)
-	/usr/bin/strip /leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/cpu.cpython-311-x86_64-linux-gnu.so
+	/usr/bin/strip /leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/cpu.cpython-311-x86_64-linux-gnu.so
 
 # Rule to build all files generated by this target.
 CMakeFiles/cpu.dir/build: cpu.cpython-311-x86_64-linux-gnu.so
@@ -107,6 +107,6 @@ CMakeFiles/cpu.dir/clean:
 .PHONY : CMakeFiles/cpu.dir/clean
 
 CMakeFiles/cpu.dir/depend:
-	cd /leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311 && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /leonardo/home/userexternal/mrigo000/jaxLDL /leonardo/home/userexternal/mrigo000/jaxLDL /leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311 /leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311 /leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/cpu.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd /leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311 && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /leonardo/home/userexternal/mrigo000/jaxLDL/online /leonardo/home/userexternal/mrigo000/jaxLDL/online /leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311 /leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311 /leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles/cpu.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles/cpu.dir/depend
 

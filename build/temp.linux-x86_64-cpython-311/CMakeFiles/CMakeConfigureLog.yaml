@@ -4,16 +4,16 @@ events:
   -
     kind: "message-v1"
     backtrace:
-      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeDetermineSystem.cmake:211 (message)"
+      - "/scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeDetermineSystem.cmake:211 (message)"
       - "CMakeLists.txt:2 (project)"
     message: |
       The system is: Linux - 4.18.0-372.32.1.el8_6.x86_64 - x86_64
   -
     kind: "message-v1"
     backtrace:
-      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
-      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
-      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "/scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
       - "CMakeLists.txt:2 (project)"
     message: |
       Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
@@ -28,19 +28,19 @@ events:
       Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.out"
       
       The CXX compiler identification is GNU, found in:
-        /leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/3.27.7/CompilerIdCXX/a.out
+        /leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles/3.27.7/CompilerIdCXX/a.out
       
   -
     kind: "try_compile-v1"
     backtrace:
-      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake:57 (try_compile)"
-      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "/scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake:57 (try_compile)"
+      - "/scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
       - "CMakeLists.txt:2 (project)"
     checks:
       - "Detecting CXX compiler ABI info"
     directories:
-      source: "/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-weGWoL"
-      binary: "/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-weGWoL"
+      source: "/leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-JdyIhV"
+      binary: "/leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-JdyIhV"
     cmakeVariables:
       CMAKE_CXX_FLAGS: ""
       CMAKE_CXX_FLAGS_DEBUG: "-g"
@@ -49,13 +49,13 @@ events:
       variable: "CMAKE_CXX_ABI_COMPILED"
       cached: true
       stdout: |
-        Change Dir: '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-weGWoL'
+        Change Dir: '/leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-JdyIhV'
         
-        Run Build Command(s): /scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_e716e/fast
-        /usr/bin/gmake  -f CMakeFiles/cmTC_e716e.dir/build.make CMakeFiles/cmTC_e716e.dir/build
-        gmake[1]: Entering directory '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-weGWoL'
-        Building CXX object CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o
-        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++   -v -o CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o -c /scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp
+        Run Build Command(s): /scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_7d70b/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_7d70b.dir/build.make CMakeFiles/cmTC_7d70b.dir/build
+        gmake[1]: Entering directory '/leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-JdyIhV'
+        Building CXX object CMakeFiles/cmTC_7d70b.dir/CMakeCXXCompilerABI.cpp.o
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++   -v -o CMakeFiles/cmTC_7d70b.dir/CMakeCXXCompilerABI.cpp.o -c /scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp
         Using built-in specs.
         COLLECT_GCC=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++
         OFFLOAD_TARGET_NAMES=nvptx-none
@@ -64,8 +64,8 @@ events:
         Thread model: posix
         Supported LTO compression algorithms: zlib zstd
         gcc version 11.3.0 (Spack GCC) 
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_e716e.dir/'
-         /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/cc1plus -quiet -v -D_GNU_SOURCE /scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_e716e.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -o /scratch_local/ccnGDD31.s
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_7d70b.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_7d70b.dir/'
+         /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/cc1plus -quiet -v -D_GNU_SOURCE /scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_7d70b.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -o /scratch_local/ccusnbLK.s
         GNU C++17 (Spack GCC) version 11.3.0 (x86_64-pc-linux-gnu)
         	compiled by GNU C version 8.5.0 20210514 (Red Hat 8.5.0-10), GMP version 6.2.1, MPFR version 4.1.0, MPC version 1.2.1, isl version none
         GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
@@ -109,15 +109,15 @@ events:
         	compiled by GNU C version 8.5.0 20210514 (Red Hat 8.5.0-10), GMP version 6.2.1, MPFR version 4.1.0, MPC version 1.2.1, isl version none
         GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
         Compiler executable checksum: 7f54fa14cd781079d8647a434f86e1e4
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_e716e.dir/'
-         as -v --64 -o CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o /scratch_local/ccnGDD31.s
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_7d70b.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_7d70b.dir/'
+         as -v --64 -o CMakeFiles/cmTC_7d70b.dir/CMakeCXXCompilerABI.cpp.o /scratch_local/ccusnbLK.s
         GNU assembler version 2.30 (x86_64-redhat-linux) using BFD version version 2.30-113.el8
         COMPILER_PATH=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/
         LIBRARY_PATH=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64/../lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/../lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/:/leonardo/prod/opt/compilers/cuda/11.8/none/lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/zlib-1.2.13-noknejuy3uxqyxfetsmtnvb6zna3zaxk/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../:/lib/:/usr/lib/
-        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.'
-        Linking CXX executable cmTC_e716e
-        /scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e716e.dir/link.txt --verbose=1
-        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -v CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_e716e 
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_7d70b.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_7d70b.dir/CMakeCXXCompilerABI.cpp.'
+        Linking CXX executable cmTC_7d70b
+        /scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7d70b.dir/link.txt --verbose=1
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -v CMakeFiles/cmTC_7d70b.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_7d70b 
         Using built-in specs.
         COLLECT_GCC=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++
         COLLECT_LTO_WRAPPER=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/lto-wrapper
@@ -129,17 +129,17 @@ events:
         gcc version 11.3.0 (Spack GCC) 
         COMPILER_PATH=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/
         LIBRARY_PATH=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64/../lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/../lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/:/leonardo/prod/opt/compilers/cuda/11.8/none/lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/zlib-1.2.13-noknejuy3uxqyxfetsmtnvb6zna3zaxk/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../:/lib/:/usr/lib/
-        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_e716e' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_e716e.'
-         /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/collect2 -plugin /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/liblto_plugin.so -plugin-opt=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/lto-wrapper -plugin-opt=-fresolution=/scratch_local/cclh4meS.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --eh-frame-hdr -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_e716e /lib/../lib64/crt1.o /lib/../lib64/crti.o /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/crtbegin.o -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64/../lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/../lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib -L/leonardo/prod/opt/compilers/cuda/11.8/none/lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/zlib-1.2.13-noknejuy3uxqyxfetsmtnvb6zna3zaxk/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../.. CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/crtend.o /lib/../lib64/crtn.o
-        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_e716e' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_e716e.'
-        gmake[1]: Leaving directory '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-weGWoL'
+        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_7d70b' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_7d70b.'
+         /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/collect2 -plugin /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/liblto_plugin.so -plugin-opt=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/lto-wrapper -plugin-opt=-fresolution=/scratch_local/cciwhHxb.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --eh-frame-hdr -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_7d70b /lib/../lib64/crt1.o /lib/../lib64/crti.o /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/crtbegin.o -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64/../lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/../lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib -L/leonardo/prod/opt/compilers/cuda/11.8/none/lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/zlib-1.2.13-noknejuy3uxqyxfetsmtnvb6zna3zaxk/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../.. CMakeFiles/cmTC_7d70b.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/crtend.o /lib/../lib64/crtn.o
+        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_7d70b' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_7d70b.'
+        gmake[1]: Leaving directory '/leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-JdyIhV'
         
       exitCode: 0
   -
     kind: "message-v1"
     backtrace:
-      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake:127 (message)"
-      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "/scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake:127 (message)"
+      - "/scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
       - "CMakeLists.txt:2 (project)"
     message: |
       Parsed CXX implicit include dir info: rv=done
@@ -182,19 +182,19 @@ events:
   -
     kind: "message-v1"
     backtrace:
-      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake:152 (message)"
-      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "/scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeDetermineCompilerABI.cmake:152 (message)"
+      - "/scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
       - "CMakeLists.txt:2 (project)"
     message: |
       Parsed CXX implicit link information:
         link line regex: [^( *|.*[/\\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
-        ignore line: [Change Dir: '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-weGWoL']
+        ignore line: [Change Dir: '/leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-JdyIhV']
         ignore line: []
-        ignore line: [Run Build Command(s): /scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_e716e/fast]
-        ignore line: [/usr/bin/gmake  -f CMakeFiles/cmTC_e716e.dir/build.make CMakeFiles/cmTC_e716e.dir/build]
-        ignore line: [gmake[1]: Entering directory '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-weGWoL']
-        ignore line: [Building CXX object CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o]
-        ignore line: [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++   -v -o CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o -c /scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [Run Build Command(s): /scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_7d70b/fast]
+        ignore line: [/usr/bin/gmake  -f CMakeFiles/cmTC_7d70b.dir/build.make CMakeFiles/cmTC_7d70b.dir/build]
+        ignore line: [gmake[1]: Entering directory '/leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-JdyIhV']
+        ignore line: [Building CXX object CMakeFiles/cmTC_7d70b.dir/CMakeCXXCompilerABI.cpp.o]
+        ignore line: [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++   -v -o CMakeFiles/cmTC_7d70b.dir/CMakeCXXCompilerABI.cpp.o -c /scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp]
         ignore line: [Using built-in specs.]
         ignore line: [COLLECT_GCC=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++]
         ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none]
@@ -203,8 +203,8 @@ events:
         ignore line: [Thread model: posix]
         ignore line: [Supported LTO compression algorithms: zlib zstd]
         ignore line: [gcc version 11.3.0 (Spack GCC) ]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_e716e.dir/']
-        ignore line: [ /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/cc1plus -quiet -v -D_GNU_SOURCE /scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_e716e.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -o /scratch_local/ccnGDD31.s]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_7d70b.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_7d70b.dir/']
+        ignore line: [ /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/cc1plus -quiet -v -D_GNU_SOURCE /scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_7d70b.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -o /scratch_local/ccusnbLK.s]
         ignore line: [GNU C++17 (Spack GCC) version 11.3.0 (x86_64-pc-linux-gnu)]
         ignore line: [	compiled by GNU C version 8.5.0 20210514 (Red Hat 8.5.0-10)  GMP version 6.2.1  MPFR version 4.1.0  MPC version 1.2.1  isl version none]
         ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
@@ -248,15 +248,15 @@ events:
         ignore line: [	compiled by GNU C version 8.5.0 20210514 (Red Hat 8.5.0-10)  GMP version 6.2.1  MPFR version 4.1.0  MPC version 1.2.1  isl version none]
         ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
         ignore line: [Compiler executable checksum: 7f54fa14cd781079d8647a434f86e1e4]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_e716e.dir/']
-        ignore line: [ as -v --64 -o CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o /scratch_local/ccnGDD31.s]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_7d70b.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_7d70b.dir/']
+        ignore line: [ as -v --64 -o CMakeFiles/cmTC_7d70b.dir/CMakeCXXCompilerABI.cpp.o /scratch_local/ccusnbLK.s]
         ignore line: [GNU assembler version 2.30 (x86_64-redhat-linux) using BFD version version 2.30-113.el8]
         ignore line: [COMPILER_PATH=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/]
         ignore line: [LIBRARY_PATH=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64/../lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/../lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/:/leonardo/prod/opt/compilers/cuda/11.8/none/lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/zlib-1.2.13-noknejuy3uxqyxfetsmtnvb6zna3zaxk/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../:/lib/:/usr/lib/]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.']
-        ignore line: [Linking CXX executable cmTC_e716e]
-        ignore line: [/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e716e.dir/link.txt --verbose=1]
-        ignore line: [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -v CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_e716e ]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_7d70b.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_7d70b.dir/CMakeCXXCompilerABI.cpp.']
+        ignore line: [Linking CXX executable cmTC_7d70b]
+        ignore line: [/scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7d70b.dir/link.txt --verbose=1]
+        ignore line: [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -v CMakeFiles/cmTC_7d70b.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_7d70b ]
         ignore line: [Using built-in specs.]
         ignore line: [COLLECT_GCC=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++]
         ignore line: [COLLECT_LTO_WRAPPER=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/lto-wrapper]
@@ -268,13 +268,13 @@ events:
         ignore line: [gcc version 11.3.0 (Spack GCC) ]
         ignore line: [COMPILER_PATH=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/]
         ignore line: [LIBRARY_PATH=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64/../lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/../lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/:/leonardo/prod/opt/compilers/cuda/11.8/none/lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/zlib-1.2.13-noknejuy3uxqyxfetsmtnvb6zna3zaxk/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib/:/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../:/lib/:/usr/lib/]
-        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_e716e' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_e716e.']
-        link line: [ /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/collect2 -plugin /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/liblto_plugin.so -plugin-opt=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/lto-wrapper -plugin-opt=-fresolution=/scratch_local/cclh4meS.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --eh-frame-hdr -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_e716e /lib/../lib64/crt1.o /lib/../lib64/crti.o /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/crtbegin.o -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64/../lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/../lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib -L/leonardo/prod/opt/compilers/cuda/11.8/none/lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/zlib-1.2.13-noknejuy3uxqyxfetsmtnvb6zna3zaxk/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../.. CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/crtend.o /lib/../lib64/crtn.o]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_7d70b' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_7d70b.']
+        link line: [ /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/collect2 -plugin /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/liblto_plugin.so -plugin-opt=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/lto-wrapper -plugin-opt=-fresolution=/scratch_local/cciwhHxb.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --eh-frame-hdr -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_7d70b /lib/../lib64/crt1.o /lib/../lib64/crti.o /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/crtbegin.o -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64/../lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/../lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib -L/leonardo/prod/opt/compilers/cuda/11.8/none/lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/zlib-1.2.13-noknejuy3uxqyxfetsmtnvb6zna3zaxk/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64 -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpc-1.2.1-ndktnvrbytlmmfwre4fs5qbyzzso7fxb/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib -L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../.. CMakeFiles/cmTC_7d70b.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/crtend.o /lib/../lib64/crtn.o]
           arg [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/collect2] ==> ignore
           arg [-plugin] ==> ignore
           arg [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/liblto_plugin.so] ==> ignore
           arg [-plugin-opt=/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/libexec/gcc/x86_64-pc-linux-gnu/11.3.0/lto-wrapper] ==> ignore
-          arg [-plugin-opt=-fresolution=/scratch_local/cclh4meS.res] ==> ignore
+          arg [-plugin-opt=-fresolution=/scratch_local/cciwhHxb.res] ==> ignore
           arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
           arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
           arg [-plugin-opt=-pass-through=-lc] ==> ignore
@@ -286,7 +286,7 @@ events:
           arg [-dynamic-linker] ==> ignore
           arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
           arg [-o] ==> ignore
-          arg [cmTC_e716e] ==> ignore
+          arg [cmTC_7d70b] ==> ignore
           arg [/lib/../lib64/crt1.o] ==> obj [/lib/../lib64/crt1.o]
           arg [/lib/../lib64/crti.o] ==> obj [/lib/../lib64/crti.o]
           arg [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/crtbegin.o] ==> obj [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/crtbegin.o]
@@ -306,7 +306,7 @@ events:
           arg [-L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib] ==> dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/mpfr-4.1.0-w4ofd2ll4ftu53yawc4d3sssrmeo2huc/lib]
           arg [-L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib] ==> dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gmp-6.2.1-i7u7hnaqpscmi2x4ffsz6so6fftszm22/lib]
           arg [-L/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../..] ==> dir [/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0/../../..]
-          arg [CMakeFiles/cmTC_e716e.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+          arg [CMakeFiles/cmTC_7d70b.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
           arg [-lstdc++] ==> lib [stdc++]
           arg [-lm] ==> lib [m]
           arg [-lgcc_s] ==> lib [gcc_s]
@@ -344,19 +344,19 @@ events:
   -
     kind: "try_compile-v1"
     backtrace:
-      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
-      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
-      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CheckCXXCompilerFlag.cmake:34 (cmake_check_compiler_flag)"
-      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/pybind11/share/cmake/pybind11/pybind11Common.cmake:276 (check_cxx_compiler_flag)"
-      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/pybind11/share/cmake/pybind11/pybind11Common.cmake:318 (_pybind11_return_if_cxx_and_linker_flags_work)"
-      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/pybind11/share/cmake/pybind11/pybind11Common.cmake:385 (_pybind11_generate_lto)"
-      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/pybind11/share/cmake/pybind11/pybind11Config.cmake:250 (include)"
+      - "/scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/Internal/CheckSourceCompiles.cmake:101 (try_compile)"
+      - "/scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/CheckCXXCompilerFlag.cmake:34 (cmake_check_compiler_flag)"
+      - "/scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/pybind11/share/cmake/pybind11/pybind11Common.cmake:276 (check_cxx_compiler_flag)"
+      - "/scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/pybind11/share/cmake/pybind11/pybind11Common.cmake:318 (_pybind11_return_if_cxx_and_linker_flags_work)"
+      - "/scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/pybind11/share/cmake/pybind11/pybind11Common.cmake:385 (_pybind11_generate_lto)"
+      - "/scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/pybind11/share/cmake/pybind11/pybind11Config.cmake:250 (include)"
       - "CMakeLists.txt:9 (find_package)"
     checks:
       - "Performing Test HAS_FLTO"
     directories:
-      source: "/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-ghaMan"
-      binary: "/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-ghaMan"
+      source: "/leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-UySTyA"
+      binary: "/leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-UySTyA"
     cmakeVariables:
       CMAKE_CXX_FLAGS: " -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi"
       CMAKE_CXX_FLAGS_DEBUG: "-g"
@@ -365,16 +365,16 @@ events:
       variable: "HAS_FLTO"
       cached: true
       stdout: |
-        Change Dir: '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-ghaMan'
+        Change Dir: '/leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-UySTyA'
         
-        Run Build Command(s): /scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_743e9/fast
-        /usr/bin/gmake  -f CMakeFiles/cmTC_743e9.dir/build.make CMakeFiles/cmTC_743e9.dir/build
-        gmake[1]: Entering directory '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-ghaMan'
-        Building CXX object CMakeFiles/cmTC_743e9.dir/src.cxx.o
-        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++ -DHAS_FLTO  -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi    -flto -fno-fat-lto-objects -o CMakeFiles/cmTC_743e9.dir/src.cxx.o -c /leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-ghaMan/src.cxx
-        Linking CXX executable cmTC_743e9
-        /scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_743e9.dir/link.txt --verbose=1
-        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi  CMakeFiles/cmTC_743e9.dir/src.cxx.o -o cmTC_743e9  -flto 
+        Run Build Command(s): /scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_66d92/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_66d92.dir/build.make CMakeFiles/cmTC_66d92.dir/build
+        gmake[1]: Entering directory '/leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-UySTyA'
+        Building CXX object CMakeFiles/cmTC_66d92.dir/src.cxx.o
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++ -DHAS_FLTO  -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi    -flto -fno-fat-lto-objects -o CMakeFiles/cmTC_66d92.dir/src.cxx.o -c /leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-UySTyA/src.cxx
+        Linking CXX executable cmTC_66d92
+        /scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_66d92.dir/link.txt --verbose=1
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi  CMakeFiles/cmTC_66d92.dir/src.cxx.o -o cmTC_66d92  -flto 
         /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `ompi_mpi_op_sum'
         /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `ompi_mpi_char'
         /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `MPI_Bcast'
@@ -401,22 +401,22 @@ events:
         /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `MPI_Comm_free'
         /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/fftw-3.3.10-aqomamymhcna6zjrd6nlrync7oag4fkg/lib/libfftw3_mpi.so: undefined reference to `MPI_Comm_split'
         collect2: error: ld returned 1 exit status
-        gmake[1]: *** [CMakeFiles/cmTC_743e9.dir/build.make:99: cmTC_743e9] Error 1
-        gmake[1]: Leaving directory '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-ghaMan'
-        gmake: *** [Makefile:127: cmTC_743e9/fast] Error 2
+        gmake[1]: *** [CMakeFiles/cmTC_66d92.dir/build.make:99: cmTC_66d92] Error 1
+        gmake[1]: Leaving directory '/leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-UySTyA'
+        gmake: *** [Makefile:127: cmTC_66d92/fast] Error 2
         
       exitCode: 2
   -
     kind: "try_compile-v1"
     backtrace:
-      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/FindMPI.cmake:1278 (try_compile)"
-      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/FindMPI.cmake:1322 (_MPI_try_staged_settings)"
-      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/FindMPI.cmake:1645 (_MPI_check_lang_works)"
+      - "/scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/FindMPI.cmake:1278 (try_compile)"
+      - "/scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/FindMPI.cmake:1322 (_MPI_try_staged_settings)"
+      - "/scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/FindMPI.cmake:1645 (_MPI_check_lang_works)"
       - "CMakeLists.txt:10 (find_package)"
     description: "The MPI test test_mpi for CXX in mode normal"
     directories:
-      source: "/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-kdCsYn"
-      binary: "/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-kdCsYn"
+      source: "/leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-glSuak"
+      binary: "/leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-glSuak"
     cmakeVariables:
       CMAKE_CXX_FLAGS: " -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi"
       CMAKE_CXX_FLAGS_DEBUG: "-g"
@@ -425,29 +425,29 @@ events:
       variable: "MPI_RESULT_CXX_test_mpi_normal"
       cached: true
       stdout: |
-        Change Dir: '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-kdCsYn'
+        Change Dir: '/leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-glSuak'
         
-        Run Build Command(s): /scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_674e1/fast
-        /usr/bin/gmake  -f CMakeFiles/cmTC_674e1.dir/build.make CMakeFiles/cmTC_674e1.dir/build
-        gmake[1]: Entering directory '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-kdCsYn'
-        Building CXX object CMakeFiles/cmTC_674e1.dir/test_mpi.cpp.o
-        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -isystem /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/include -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi  -pthread -o CMakeFiles/cmTC_674e1.dir/test_mpi.cpp.o -c /leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-kdCsYn/test_mpi.cpp
-        Linking CXX executable cmTC_674e1
-        /scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_674e1.dir/link.txt --verbose=1
-        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi  -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0 -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64 -Wl,-rpath -Wl,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib -pthread CMakeFiles/cmTC_674e1.dir/test_mpi.cpp.o -o cmTC_674e1  /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib/libmpi.so 
-        gmake[1]: Leaving directory '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-kdCsYn'
+        Run Build Command(s): /scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_2f3cd/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_2f3cd.dir/build.make CMakeFiles/cmTC_2f3cd.dir/build
+        gmake[1]: Entering directory '/leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-glSuak'
+        Building CXX object CMakeFiles/cmTC_2f3cd.dir/test_mpi.cpp.o
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -isystem /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/include -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi  -pthread -o CMakeFiles/cmTC_2f3cd.dir/test_mpi.cpp.o -c /leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-glSuak/test_mpi.cpp
+        Linking CXX executable cmTC_2f3cd
+        /scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2f3cd.dir/link.txt --verbose=1
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi  -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0 -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64 -Wl,-rpath -Wl,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib -pthread CMakeFiles/cmTC_2f3cd.dir/test_mpi.cpp.o -o cmTC_2f3cd  /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib/libmpi.so 
+        gmake[1]: Leaving directory '/leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-glSuak'
         
       exitCode: 0
   -
     kind: "try_compile-v1"
     backtrace:
-      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/FindMPI.cmake:1278 (try_compile)"
-      - "/scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/FindMPI.cmake:1672 (_MPI_try_staged_settings)"
+      - "/scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/FindMPI.cmake:1278 (try_compile)"
+      - "/scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/FindMPI.cmake:1672 (_MPI_try_staged_settings)"
       - "CMakeLists.txt:10 (find_package)"
     description: "The MPI test test_mpi for CXX in mode MPICXX"
     directories:
-      source: "/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-15wKNy"
-      binary: "/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-15wKNy"
+      source: "/leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-OhJopD"
+      binary: "/leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-OhJopD"
     cmakeVariables:
       CMAKE_CXX_FLAGS: " -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi"
       CMAKE_CXX_FLAGS_DEBUG: "-g"
@@ -456,84 +456,17 @@ events:
       variable: "MPI_RESULT_CXX_test_mpi_MPICXX"
       cached: true
       stdout: |
-        Change Dir: '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-15wKNy'
+        Change Dir: '/leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-OhJopD'
         
-        Run Build Command(s): /scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_2130a/fast
-        /usr/bin/gmake  -f CMakeFiles/cmTC_2130a.dir/build.make CMakeFiles/cmTC_2130a.dir/build
-        gmake[1]: Entering directory '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-15wKNy'
-        Building CXX object CMakeFiles/cmTC_2130a.dir/test_mpi.cpp.o
-        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -isystem /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/include -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi  -pthread -o CMakeFiles/cmTC_2130a.dir/test_mpi.cpp.o -c /leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-15wKNy/test_mpi.cpp
-        Linking CXX executable cmTC_2130a
-        /scratch_local/pip-build-env-z6blw6zy/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2130a.dir/link.txt --verbose=1
-        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi  -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0 -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64 -Wl,-rpath -Wl,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib -pthread CMakeFiles/cmTC_2130a.dir/test_mpi.cpp.o -o cmTC_2130a  /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib/libmpi.so 
-        gmake[1]: Leaving directory '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-15wKNy'
-        
-      exitCode: 0
-...
-
----
-events:
-  -
-    kind: "try_compile-v1"
-    backtrace:
-      - "/scratch_local/pip-build-env-jx8mr87o/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/FindMPI.cmake:1278 (try_compile)"
-      - "/scratch_local/pip-build-env-jx8mr87o/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/FindMPI.cmake:1322 (_MPI_try_staged_settings)"
-      - "/scratch_local/pip-build-env-jx8mr87o/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/FindMPI.cmake:1645 (_MPI_check_lang_works)"
-      - "CMakeLists.txt:10 (find_package)"
-    description: "The MPI test test_mpi for CXX in mode normal"
-    directories:
-      source: "/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-RwEcV8"
-      binary: "/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-RwEcV8"
-    cmakeVariables:
-      CMAKE_CXX_FLAGS: " -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi"
-      CMAKE_CXX_FLAGS_DEBUG: "-g"
-      CMAKE_EXE_LINKER_FLAGS: ""
-    buildResult:
-      variable: "MPI_RESULT_CXX_test_mpi_normal"
-      cached: true
-      stdout: |
-        Change Dir: '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-RwEcV8'
-        
-        Run Build Command(s): /scratch_local/pip-build-env-jx8mr87o/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_c362e/fast
-        /usr/bin/gmake  -f CMakeFiles/cmTC_c362e.dir/build.make CMakeFiles/cmTC_c362e.dir/build
-        gmake[1]: Entering directory '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-RwEcV8'
-        Building CXX object CMakeFiles/cmTC_c362e.dir/test_mpi.cpp.o
-        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -isystem /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/include -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi  -pthread -o CMakeFiles/cmTC_c362e.dir/test_mpi.cpp.o -c /leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-RwEcV8/test_mpi.cpp
-        Linking CXX executable cmTC_c362e
-        /scratch_local/pip-build-env-jx8mr87o/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c362e.dir/link.txt --verbose=1
-        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi  -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0 -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64 -Wl,-rpath -Wl,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib -pthread CMakeFiles/cmTC_c362e.dir/test_mpi.cpp.o -o cmTC_c362e  /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib/libmpi.so 
-        gmake[1]: Leaving directory '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-RwEcV8'
-        
-      exitCode: 0
-  -
-    kind: "try_compile-v1"
-    backtrace:
-      - "/scratch_local/pip-build-env-jx8mr87o/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/FindMPI.cmake:1278 (try_compile)"
-      - "/scratch_local/pip-build-env-jx8mr87o/overlay/lib/python3.11/site-packages/cmake/data/share/cmake-3.27/Modules/FindMPI.cmake:1672 (_MPI_try_staged_settings)"
-      - "CMakeLists.txt:10 (find_package)"
-    description: "The MPI test test_mpi for CXX in mode MPICXX"
-    directories:
-      source: "/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-OiePLQ"
-      binary: "/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-OiePLQ"
-    cmakeVariables:
-      CMAKE_CXX_FLAGS: " -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi"
-      CMAKE_CXX_FLAGS_DEBUG: "-g"
-      CMAKE_EXE_LINKER_FLAGS: ""
-    buildResult:
-      variable: "MPI_RESULT_CXX_test_mpi_MPICXX"
-      cached: true
-      stdout: |
-        Change Dir: '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-OiePLQ'
-        
-        Run Build Command(s): /scratch_local/pip-build-env-jx8mr87o/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_7d099/fast
-        /usr/bin/gmake  -f CMakeFiles/cmTC_7d099.dir/build.make CMakeFiles/cmTC_7d099.dir/build
-        gmake[1]: Entering directory '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-OiePLQ'
-        Building CXX object CMakeFiles/cmTC_7d099.dir/test_mpi.cpp.o
-        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -isystem /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/include -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi  -pthread -o CMakeFiles/cmTC_7d099.dir/test_mpi.cpp.o -c /leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-OiePLQ/test_mpi.cpp
-        Linking CXX executable cmTC_7d099
-        /scratch_local/pip-build-env-jx8mr87o/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7d099.dir/link.txt --verbose=1
-        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi  -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0 -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64 -Wl,-rpath -Wl,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib -pthread CMakeFiles/cmTC_7d099.dir/test_mpi.cpp.o -o cmTC_7d099  /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib/libmpi.so 
-        gmake[1]: Leaving directory '/leonardo/home/userexternal/mrigo000/jaxLDL/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-OiePLQ'
+        Run Build Command(s): /scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_52fa6/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_52fa6.dir/build.make CMakeFiles/cmTC_52fa6.dir/build
+        gmake[1]: Entering directory '/leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-OhJopD'
+        Building CXX object CMakeFiles/cmTC_52fa6.dir/test_mpi.cpp.o
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -isystem /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/include -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi  -pthread -o CMakeFiles/cmTC_52fa6.dir/test_mpi.cpp.o -c /leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-OhJopD/test_mpi.cpp
+        Linking CXX executable cmTC_52fa6
+        /scratch_local/pip-build-env-seoj50w3/overlay/lib/python3.11/site-packages/cmake/data/bin/cmake -E cmake_link_script CMakeFiles/cmTC_52fa6.dir/link.txt --verbose=1
+        /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/bin/g++  -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi  -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib/gcc/x86_64-pc-linux-gnu/11.3.0 -Wl,-rpath,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-8.5.0/gcc-11.3.0-tm6phj7wkcw7cuy6gjixemkvh5x2mhza/lib64 -Wl,-rpath -Wl,/leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib -pthread CMakeFiles/cmTC_52fa6.dir/test_mpi.cpp.o -o cmTC_52fa6  /leonardo/prod/spack/03/install/0.19/linux-rhel8-icelake/gcc-11.3.0/openmpi-4.1.4-si334jjzldoxyl3jbbb3cf6legzshlqn/lib/libmpi.so 
+        gmake[1]: Leaving directory '/leonardo/home/userexternal/mrigo000/jaxLDL/online/build/temp.linux-x86_64-cpython-311/CMakeFiles/CMakeScratch/TryCompile-OhJopD'
         
       exitCode: 0
 ...
