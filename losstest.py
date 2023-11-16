@@ -12,7 +12,7 @@ import tracemalloc
 
 tracemalloc.start()
 
-Ngrid=50
+Ngrid=20
 
 pm = PMesh(Ngrid, 205.)
 comm = pm.comm
@@ -56,3 +56,4 @@ stats = snapshot.statistics('lineno')
 total = sum(stat.size for stat in stats)
 if rank == 0:
     print("Allocated size: %.1f KiB" % (total / 1024))
+

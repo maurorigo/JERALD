@@ -147,4 +147,19 @@ class PMesh(object):
 
         Kx, Ky, Kz = jnp.meshgrid(kx, ky, kz, indexing='ij')
         return jnp.stack((Kx, Ky, Kz), axis=-1)
+    
+    def preview(self, localfield, fullsize=None, comm=None):
+        """
+        Collects local fields from all ranks to the root rank and
+        returns the full field (as a numpy array)
+        """
+        if fullsize==None:
+            fullsize = self.Nmesh
 
+        if comm==None:
+            comm = self.comm
+
+        fullfield = self.comm.allgather(localfield)
+        out = np.concatenate(fullfield).reshape(fullsize)
+        return out
+    
