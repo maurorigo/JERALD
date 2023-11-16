@@ -9,11 +9,10 @@ jaxLDL is the [JAX](https://github.com/google/jax) implementation of the [code](
 The package is based on JAX and [mpi4jax](https://github.com/mpi4jax/mpi4jax/tree/master), and it uses MPI to implement parallel Cloud-In-Cell (CIC) painting and interpolation algorithms as well as parallel forward and backward Fourier transforms via [FFTW](https://www.fftw.org/).
 
 ## Installation
-The package can be built using
+To install the package, create a folder named ```src``` first. Then the package can be built using
 ```
 pip install .
 ```
-You may need to remove the current build folder first.
 On the C++ side, installation requires FFTW with MPI support (which should generally be available on clusters), while on the Python side it requires JAX and mpi4jax (see the related READMEs for installation), as well as [pybind11](https://github.com/pybind/pybind11) for binding C++ code to Python.
 CUDA support isn't required, as for the time being the package only runs on CPU. In the future this may change.
 On a cluster, I suggest loading any MPI modules and then installing mpi4jax via pip, to allow mpi4py to build on the existing MPI installation.
