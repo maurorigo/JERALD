@@ -109,8 +109,7 @@ class PMesh(object):
 
     def mesh_coordinates(self):
         """
-        Computes grid coordinates as a (Nx, Ny, Nz, 3) array
-        !!! OUTDATED !!!
+        Computes global grid coordinates as a (Nmesh[0], Nmesh[1], Nmesh[2], 3) array
         """
         x = jnp.arange(self.Nmesh[0]) / self.Nmesh[0] * self.BoxSize[0]
         y = jnp.arange(self.Nmesh[1]) / self.Nmesh[1] * self.BoxSize[1]
@@ -122,15 +121,14 @@ class PMesh(object):
 
     def flattened_coordinates(self):
         """
-        Computes grid coordinates as a (Nx*Ny*Nz, 3) array
-        !!! OUTDATED !!!
+        Computes global grid coordinates as a (Nmesh[0]*Nmesh[1]*Nmesh[2], 3) array
         """
         cellsz = self.BoxSize / self.Nmesh
         out = jnp.empty((self.Nmesh.prod(), 3))
         lenrange = jnp.arange(self.Nmesh.prod())
         out = out.at[:, 2].set(jnp.mod(lenrange, self.Nmesh[2]) * cellsz[2])
-        out = out.at[:, 1].set(jnp.mod(jnp.floor(lenrange / self.Nmesh[2]), self.Nmesh[1]) * cellsz[1])
-        out = out.at[:, 0].set(jnp.mod(jnp.floor(lenrange / self.Nmesh[2] / self.Nmesh[1]), self.Nmesh[0]) * cellsz[1])
+        out = out.at[:, 1].set(jnp.mod(lenrange // self.Nmesh[2], self.Nmesh[1]) * cellsz[1])
+        out = out.at[:, 0].set(jnp.mod(lenrange // (self.Nmesh[2] * self.Nmesh[1]), self.Nmesh[0]) * cellsz[0])
 
         return out
     
