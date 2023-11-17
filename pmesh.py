@@ -30,8 +30,8 @@ class PMesh(object):
             self.BoxSize = jnp.array(BoxSize)
 
         self.comm = comm
-        self.commrank = self.comm.Get_rank()
-        self.commsize = self.comm.Get_size()
+        self.commrank = self.comm.rank
+        self.commsize = self.comm.size
 
         # Compute fft partitioning of data (local x length and local start)
         self.localL, self.localS = jpo.buildplan(self.Nmesh, comm)
@@ -148,8 +148,7 @@ class PMesh(object):
     
     def preview(self, localfield, fullsize=None, comm=None):
         """
-        Collects local fields from all ranks to the root rank and
-        returns the full field (as a numpy array)
+        Collects local fields from all ranks and returns the full field (as a numpy array)
         """
         if fullsize==None:
             fullsize = self.Nmesh

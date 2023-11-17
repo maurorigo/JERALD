@@ -32,23 +32,25 @@ Nstep = 2
 param = jnp.array([100000., 0.5, 1., 8., 0.]*Nstep + [1., 1., 0.])
 target = jnp.array(np.random.rand(Ngrid, Ngrid, Ngrid))
 # Local target
-target = target[pm.localS:pm.localS+pm.localL, :, :]
+targetl = target[pm.localS:pm.localS+pm.localL, :, :]
 model = LDLModel(pm=pm)
 
 model.set_loss_params(Nstep, baryon=True)
-loss = model.loss(param, pos, target)
+# Compute a first time for JIT compilation
+loss = model.loss(param, pos, targetl)
 
 tim = time.time()
-loss = model.loss(param, pos, target)
+loss = model.loss(param, pos, targetl)
 if rank==0:
-    print(f"Loss computed in {((time.time()-tim)*1000):.3f}ms")
+    print(f"Loss alone computed in {((time.time()-tim)*1000):.3f}ms")
     print(f"Loss: {loss}")
 
-grad = model.loss_gradient(param, pos, target)
+loss, grad = model.loss_and_grad(param, pos, targetl)
 tim = time.time()
-grad = model.loss_gradient(param, pos, target)
+loss, grad = model.loss_and_grad(param, pos, targetl)
 if rank==0:
-    print(f"Gradient computed in {((time.time()-tim)*1000):.3f}ms")
+    print(f"Loss with gradient computed in {((time.time()-tim)*1000):.3f}ms")
+    print("Gradient:")
     print(grad)
 
 snapshot = tracemalloc.take_snapshot()
