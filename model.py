@@ -5,7 +5,7 @@ from functools import partial
 from jax import jit, vmap, grad, value_and_grad, custom_vjp
 from mpi4py import MPI
 import mpi4jax
-
+import gc
 
 @custom_vjp
 def c2f(obj):
@@ -50,25 +50,56 @@ def allbcast_bwd(comm, res, v):
 allbcast.defvjp(allbcast_fwd, allbcast_bwd)
 
 
+@jax.tree_util.register_pytree_node_class
 class LDLModel(object):
     """
     Model for Lagrangian Deep Learning
     """
-
-    def __init__(self, pm):
+    def __init__(self, X, target, pm, Nstep=1, baryon=False, n=1., index=1., L1=None, field2=None, masktrain=None, maskvalid=None):
         """
             pm (PMesh object): PMesh that performs fft, paint, readout
+            X (array-like): (?, 3) array of local input positions
+            target (array-like): (?, Ny, Nz) array of local target map
+            Nstep (int): Number of displacement steps
+            baryon (bool): Baryonic observables or no
+            n (float): Smoothing kernel exponent, see LDL paper
+            index (float): Exponent for LDL map, see LDL paper
+            field2 (array-like): Additional (?, Ny, Nz) map to be multiplied to LDL output
+            masktrain (array-like): (?, Ny, Nz) local array of 0s and 1s for selecting training pixels
+            maskvalid (array-like): As above, for validation
+            L1 (bool): L1 or L2 norm loss
+
+            NOTE: initializing everything here to make compilation of class faster via pytrees,
+            avoiding constant folding of huge arrays which can lead to massive slowdowns.
         """
         self.pm = pm
-        self.ready = False
+        self.X = X
+        self.target = target
+        # Useful later
+        self.kvals = self.pm.compute_wavevectors()
+        self.knorms = jnp.linalg.norm(self.kvals, axis=-1)
 
+        # Loss parameters
+        self.Nstep = Nstep
+        self.baryon = baryon
+        self.n = n
+        self.index = index
+        self.field2 = field2
+        self.masktrain = masktrain if masktrain is not None else None
+        self.maskvalid = maskvalid if maskvalid is not None else None
+        if L1 is None:
+            self.L1 = baryon # Paper uses True for baryons and False otherwise
+        else:
+            self.L1 = L1
+
+    @jit
     def potential_gradient(self, params, X):
         """
-        Computes gradient of LDL potential following code from https://github.com/biweidai/LDL/tree/master
+        Computes gradient of LDL potential following https://github.com/biweidai/LDL/tree/master
 
         Parameters:
             params (tuple): Parameters of LDL
-            X (array-like): (N, 3) array representing particle positions, needed to compute density
+            X (array-like): (N, 3) array representing particle positions
 
         Returns:
             Gradient of LDL potential with shape (Nx, Ny, Nz, 3)
@@ -87,13 +118,7 @@ class LDLModel(object):
         kl = allbcast(kl, self.pm.comm)
         kh = allbcast(kh, self.pm.comm)
         n = allbcast(n, self.pm.comm)
-        kvals = self.pm.kvals # (Nx, Ny, Nz, 3)
-        knorms = self.pm.knorms # (Nx, Ny, Nz)
-        # Using the next two lines instead of the two above makes compilation faster (and not give
-        # some warnings) on small numbers of MPI ranks.
-        #kvals = self.pm.compute_wavevectors()
-        #knorms = jnp.linalg.norm(kvals, axis=-1) 
-        knorms = jnp.where(knorms==0, 1e-8, knorms) # Correct norms that are null
+        knorms = jnp.where(self.knorms==0, 1e-8, self.knorms) # Correct norms that are null
         filterk = -jnp.exp(-knorms**2/kl**2) * jnp.exp(-kh**2/knorms**2) * knorms**n # Idk why - sign, but it's just a multiplicative factor
         filterk = c2f(filterk) # Compensates the fact that we only have ~half of the fft (for back pass)
 
@@ -103,7 +128,7 @@ class LDLModel(object):
         # Note that we only have the values at some grid points, so we need to use a finite difference approach (see overleaf)
         # Compare the FT of this (convolution) with an order 2 finite difference formula (https://en.wikipedia.org/wiki/Numerical_differentiation)
         step = self.pm.BoxSize / self.pm.Nmesh
-        coeff = 1 / (6 * step) * (8 * jnp.sin(kvals * step) - jnp.sin(2 * kvals * step)) # (Nx, Ny, Nz, 3)
+        coeff = 1 / (6 * step) * (8 * jnp.sin(self.kvals * step) - jnp.sin(2 * self.kvals * step)) # (Nx, Ny, Nz, 3)
 
         # This gives gradient at grid positions, but we need it at particle positions, so we interpolate (see overleaf)
         potgradk = -1j * coeff[:, :, :, 0] * potk # x component (using same array to save memory)
@@ -118,13 +143,15 @@ class LDLModel(object):
             self.pm.readout(X, potgrady),
             self.pm.readout(X, potgradz)), axis=-1)
     
-    def displace(self, params, X, Nstep=1):
+    @partial(jit, static_argnums=3)
+    def displace(self, params, X, Nstep):
         """
         Displaces particles according to LDL model.
 
         Parameters:
             params (array-like): Parameters for LDL
-            X: (array-like): Particle positions (divided into different ranks)
+            X (array-like): Particle positions (divided into different ranks)
+            Nstep (int): Number of displacement layers
         
         Returns:
             Displaced particle positions
@@ -132,7 +159,7 @@ class LDLModel(object):
 
         sz, _ = mpi4jax.allreduce(len(X), op=MPI.SUM, comm=self.pm.comm)
         fact = self.pm.Nmesh.prod() / sz # Normalization for density
-
+        
         for i in range(Nstep):
             
             alpha = params[5*i]
@@ -152,8 +179,8 @@ class LDLModel(object):
         # Just ReLU in JAX
         return jnp.where(x >= 0, x, 0)
 
-    @partial(jit, static_argnums=(0, 3, 4))
-    def LDL(self, params, X, Nstep=1, baryon=False):
+    @partial(jit, static_argnums=(3, 4))
+    def LDL(self, params, X, Nstep, baryon):
 
         sz, _ = mpi4jax.allreduce(len(X), op=MPI.SUM, comm=self.pm.comm)
         fact = self.pm.Nmesh.prod() / sz
@@ -176,63 +203,32 @@ class LDLModel(object):
         else:
             return delta
 
-    def set_loss_params(self, Nstep, baryon=False, n=1., index=1., field2=None, masktrain=None, maskvalid=None, L1=None):
-        """
-        Just sets some variables for the loss function
-
-        Parameters:
-            Nstep (int): Number of displacement steps
-            baryon (bool): Baryonic observables or no
-            n (float): Smoothing kernel exponent, see LDL paper
-            index (float): Exponent for LDL map, see LDL paper
-            field2 (array-like): Additional (Nx, Ny, Nz) map to be multiplied to LDL output for combined observables
-            masktrain (array-like): (Nx, Ny, Nz) array of zeros and ones for selecting training pixels
-            maskvalid (array-like): As above, for validation
-            L1 (bool): L1 or L2 norm loss
-        """
-        self.ready = True
-        self.Nstep = Nstep
-        self.baryon = baryon
-        self.n = n
-        self.index = index
-        self.field2 = field2
-        # Store the local parts of the masks
-        self.masktrain = masktrain[self.pm.fftss[0]:self.pm.fftss[1], :, :] if masktrain is not None else None
-        self.maskvalid = maskvalid[self.pm.fftss[0]:self.pm.fftss[1], :, :] if maskvalid is not None else None
-        if L1 is None:
-            self.L1 = baryon # Paper uses True for baryons and False otherwise
-        else:
-            self.L1 = L1
-
-    @partial(jit, static_argnums=(0))
-    def _loss(self, params, X, target):
+    @jit
+    def loss(self, params):
         """
         LDL loss function
-        No validation, could be faster if validation is not needed)
+        No validation, could be much faster if validation is not needed
 
         Parameters:
             params (array-like): Parameters of LDL model
-            X (array-like): (N, 3) array representing input particle positions
-            target (array-like): (?, Ny, Nz) LOCAL target map
 
         Returns:
             loss (float): LDL model loss
         """
 
         # Compute the LDL map
-        F = self.LDL(params, X, Nstep=self.Nstep, baryon=self.baryon) ** self.index
+        F = self.LDL(params, self.X, Nstep=self.Nstep, baryon=self.baryon) ** self.index
 
         # Optionally multiply by second field
         if self.field2 is not None:
             F = F * self.field2
 
         # Residue field
-        residue = F - target
+        residue = F - self.target
 
-        #smooth the field
-        knorms = self.pm.knorms
+        # Smooth the field
         # !!! NO C2F HERE AS PER ORIGINAL CODE !!!
-        smoothingkernel = jnp.where(knorms==0, 1., knorms**(-self.n) + 1.)
+        smoothingkernel = jnp.where(self.knorms==0, 1., self.knorms**(-self.n) + 1.)
         residuek = self.pm.r2c(residue)
         residuek *= smoothingkernel
         residue = jnp.abs(self.pm.c2r(residuek))
@@ -254,45 +250,34 @@ class LDLModel(object):
         loss, _ = mpi4jax.allreduce(loss, op=MPI.SUM, comm=self.pm.comm)
         Npixel, _ = mpi4jax.allreduce(Npixel, op=MPI.SUM, comm=self.pm.comm)
         
+        gc.collect() # Collect garbage
         return loss / Npixel
 
-    def loss(self, params, X, target):
-        # Loss with exception handling, see _loss for the parameters
-        if not self.ready:
-            raise Exception("Cannot compute loss before setting its parameters.")
+    def loss_grad(self, params):
+        out = grad(self.loss)(params)
+        gc.collect()
+        return out
 
-        return self._loss(params, X, target)
+    def loss_and_grad(self, params):
+        out1, out2 = value_and_grad(self.loss)(params)
+        gc.collect()
+        return out1, out2
 
-    def loss_grad(self, params, X, target):
-        # Gradient of loss function with exception handling, see _loss for the parameters
-        if not self.ready:
-            raise Exception("Cannot compute loss gradient before setting loss parameters.")
-
-        return grad(self._loss, argnums=0)(params, X, target)
-
-    def loss_and_grad(self, params, X, target):
-        # Loss and its gradient with exception handling, see _loss for the parameters
-        if not self.ready:
-            raise Exception("Cannot compute loss and gradient before setting loss parameters.")
-
-        return value_and_grad(self._loss, argnums=0)(params, X, target)
-
-    def _lossv(self, params, X, target):
+    @jit
+    def lossv(self, params):
         """
         Same as above, but if validation mask was provided int set_loss_params,
         also computes validation loss and stores it as a class variable.
-        NOTE: could be much slower than loss above
         """
 
-        F = self.LDL(params, X, Nstep=self.Nstep, baryon=self.baryon) ** self.index
+        F = self.LDL(params, self.X, Nstep=self.Nstep, baryon=self.baryon) ** self.index
 
         if self.field2 is not None:
             F = F * self.field2
 
-        residue = F - target
+        residue = F - self.target
 
-        knorms = self.pm.knorms
-        smoothingkernel = jnp.where(knorms==0, 1., knorms**(-self.n) + 1.)
+        smoothingkernel = jnp.where(self.knorms==0, 1., self.knorms**(-self.n) + 1.)
         residuek = self.pm.r2c(residue)
         residuek *= smoothingkernel
         residue = jnp.abs(self.pm.c2r(residuek))
@@ -323,31 +308,29 @@ class LDLModel(object):
             Npixelv, _ = mpi4jax.allreduce(Npixelv, op=MPI.SUM, comm=self.pm.comm)
             self.lossvalid = lossv / Npixelv
 
+        gc.collect()
         return loss / Npixel
 
-    def lossv(self, params, X, target):
-        # Loss with exception handling, see _lossv for the parameters
-        if not self.ready:
-            raise Exception("Cannot compute loss before setting its parameters.")
+    def lossv_grad(self, params):
+        out = grad(self.lossv)(params)
+        gc.collect()
+        return out
 
-        return self._lossv(params, X, target)
+    def lossv_and_grad(self, params):
+        out1, out2 = value_and_grad(self.lossv)(params)
+        gc.collect()
+        return out1, out2
+    
+    def tree_flatten(self):
+        children = (self.X, self.target, self.field2, self.masktrain, self.maskvalid)
+        aux_data = (self.pm, self.Nstep, self.baryon, self.n, self.index, self.L1)
+        return (children, aux_data)
 
-    def lossv_grad(self, params, X, target):
-        # Gradient of loss function with exception handling, see _lossv for the parameters
-        if not self.ready:
-            raise Exception("Cannot compute loss gradient before setting loss parameters.")
+    @classmethod
+    def tree_unflatten(cls, aux_data, children):
+        return cls(*(children[:2]), *aux_data, *(children[2:]))
 
-        return grad(self._lossv, argnums=0)(params, X, target)
-
-    def lossv_and_grad(self, params, X, target):
-        # Loss and its gradient with exception handling, see _loss forv the parameters
-        if not self.ready:
-            raise Exception("Cannot compute loss and gradient before setting loss parameters.")
-
-        return value_and_grad(self._lossv, argnums=0)(params, X, target)
-
-
-class RMSprop(object):
+class RMSProp(object):
     """
     RMSprop optimizer class
     """

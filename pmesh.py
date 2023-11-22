@@ -33,6 +33,9 @@ class PMesh(object):
         self.commrank = self.comm.rank
         self.commsize = self.comm.size
 
+        # Initialize decomposition layout
+        jpo.initLayout(self.commsize)
+
         # Compute fft partitioning of data (local x length and local start)
         self.localL, self.localS = jpo.buildplan(self.Nmesh, comm)
         self._Nmesh = (int(self.Nmesh[0]), int(self.Nmesh[1]), int(self.Nmesh[2])) # For kvals
@@ -46,8 +49,8 @@ class PMesh(object):
                 int(self.edges[2, self.commrank, 1] - self.edges[2, self.commrank, 0]))
         
         # Useful for LDL transfer function (might do a void returning function later)
-        self.kvals = self.compute_wavevectors()
-        self.knorms = jnp.linalg.norm(self.kvals, axis=-1) # kvals is (Nx, Ny, Nz)
+        #self.kvals = self.compute_wavevectors()
+        #self.knorms = jnp.linalg.norm(self.kvals, axis=-1) # kvals is (Nx, Ny, Nz)
 
 
     def computeEdges(self):
@@ -79,6 +82,10 @@ class PMesh(object):
             comm = self.comm
 
         return jpo.preadout(pos, mesh, self.Nmesh, boxsize, self.edges, self.paintdims, comm, lyidx)
+    
+    @staticmethod
+    def clean(lyidx=0):
+        return jpo.clean(lyidx)
 
     @partial(jit, static_argnums=0)
     def r2c(self, localreal):
@@ -118,6 +125,18 @@ class PMesh(object):
         out = jnp.stack((X, Y, Z), axis=-1)
 
         return out
+
+    def local_mesh_coordinates(self):
+        """
+        Computes local grid coordinates as a (?, Nmesh[1], Nmesh[2], 3) array
+        """
+        x = jnp.arange(self.Nmesh[0]) / self.Nmesh[0] * self.BoxSize[0]
+        y = jnp.arange(self.Nmesh[1]) / self.Nmesh[1] * self.BoxSize[1]
+        z = jnp.arange(self.Nmesh[2]) / self.Nmesh[2] * self.BoxSize[2]
+        X, Y, Z = jnp.meshgrid(x, y, z, indexing='ij')
+        out = jnp.stack((X, Y, Z), axis=-1)
+
+        return out[self.fftss[0]:self.fftss[1], :, :, :]
 
     def flattened_coordinates(self):
         """

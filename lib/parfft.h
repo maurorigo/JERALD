@@ -79,7 +79,7 @@ void buildplanf(int32_t& L, int32_t& M, int32_t& N, Plannerf* planner, MPI_Comm&
     (*planner).N = N;
 }
 
-void pfft(double*& data, double** realout, double** imagout, Planner& planner){
+void pfft(double*& data, Planner& planner){
     // Forward double fft
     int L = planner.localL;
     int M = planner.M;
@@ -96,16 +96,16 @@ void pfft(double*& data, double** realout, double** imagout, Planner& planner){
     // Run fft
     fftw_execute(planner.planfwd);
 
-    // Save output
-    (*realout) = new double[L*M*(N/2+1)];
+    // Old way to copy output (requires inputs double** realout, double** imagout), now just copy outside
+    /*(*realout) = new double[L*M*(N/2+1)];
     (*imagout) = new double[L*M*(N/2+1)];
     for (int i = 0; i < L*M*(N/2+1); i++){
 	(*realout)[i] = planner.cplx[i][0];
 	(*imagout)[i] = planner.cplx[i][1];
-    }
+    }*/
 }
 
-void pifft(double*& realdata, double*& imagdata, double** out, Planner& planner){
+void pifft(double*& realdata, double*& imagdata, Planner& planner){
     // Backward double fft
     int L = planner.localL;
     int M = planner.M;
@@ -119,18 +119,18 @@ void pifft(double*& realdata, double*& imagdata, double** out, Planner& planner)
     // Run ifft
     fftw_execute(planner.planbwd);
 
-    // Save output
-    (*out) = new double[L*M*N];
+    // Output is saved outside (to use this again, need a double** out input))
+    /*(*out) = new double[L*M*N];
     for (int i = 0; i < L; i++){
         for (int j = 0; j < M; j++){
             for (int k = 0; k < N; k++){
                 (*out)[i*M*N + N*j + k] = planner.real[(i*M + j) * 2*(N/2+1) + k];
             }
         }
-    }
+    }*/
 }
 
-void pfftf(float*& data, float** realout, float** imagout, Plannerf& planner){
+void pfftf(float*& data, Plannerf& planner){
     // Forward float fft
     int L = planner.localL;
     int M = planner.M;
@@ -145,15 +145,16 @@ void pfftf(float*& data, float** realout, float** imagout, Plannerf& planner){
 
     fftwf_execute(planner.planfwd);
 
-    (*realout) = new float[L*M*(N/2+1)];
+    // Old way to copy output (requires inputs float** realout, float** imagout), now just copy outside
+    /*(*realout) = new float[L*M*(N/2+1)];
     (*imagout) = new float[L*M*(N/2+1)];
     for (int i = 0; i < L*M*(N/2+1); i++){
         (*realout)[i] = planner.cplx[i][0];
         (*imagout)[i] = planner.cplx[i][1];
-    }
+    }*/
 }
 
-void pifftf(float*& realdata, float*& imagdata, float** out, Plannerf& planner){
+void pifftf(float*& realdata, float*& imagdata, Plannerf& planner){
     // Backward float fft
     int L = planner.localL;
     int M = planner.M;
@@ -165,14 +166,15 @@ void pifftf(float*& realdata, float*& imagdata, float** out, Plannerf& planner){
 
     fftwf_execute(planner.planbwd);
 
-    (*out) = new float[L*M*N];
+    // Output is saved outside (to use this again, need a float** out input)
+    /*(*out) = new float[L*M*N];
     for (int i = 0; i < L; i++){
         for (int j = 0; j < M; j++){
             for (int k = 0; k < N; k++){
                 (*out)[i*M*N + N*j + k] = planner.real[(i*M + j) * 2*(N/2+1) + k];
             }
         }
-    }
+    }*/
 }
 
 } // Namespace parfft_jax

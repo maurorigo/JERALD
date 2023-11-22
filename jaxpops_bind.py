@@ -1,7 +1,7 @@
 # JAX BINDINGS FOR PARALLEL OPERATIONS
 # Big thanks to https://github.com/dfm/extending-jax/tree/main
 
-__all__ = ["ppaint", "preadout", "buildplan", "pfft", "pifft"]
+__all__ = ["initLayout", "clean", "ppaint", "preadout", "buildplan", "pfft", "pifft"]
 
 from functools import partial
 
@@ -50,11 +50,91 @@ class HashableMPIType:
         return int(to_mpi_ptr(self.wrapped))
 
 
+# |############|
+# | INITLAYOUT |
+# |############|
+# initLayout doesn't actually need a primitive, but for consistency
+def initLayout(commsize, lyidx=0):
+    # Initializes layout with index lyidx.
+    
+    return _initLayout_prim.bind(commsize=commsize, lyidx=lyidx)
+
+def _initLayout_abstract(commsize, lyidx):
+    return (ShapedArray((1, ), np.int32))
+
+def _initLayout_lowering(ctx, commsize, lyidx):
+
+    comm = as_mhlo_constant(commsize, np.int32)
+    lyidx = as_mhlo_constant(lyidx, np.int32)
+
+    out_type = mlir.aval_to_ir_type(ctx.avals_out[0])
+
+    return custom_call(
+        "initLayout",
+        # Output types
+        result_types=[out_type],
+        # Inputs
+        operands=[comm, lyidx],
+    ).results
+
+
+# Register the op
+_initLayout_prim = core.Primitive("initLayout")
+_initLayout_prim.def_impl(partial(xla.apply_primitive, _initLayout_prim))
+_initLayout_prim.def_abstract_eval(_initLayout_abstract)
+
+# Connect the XLA translation rules for JIT compilation
+mlir.register_lowering(_initLayout_prim, _initLayout_lowering, platform="cpu")
+# No need for vjp
+
+
+# |#######|
+# | CLEAN |
+# |#######|
+# clean doesn't actually need a primitive, but for consistency
+def clean(lyidx=0):
+    # Cleans layout and exchanged quantities with index lyidx.
+
+    return _clean_prim.bind(lyidx=lyidx)
+
+def _clean_abstract(lyidx):
+    return (ShapedArray((1, ), np.int32))
+
+def _clean_lowering(ctx, lyidx):
+
+    lyidx = as_mhlo_constant(lyidx, np.int32)
+    out_type = mlir.aval_to_ir_type(ctx.avals_out[0])
+
+    # Different call based on dtype
+    if config.x64_enabled:
+        op_name = "clean_f64"
+    else:
+        op_name = "clean_f32"
+
+    return custom_call(
+        op_name,
+        # Output types
+        result_types=[out_type],
+        # Inputs
+        operands=[lyidx],
+    ).results
+
+
+# Register the op
+_clean_prim = core.Primitive("clean")
+_clean_prim.def_impl(partial(xla.apply_primitive, _clean_prim))
+_clean_prim.def_abstract_eval(_clean_abstract)
+
+# Connect the XLA translation rules for JIT compilation
+mlir.register_lowering(_clean_prim, _clean_lowering, platform="cpu")
+# No need for vjp
+
+
 # |#######|
 # | PAINT |
 # |#######|
-@partial(custom_vjp, nondiff_argnums=(2, 3, 4, 5, 6, 7))
-def ppaint(pos, mass, Nmesh, BoxSize, edges, dims, comm, lyidx=0):
+@partial(custom_vjp, nondiff_argnums=(2, 3, 4, 5, 6, 7, 8))
+def ppaint(pos, mass, Nmesh, BoxSize, edges, dims, comm, lyidx=0, bwd=False):
     """
     JAX binding of parallel Cloud-In-Cell (CIC) painter in C++.
     Could do the type hinting at some point
@@ -69,6 +149,7 @@ def ppaint(pos, mass, Nmesh, BoxSize, edges, dims, comm, lyidx=0):
         dims (ArrayLike): Local dimensions of the output field
         comm (MPI_Comm): MPI communicator
         lyidx (int): Layout decomposition index (in case there are multiple, up to 4)
+        bwd (bool): whether it's part of a readout derivative or not (if yes, use pre-existing layout)
     
     Returns:
         out (ArrayLike): Local painted field
@@ -92,16 +173,16 @@ def ppaint(pos, mass, Nmesh, BoxSize, edges, dims, comm, lyidx=0):
     # Actually check mpi4jax, for instance in collective_ops (in _src), barrier
     comm = HashableMPIType(comm)
 
-    out = _ppaint_prim.bind(pos, mass, Nmesh, edgesx, edgesy, edgesz, dims=dims, comm=comm, lyidx=lyidx)
+    out = _ppaint_prim.bind(pos, mass, Nmesh, edgesx, edgesy, edgesz, dims=dims, comm=comm, lyidx=lyidx, bwd=bwd)
     
     return out.reshape((dims[0], dims[1], dims[2])) # Make it 3D
 
 # Abstract evaluation rule
-def _ppaint_abstract(pos, mass, Nmesh, edgesx, edgesy, edgesz, dims, comm, lyidx):
+def _ppaint_abstract(pos, mass, Nmesh, edgesx, edgesy, edgesz, dims, comm, lyidx, bwd):
     return (ShapedArray((dims[0]*dims[1]*dims[2],), mass.dtype))
 
 # Lowering rule
-def _ppaint_lowering(ctx, pos, mass, Nmesh, edgesx, edgesy, edgesz, dims, comm, lyidx):
+def _ppaint_lowering(ctx, pos, mass, Nmesh, edgesx, edgesy, edgesz, dims, comm, lyidx, bwd):
 
     # Get value of hashable
     comm = comm.wrapped
@@ -118,6 +199,7 @@ def _ppaint_lowering(ctx, pos, mass, Nmesh, edgesx, edgesy, edgesz, dims, comm, 
     lyidx = as_mhlo_constant(lyidx, np.int32)
     # This dtype is int64 only for Nparts and int32 only for lyidx, all the other ints are variable
     # int32_t or int64_t in C++ based on np_dtype (could also make more general)
+    bwd = as_mhlo_constant(bwd, bool)
 
     # Dealing with comm as in mpi4jax, see for instance barrier.py in collective ops
     comm = as_mhlo_constant(to_mpi_handle(comm), np.uintp)
@@ -135,7 +217,7 @@ def _ppaint_lowering(ctx, pos, mass, Nmesh, edgesx, edgesy, edgesz, dims, comm, 
         # Output types
         result_types=[out_type],
         # Inputs
-        operands=[pos, mlir.ir_constant(Nparts), mass, Nmesh, edgesx, edgesy, edgesz, comm, lyidx],
+        operands=[pos, mlir.ir_constant(Nparts), mass, Nmesh, edgesx, edgesy, edgesz, comm, lyidx, bwd],
     ).results
 
 
@@ -148,10 +230,10 @@ _ppaint_prim.def_abstract_eval(_ppaint_abstract)
 mlir.register_lowering(_ppaint_prim, _ppaint_lowering, platform="cpu")
 
 # VJP definition for ppaint (see notes for a derivation)
-def ppaint_fwd(pos, mass, Nmesh, BoxSize, edges, dims, comm, lyidx=0):
-    return ppaint(pos, mass, Nmesh, BoxSize, edges, dims, comm, lyidx), (pos, mass)
+def ppaint_fwd(pos, mass, Nmesh, BoxSize, edges, dims, comm, lyidx=0, bwd=False):
+    return ppaint(pos, mass, Nmesh, BoxSize, edges, dims, comm, lyidx, bwd), (pos, mass)
 
-def ppaint_bwd(Nmesh, BoxSize, edges, dims, comm, lyidx, res, vimg):
+def ppaint_bwd(Nmesh, BoxSize, edges, dims, comm, lyidx, bwd, res, vimg):
     pos, mass = res
     localedges = edges[:, comm.Get_rank(), :]
     out1 = jnp.zeros(pos.shape)
@@ -272,7 +354,7 @@ def preadout_bwd(Nmesh, BoxSize, edges, dims, comm, lyidx, vjpdim, res, vmass):
     out1 = out1.at[:, 1].set(preadout(pos, field, Nmesh, BoxSize, edges, dims, comm, lyidx, 1))
     out1 = out1.at[:, 2].set(preadout(pos, field, Nmesh, BoxSize, edges, dims, comm, lyidx, 2))
 
-    out2 = ppaint(pos, vmass, Nmesh, BoxSize, edges, dims, comm, lyidx)
+    out2 = ppaint(pos, vmass, Nmesh, BoxSize, edges, dims, comm, lyidx, True)
 
     return ((out1.T * vmass).T, out2)
 

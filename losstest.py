@@ -9,10 +9,11 @@ config.update("jax_enable_x64", True)
 from mpi4py import MPI
 import mpi4jax
 import tracemalloc
+import jax
 
 tracemalloc.start()
 
-Ngrid=20
+Ngrid=100
 
 pm = PMesh(Ngrid, 205.)
 comm = pm.comm
@@ -33,21 +34,20 @@ param = jnp.array([100000., 0.5, 1., 8., 0.]*Nstep + [1., 1., 0.])
 target = jnp.array(np.random.rand(Ngrid, Ngrid, Ngrid))
 # Local target
 targetl = target[pm.localS:pm.localS+pm.localL, :, :]
-model = LDLModel(pm=pm)
+model = LDLModel(pos, targetl, pm, Nstep=Nstep, baryon=True)
 
-model.set_loss_params(Nstep, baryon=True)
 # Compute a first time for JIT compilation
-loss = model.loss(param, pos, targetl)
+loss = model.lossv(param)
 
 tim = time.time()
-loss = model.loss(param, pos, targetl)
+loss = model.lossv(param)
 if rank==0:
     print(f"Loss alone computed in {((time.time()-tim)*1000):.3f}ms")
     print(f"Loss: {loss}")
 
-loss, grad = model.loss_and_grad(param, pos, targetl)
+loss, grad = model.lossv_and_grad(param)
 tim = time.time()
-loss, grad = model.loss_and_grad(param, pos, targetl)
+loss, grad = model.lossv_and_grad(param)
 if rank==0:
     print(f"Loss with gradient computed in {((time.time()-tim)*1000):.3f}ms")
     print("Gradient:")
