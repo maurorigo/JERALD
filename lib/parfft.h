@@ -95,14 +95,6 @@ void pfft(double*& data, Planner& planner){
     
     // Run fft
     fftw_execute(planner.planfwd);
-
-    // Old way to copy output (requires inputs double** realout, double** imagout), now just copy outside
-    /*(*realout) = new double[L*M*(N/2+1)];
-    (*imagout) = new double[L*M*(N/2+1)];
-    for (int i = 0; i < L*M*(N/2+1); i++){
-	(*realout)[i] = planner.cplx[i][0];
-	(*imagout)[i] = planner.cplx[i][1];
-    }*/
 }
 
 void pifft(double*& realdata, double*& imagdata, Planner& planner){
@@ -118,16 +110,6 @@ void pifft(double*& realdata, double*& imagdata, Planner& planner){
 
     // Run ifft
     fftw_execute(planner.planbwd);
-
-    // Output is saved outside (to use this again, need a double** out input))
-    /*(*out) = new double[L*M*N];
-    for (int i = 0; i < L; i++){
-        for (int j = 0; j < M; j++){
-            for (int k = 0; k < N; k++){
-                (*out)[i*M*N + N*j + k] = planner.real[(i*M + j) * 2*(N/2+1) + k];
-            }
-        }
-    }*/
 }
 
 void pfftf(float*& data, Plannerf& planner){
@@ -144,14 +126,6 @@ void pfftf(float*& data, Plannerf& planner){
     }
 
     fftwf_execute(planner.planfwd);
-
-    // Old way to copy output (requires inputs float** realout, float** imagout), now just copy outside
-    /*(*realout) = new float[L*M*(N/2+1)];
-    (*imagout) = new float[L*M*(N/2+1)];
-    for (int i = 0; i < L*M*(N/2+1); i++){
-        (*realout)[i] = planner.cplx[i][0];
-        (*imagout)[i] = planner.cplx[i][1];
-    }*/
 }
 
 void pifftf(float*& realdata, float*& imagdata, Plannerf& planner){
@@ -165,16 +139,6 @@ void pifftf(float*& realdata, float*& imagdata, Plannerf& planner){
     }
 
     fftwf_execute(planner.planbwd);
-
-    // Output is saved outside (to use this again, need a float** out input)
-    /*(*out) = new float[L*M*N];
-    for (int i = 0; i < L; i++){
-        for (int j = 0; j < M; j++){
-            for (int k = 0; k < N; k++){
-                (*out)[i*M*N + N*j + k] = planner.real[(i*M + j) * 2*(N/2+1) + k];
-            }
-        }
-    }*/
 }
 
 } // Namespace parfft_jax

@@ -13,7 +13,7 @@ import jax
 
 tracemalloc.start()
 
-Ngrid=100
+Ngrid=50
 
 pm = PMesh(Ngrid, 205.)
 comm = pm.comm
@@ -34,28 +34,31 @@ param = jnp.array([100000., 0.5, 1., 8., 0.]*Nstep + [1., 1., 0.])
 target = jnp.array(np.random.rand(Ngrid, Ngrid, Ngrid))
 # Local target
 targetl = target[pm.localS:pm.localS+pm.localL, :, :]
-model = LDLModel(pos, targetl, pm, Nstep=Nstep, baryon=True)
+maskl = jnp.ones_like(targetl)
+maskl2 = maskl.at[:, :, :20].set(0)
+model = LDLModel(pos, targetl, pm, Nstep=Nstep, baryon=True, masktrain=maskl, maskvalid=maskl2)
 
 # Compute a first time for JIT compilation
-loss = model.lossv(param)
+loss, lossv = model.lossv(param)
 
 tim = time.time()
-loss = model.lossv(param)
+loss, lossv = model.lossv(param)
 if rank==0:
     print(f"Loss alone computed in {((time.time()-tim)*1000):.3f}ms")
-    print(f"Loss: {loss}")
+    print(f"Loss: {loss}, validation loss: {lossv}")
 
-loss, grad = model.lossv_and_grad(param)
+loss, lossv, grad = model.lossv_and_grad(param)
 tim = time.time()
-loss, grad = model.lossv_and_grad(param)
+loss, lossv, grad = model.lossv_and_grad(param)
 if rank==0:
     print(f"Loss with gradient computed in {((time.time()-tim)*1000):.3f}ms")
     print("Gradient:")
     print(grad)
+    print(lossv)
 
 snapshot = tracemalloc.take_snapshot()
 stats = snapshot.statistics('lineno')
-total = sum(stat.size for stat in stats)
+total = comm.allreduce(sum(stat.size for stat in stats))
 if rank == 0:
     print("Allocated size: %.1f KiB" % (total / 1024))
 

@@ -21,7 +21,6 @@ Plannerf plannerf; // fft float planner
 namespace {
 
 void cinitLayout(void* out, void** in){
-    // Initializes decomposition layout
     int32_t commsize = *reinterpret_cast<int32_t*>(in[0]);
     int32_t lyidx = *reinterpret_cast<int32_t*>(in[1]);
 
@@ -34,7 +33,6 @@ void cinitLayout(void* out, void** in){
 
 template <typename T>
 void cclean(void* out, void** in){
-    // Initializes decomposition layout
     int32_t lyidx = *reinterpret_cast<int32_t*>(in[1]);
 
     cleanpops(&(layout[lyidx]), &(exd<T>[lyidx]));
@@ -96,6 +94,7 @@ void cbuildplan(void* out, void** in){
 
     buildplan(Nmesh[0], Nmesh[1], Nmesh[2], &planner, comm);
 
+    // Return local size and local start index
     localvars[0] = planner.localL;
     localvars[1] = planner.localstart;
 }

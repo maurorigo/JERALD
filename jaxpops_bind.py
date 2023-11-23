@@ -235,7 +235,7 @@ def ppaint_fwd(pos, mass, Nmesh, BoxSize, edges, dims, comm, lyidx=0, bwd=False)
 
 def ppaint_bwd(Nmesh, BoxSize, edges, dims, comm, lyidx, bwd, res, vimg):
     pos, mass = res
-    localedges = edges[:, comm.Get_rank(), :]
+    localedges = edges[:, comm.rank, :]
     out1 = jnp.zeros(pos.shape)
     out1 = out1.at[:, 0].set(preadout(pos, vimg, Nmesh, BoxSize, edges, dims, comm, lyidx, 0))
     out1 = out1.at[:, 1].set(preadout(pos, vimg, Nmesh, BoxSize, edges, dims, comm, lyidx, 1))
@@ -354,7 +354,9 @@ def preadout_bwd(Nmesh, BoxSize, edges, dims, comm, lyidx, vjpdim, res, vmass):
     out1 = out1.at[:, 1].set(preadout(pos, field, Nmesh, BoxSize, edges, dims, comm, lyidx, 1))
     out1 = out1.at[:, 2].set(preadout(pos, field, Nmesh, BoxSize, edges, dims, comm, lyidx, 2))
 
-    out2 = ppaint(pos, vmass, Nmesh, BoxSize, edges, dims, comm, lyidx, True)
+    # Using True in bwd here leads to a speedup but one must use different decomposition layouts,
+    # increasing the memory usage (because this ppaint re-defines the correct layout for bwd pass).
+    out2 = ppaint(pos, vmass, Nmesh, BoxSize, edges, dims, comm, lyidx)
 
     return ((out1.T * vmass).T, out2)
 

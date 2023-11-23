@@ -1,6 +1,8 @@
 #ifndef _JAXPAROPS_H_
 #define _JAXPAROPS_H_
 
+// NOTE: ALL FLATTENINGS ARE ASSUMED TO BE ROW-MAJOR
+
 #include <iostream>
 #include <mpi.h>
 #include <vector>
@@ -27,11 +29,12 @@ struct Layout{
 
 template <typename T>
 struct Exchanged{
-    // Struct for layout-exchanged quantities (only position actually)
+    // Struct for layout-exchanged quantities (only position actually, may just change to global T*)
     T* pos;
 };
 
 void initLayout(Layout* layout, int comm_size){
+    // Initializes layout parameters of input layout
     layout->sendcounts = new int[comm_size];
     layout->senddispl = new int[comm_size];
     layout->recvcounts = new int[comm_size];
@@ -40,6 +43,8 @@ void initLayout(Layout* layout, int comm_size){
 
 template <typename T>
 void cleanpops(Layout* layout, Exchanged<T>* ex){
+    // Cleans stored data to free memory of layout and exchanged positions
+    // Doesn't really seem to work though
     delete[] layout->indices;
     delete[] ex->pos;
 }
@@ -47,13 +52,13 @@ void cleanpops(Layout* layout, Exchanged<T>* ex){
 template <typename T, typename intT>
 void decompose(T* pos, // (Nparts * 3) Flattened positions (in mesh space)
 	       int64_t Nparts, // Number of particles
-	       intT* Nmesh, // Mesh grid specs (3, )
-	       intT* edgesx, // Limit grid indices along x for each rank, (comm_size, 2) flattened
+	       intT* Nmesh, // (3, ) Mesh grid specs
+	       intT* edgesx, // (comm_size, 2) Flattened limit grid indices along x for each rank
 	       intT* edgesy, // Same, for y
 	       intT* edgesz, // Same, for z
-	       Layout* layout, // Layout for decomposition
+	       Layout* layout, // Layout variable to store decomposition
 	       MPI_Comm comm=MPI_COMM_WORLD){ // MPI communicator
-    // Creates a layout decomposition based on the given positions and
+    // Creates a decomposition layout based on the given positions and
     // edges of the domains for CIC.
     // Particles can be repeated (due to ghosts)
     
@@ -110,7 +115,7 @@ void decompose(T* pos, // (Nparts * 3) Flattened positions (in mesh space)
 	layout->recvsize += layout->recvcounts[rank];
     }
 
-    // Clean previous indices and fill again
+    // Indices of particles for each rank, stacked vertically
     layout->indices = new int[layout->sendsize];
     int ctr = 0;
     for (int rank=0; rank<comm_size; rank++){
@@ -135,7 +140,7 @@ template <typename T>
 void exchange(T* data, int dims, Layout layout, T** outdata, MPI_Comm comm=MPI_COMM_WORLD){
     // Sends what's in "data" (flattened) to the correct ranks to perform CIC operations.
     // dims is the dimensionality of data
-    // layout is the decomposition layout, computed using "decompose".
+    // layout is the decomposition layout.
     // Sets the value in outdata to the "data" each rank have assigned to this (including self).
 
     // Construct the array that contains the data to send
@@ -144,7 +149,7 @@ void exchange(T* data, int dims, Layout layout, T** outdata, MPI_Comm comm=MPI_C
 	 for (int d=0; d<dims; d++) sendbuf[dims*i + d] = data[dims*layout.indices[i] + d];
     }
 
-    // Create datatype to send
+    // Create datatype to send (contiguous T of dim length)
     MPI_Datatype dt;
     if (is_same<T, double>::value){
 	MPI_Type_contiguous(dims, MPI_DOUBLE, &dt);
@@ -239,14 +244,14 @@ void gather1D(T* data, Layout layout, T** outdata, MPI_Comm comm=MPI_COMM_WORLD)
 }
 
 template <typename T, typename intT>
-void lpaint(T* pos, // Flattened positions in mesh space (Nparts * 3)
+void lpaint(T* pos, // (Nparts * 3) Flattened positions in mesh space
 	    intT Nparts, // Number of particles
 	    T* mass, // Mass of each particle
 	    intT ex[2], // Limits along x of grid for local part of the field
 	    intT ey[2], // Along y
 	    intT ez[2], // Along z
 	    intT* Nmesh, // Mesh sizes, needed for ghosts
-	    T** field){ // Output field, flattened (row-major order)
+	    T** field){ // Flattened output field
     // Computes the local part of the field using CIC, assuming the
     // positions in "pos" are the result of an "exchange" operation.
 
@@ -299,9 +304,9 @@ void lpaint(T* pos, // Flattened positions in mesh space (Nparts * 3)
 }
 
 template <typename T, typename intT>
-void lreadout(T* pos, // Flattened positions in mesh space (Nparts * 3)
+void lreadout(T* pos, // (Nparts * 3) Flattened positions in mesh space
 	      intT Nparts, // Number of particles
-              T* field, // Field to read from (flattened, row-major order)
+              T* field, // Flattened local field to read from
 	      intT ex[2], // Limits along x of grid for local part of the field
 	      intT ey[2], // Along y
 	      intT ez[2], // Along z
@@ -372,13 +377,13 @@ template <typename T, typename intT>
 void ppaint(T*& pos, // (Nparts * 3) Flattened positions (in mesh space)
             int64_t& Nparts, // Number of particles
 	    T*& mass, // Particle masses
-            intT*& Nmesh, // Mesh grid specs (3, )
-            intT*& edgesx, // Limiting grid indices along x for each rank, (comm_size, 2) flattened
+            intT*& Nmesh, // (3, ) Mesh grid specs
+            intT*& edgesx, // (comm_size, 2) Flattened limiting grid indices along x for each rank
             intT*& edgesy, // Same, for y
             intT*& edgesz, // Same, for z
-            T** outptr, // Output pointer (flattened field, row-major order)
-	    Layout* layout, // Output layout (store it so that it's already defined)
-	    Exchanged<T>* exd, // Exchanged particle positions and masses
+            T** outptr, // Flattened output pointer
+	    Layout* layout, // Output layout (to store it)
+	    Exchanged<T>* exd, // Exchanged particle positions (to store it)
 	    bool& useLayout, // Use pre-defined decomposition layout or no
 	    MPI_Comm& comm){ // MPI communicator
     // Parallel paint
@@ -388,6 +393,7 @@ void ppaint(T*& pos, // (Nparts * 3) Flattened positions (in mesh space)
     // particles at the edges of the field limits that only partially contribute here
     // Stores resulting local part of density field in outptr, as well as
     // decomposition layout and exchanged positions to make preadout faster
+    // Optionally does CIC using pre-existing decomposition layout and exchanged positions
     
     int comm_rank;
     MPI_Comm_rank(MPI_COMM_WORLD, &comm_rank);
@@ -396,11 +402,12 @@ void ppaint(T*& pos, // (Nparts * 3) Flattened positions (in mesh space)
     	// Find layout decomposition
     	decompose<T, intT>(pos, Nparts, Nmesh, edgesx, edgesy, edgesz, layout, comm);
     
-    	// Exchange positions and mass
+    	// Exchange positions
     	exd->pos = new T[layout->recvsize * 3];
     	exchange<T>(pos, 3, *layout, &(exd->pos), comm);
     }
-
+	
+    // Exchange mass
     T* exdmass = new T[layout->recvsize];
     exchange1D<T>(mass, *layout, &exdmass, comm);
 
@@ -419,10 +426,10 @@ template <typename T, typename intT>
 void preadout(Layout& layout, // Decomposition layout PPAINT CALL NEEDED
 	      Exchanged<T>& exd, // Exchanged positions PPAINT CALL NEEDED
 	      int64_t& Nparts, // Number of particles
-	      T*& localfield, // Field to readout from (flattened, row-major order)
-              intT*& Nmesh, // Mesh grid specs (3, )
+	      T*& localfield, // Flattened local field to readout from
+              intT*& Nmesh, // (3, ) Mesh grid specs
 	      T*& BoxSize, // Needed for vjp
-              intT*& edgesx, // Limiting grid indices along x for each rank, (comm_size, 2) flattened
+              intT*& edgesx, // Flattened (comm_size, 2) limiting grid indices along x for each rank
               intT*& edgesy, // Same, for y
               intT*& edgesz, // Same, for z
               T** outptr, // Output pointer
@@ -451,7 +458,7 @@ void preadout(Layout& layout, // Decomposition layout PPAINT CALL NEEDED
     delete[] outmass;
 }
 
-// NOT NEEDED, BUT KEEPING FOR SAFETY
+// NOT NEEDED, BUT KEEPING FOR SAFETY (ALSO NOT UPDATED)
 /*template <typename T, typename intT>
 void preadout_nolayout(T**& pos, // (Nparts, 3) Particle positions (in mesh space)
               int64_t& Nparts, // Number of particles

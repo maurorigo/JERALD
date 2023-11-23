@@ -15,7 +15,7 @@ class PMesh(object):
     
     def __init__(self, Nmesh, BoxSize, comm=MPI.COMM_WORLD):
         """
-            Nmesh (int or tuple): int N specifying the grid size (same for x, y and z) or tuple (Nx, Ny, Nz)
+            Nmesh (int or tuple): int N for grid size (same for x, y and z) or tuple (Nx, Ny, Nz)
             BoxSize (float or tuple): Size of the simulation box (same or different for x, y and z)
             comm: MPI communicator
         """
@@ -48,15 +48,9 @@ class PMesh(object):
                 int(self.edges[1, self.commrank, 1] - self.edges[1, self.commrank, 0]),
                 int(self.edges[2, self.commrank, 1] - self.edges[2, self.commrank, 0]))
         
-        # Useful for LDL transfer function (might do a void returning function later)
-        #self.kvals = self.compute_wavevectors()
-        #self.knorms = jnp.linalg.norm(self.kvals, axis=-1) # kvals is (Nx, Ny, Nz)
-
 
     def computeEdges(self):
-        """
-            Computes lower and upper limits along x, y, z for the local part of the field
-        """
+        # Computes lower and upper limits along x, y, z for the local part of the field
         lls, _ = mpi4jax.allgather(self.localL, comm=self.comm)
         lss, _ = mpi4jax.allgather(self.localS, comm=self.comm)
         edges = np.zeros((3, self.commsize, 2), dtype=int)
@@ -85,18 +79,20 @@ class PMesh(object):
     
     @staticmethod
     def clean(lyidx=0):
+        # Clean parameters stored after decomposition, probably not useful actually
         return jpo.clean(lyidx)
 
     @partial(jit, static_argnums=0)
     def r2c(self, localreal):
         """
         Real to complex, direct 3D Fourier transform
+        (Forward normalization to match original LDL code)
 
         Parameters:
-            mesh (array-like): Values at mesh points (real)
+            localreal (array-like): Local real field
 
         Returns:
-            out (array-like): Fourier transform of input mesh (complex)
+            (array-like): Fourier transform of local input field (complex)
         """
 
         return jpo.pfft(localreal, self.fftdims) / jnp.prod(self.Nmesh)
@@ -105,12 +101,13 @@ class PMesh(object):
     def c2r(self, localcplx):
         """
         Complex to real, inverse 3D Fourier transform
+        (Forward normalization to match original LDL code)
 
         Parameters:
-            mesh (array-like): Values at mesh points (complex)
+            localcplx (array-like): Local complex field
 
         Returns:
-            out (array-like): Inverse Fourier transform of input mesh (real)
+            out (array-like): Inverse Fourier transform of local input field (real)
         """
         return jpo.pifft(localcplx, self.fftdims)
 
@@ -168,6 +165,12 @@ class PMesh(object):
     def preview(self, localfield, fullsize=None, comm=None):
         """
         Collects local fields from all ranks and returns the full field (as a numpy array)
+
+        Parameters:
+            localfield (array-like): field in this rank
+
+        Returns:
+            out (array-like): full field, reconstructed from all ranks
         """
         if fullsize==None:
             fullsize = self.Nmesh

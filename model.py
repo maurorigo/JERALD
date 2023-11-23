@@ -142,7 +142,7 @@ class LDLModel(object):
         return jnp.stack((self.pm.readout(X, potgradx),
             self.pm.readout(X, potgrady),
             self.pm.readout(X, potgradz)), axis=-1)
-    
+
     @partial(jit, static_argnums=3)
     def displace(self, params, X, Nstep):
         """
@@ -295,31 +295,34 @@ class LDLModel(object):
 
         loss, _ = mpi4jax.allreduce(loss, op=MPI.SUM, comm=self.pm.comm)
         Npixel, _ = mpi4jax.allreduce(Npixel, op=MPI.SUM, comm=self.pm.comm)
-        
+        loss /= Npixel
+
         # Optionally compute and store validation loss
+        lossv = 0.
         if self.maskvalid is not None:
-            residuev = residue * self.maskvalid
+            residue *= self.maskvalid
             Npixelv = jnp.sum(self.maskvalid)
             if self.L1:
-                lossv = jnp.sum(residuev)
+                lossv = jnp.sum(residue)
             else:
-                lossv = jnp.sum(residuev**2)
+                lossv = jnp.sum(residue**2)
             lossv, _ = mpi4jax.allreduce(lossv, op=MPI.SUM, comm=self.pm.comm)
             Npixelv, _ = mpi4jax.allreduce(Npixelv, op=MPI.SUM, comm=self.pm.comm)
-            self.lossvalid = lossv / Npixelv
+            lossv /= Npixelv
 
         gc.collect()
-        return loss / Npixel
+        return loss, lossv
 
-    def lossv_grad(self, params):
-        out = grad(self.lossv)(params)
+    def _lossv(self, params, lossvp):
+        # Trick to also return lossv and be able to compute gradient
+        o1, o2 = self.lossv(params)
         gc.collect()
-        return out
+        return o1 + lossvp*o2
 
     def lossv_and_grad(self, params):
-        out1, out2 = value_and_grad(self.lossv)(params)
+        out1, (out3, out2) = value_and_grad(self._lossv, argnums=(0, 1))(params, 0.)
         gc.collect()
-        return out1, out2
+        return out1, out2, out3
     
     def tree_flatten(self):
         children = (self.X, self.target, self.field2, self.masktrain, self.maskvalid)
