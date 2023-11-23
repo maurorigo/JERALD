@@ -22,7 +22,7 @@ size = comm.size
 
 np.random.seed(19)
 pos = jnp.array(np.random.rand(Ngrid**3, 3)) * 205.
-randomvels = 20*jnp.cos(jnp.linalg.norm(pos, axis=1)/19).reshape((len(pos), 1))
+randomvels = 30*jnp.cos(jnp.linalg.norm(pos, axis=1)/19).reshape((len(pos), 1))
 pos = pos.at[:].add(randomvels)
 # Local positions
 pos = pos[int(Ngrid**3/size*rank):int(Ngrid**3/size*(rank+1))]
@@ -34,8 +34,10 @@ param = jnp.array([100000., 0.5, 1., 8., 0.]*Nstep + [1., 1., 0.])
 target = jnp.array(np.random.rand(Ngrid, Ngrid, Ngrid))
 # Local target
 targetl = target[pm.localS:pm.localS+pm.localL, :, :]
-maskl = jnp.ones_like(targetl)
-maskl2 = maskl.at[:, :, :20].set(0)
+maskl = np.random.randint(0, 20, targetl.shape)
+maskl[maskl > 1] = 1
+maskl = jnp.array(maskl)
+maskl2 = jnp.array(np.random.randint(0, 2, targetl.shape))
 model = LDLModel(pos, targetl, pm, Nstep=Nstep, baryon=True, masktrain=maskl, maskvalid=maskl2)
 
 # Compute a first time for JIT compilation
@@ -54,7 +56,6 @@ if rank==0:
     print(f"Loss with gradient computed in {((time.time()-tim)*1000):.3f}ms")
     print("Gradient:")
     print(grad)
-    print(lossv)
 
 snapshot = tracemalloc.take_snapshot()
 stats = snapshot.statistics('lineno')

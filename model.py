@@ -283,15 +283,15 @@ class LDLModel(object):
         residue = jnp.abs(self.pm.c2r(residuek))
         
         if self.masktrain is not None:
-            residue *= self.masktrain
+            residuel = residue * self.masktrain
             Npixel = jnp.sum(self.masktrain)
         else:
             Npixel = residue.size
 
         if self.L1:
-            loss = jnp.sum(residue)
+            loss = jnp.sum(residuel)
         else:
-            loss = jnp.sum(residue**2)
+            loss = jnp.sum(residuel**2)
 
         loss, _ = mpi4jax.allreduce(loss, op=MPI.SUM, comm=self.pm.comm)
         Npixel, _ = mpi4jax.allreduce(Npixel, op=MPI.SUM, comm=self.pm.comm)
