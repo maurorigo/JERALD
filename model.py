@@ -159,7 +159,7 @@ class LDLModel(object):
 
         sz, _ = mpi4jax.allreduce(len(X), op=MPI.SUM, comm=self.pm.comm)
         fact = self.pm.Nmesh.prod() / sz # Normalization for density
-        
+
         for i in range(Nstep):
             
             alpha = params[5*i]

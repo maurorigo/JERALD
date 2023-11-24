@@ -47,7 +47,6 @@ class PMesh(object):
         self.paintdims = (int(self.edges[0, self.commrank, 1] - self.edges[0, self.commrank, 0]),
                 int(self.edges[1, self.commrank, 1] - self.edges[1, self.commrank, 0]),
                 int(self.edges[2, self.commrank, 1] - self.edges[2, self.commrank, 0]))
-        
 
     def computeEdges(self):
         # Computes lower and upper limits along x, y, z for the local part of the field
@@ -127,13 +126,21 @@ class PMesh(object):
         """
         Computes local grid coordinates as a (?, Nmesh[1], Nmesh[2], 3) array
         """
-        x = jnp.arange(self.Nmesh[0]) / self.Nmesh[0] * self.BoxSize[0]
+        x = jnp.arange(self.fftss[0], self.fftss[1]) / self.Nmesh[0] * self.BoxSize[0]
         y = jnp.arange(self.Nmesh[1]) / self.Nmesh[1] * self.BoxSize[1]
         z = jnp.arange(self.Nmesh[2]) / self.Nmesh[2] * self.BoxSize[2]
         X, Y, Z = jnp.meshgrid(x, y, z, indexing='ij')
-        out = jnp.stack((X, Y, Z), axis=-1)
+        return jnp.stack((X, Y, Z), axis=-1)
 
-        return out[self.fftss[0]:self.fftss[1], :, :, :]
+    def local_mesh_indices(self):
+        """
+        Computes local grid indices as a (?, Nmesh[1], Nmesh[2], 3) array
+        """
+        x = jnp.arange(self.fftss[0], self.fftss[1])
+        y = jnp.arange(self.Nmesh[1])
+        z = jnp.arange(self.Nmesh[2])
+        X, Y, Z = jnp.meshgrid(x, y, z, indexing='ij')
+        return jnp.stack((X, Y, Z), axis=-1)
 
     def flattened_coordinates(self):
         """

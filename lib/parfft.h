@@ -42,11 +42,9 @@ void buildplan(int32_t& L, int32_t& M, int32_t& N, Planner* planner, MPI_Comm& c
     fftw_complex* cplx = fftw_alloc_complex(alloclocal);
 
     // Create plans
-    fftw_plan planfwd = fftw_mpi_plan_dft_r2c_3d(L, M, N, real, cplx, comm, FFTW_ESTIMATE);
-    fftw_plan planbwd = fftw_mpi_plan_dft_c2r_3d(L, M, N, cplx, real, comm, FFTW_ESTIMATE);
+    planner->planfwd = fftw_mpi_plan_dft_r2c_3d(L, M, N, real, cplx, comm, FFTW_ESTIMATE);
+    planner->planbwd = fftw_mpi_plan_dft_c2r_3d(L, M, N, cplx, real, comm, FFTW_ESTIMATE);
     // Save things in planner
-    (*planner).planfwd = planfwd;
-    (*planner).planbwd = planbwd;
     (*planner).localL = localL;
     (*planner).localstart = localstart;
     (*planner).real = real;
@@ -66,8 +64,8 @@ void buildplanf(int32_t& L, int32_t& M, int32_t& N, Plannerf* planner, MPI_Comm&
     float* real = fftwf_alloc_real(2 * alloclocal);
     fftwf_complex* cplx = fftwf_alloc_complex(alloclocal);
 
-    fftwf_plan planfwd = fftwf_mpi_plan_dft_r2c_3d(L, M, N, real, cplx, comm, FFTW_ESTIMATE);
-    fftwf_plan planbwd = fftwf_mpi_plan_dft_c2r_3d(L, M, N, cplx, real, comm, FFTW_ESTIMATE);
+    planner->planfwd = fftwf_mpi_plan_dft_r2c_3d(L, M, N, real, cplx, comm, FFTW_ESTIMATE);
+    planner->planbwd = fftwf_mpi_plan_dft_c2r_3d(L, M, N, cplx, real, comm, FFTW_ESTIMATE);
     (*planner).planfwd = planfwd;
     (*planner).planbwd = planbwd;
     (*planner).localL = localL;
