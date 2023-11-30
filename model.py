@@ -6,7 +6,6 @@ from jax import jit, vmap, grad, value_and_grad, custom_vjp
 from mpi4py import MPI
 import mpi4jax
 import gc
-import sys
 
 @custom_vjp
 def c2f(obj):
@@ -219,7 +218,7 @@ class LDLModel(object):
         """
 
         # Compute the LDL map
-        F = jnp.power(self.LDL(params, self.X, Nstep=self.Nstep, baryon=self.baryon), self.index)
+        F = self.LDL(params, self.X, Nstep=self.Nstep, baryon=self.baryon) ** self.index
 
         # Optionally multiply by second field
         if self.field2 is not None:
@@ -265,7 +264,7 @@ class LDLModel(object):
         gc.collect()
         return out1, out2
 
-    #@jit
+    @jit
     def lossv(self, params):
         """
         Same as above, but if validation mask was provided int set_loss_params,
