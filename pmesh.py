@@ -41,7 +41,7 @@ class PMesh(object):
         self._Nmesh = (int(self.Nmesh[0]), int(self.Nmesh[1]), int(self.Nmesh[2])) # For kvals
         self.fftss = (int(self.localS), int(self.localS + self.localL)) # Start/stop for kvals x
         self.fftdims = (int(self.localL), int(self.Nmesh[1]), int(self.Nmesh[2]))
-        
+
         # Values for painting/readout
         self.edges = self.computeEdges()
         self.paintdims = (int(self.edges[0, self.commrank, 1] - self.edges[0, self.commrank, 0]),

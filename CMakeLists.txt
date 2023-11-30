@@ -3,13 +3,13 @@ project(jaxpops CXX)
 
 message(STATUS "Using CMake version " ${CMAKE_VERSION})
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O5 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi")
-
 find_package(Python COMPONENTS Interpreter Development REQUIRED)
 find_package(pybind11 CONFIG REQUIRED)
 find_package(MPI REQUIRED)
 find_package(PkgConfig REQUIRED) # For fftw
 pkg_search_module(FFTW REQUIRED fftw3 IMPORTED_TARGET)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O3 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi")
 
 include_directories(${CMAKE_CURRENT_LIST_DIR}/lib)
 include_directories(${MPI_INCLUDE_PATH})

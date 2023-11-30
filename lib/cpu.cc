@@ -13,7 +13,13 @@ using namespace parfft_jax;
 
 // These global variables are not passed to python because they may be hard to handle by JAX
 Layout layout[5]; // General decomposition layouts (at most 5 can be saved)
-template <typename T>Exchanged<T> exd[5]; // Exchanged positions and masses (at most 5 can be saved)
+// Intel compiler wants static data members to make a global variable with arbitrary type
+template <typename T>
+struct Ex{
+    static T* pos[5]; // Exchanged positions
+};
+template <typename T>
+T* Ex<T>::pos[5]; // Exchanged positions (at most 5 can be saved)
 
 Planner planner; // fft double planner
 Plannerf plannerf; // fft float planner
@@ -35,7 +41,7 @@ template <typename T>
 void cclean(void* out, void** in){
     int32_t lyidx = *reinterpret_cast<int32_t*>(in[1]);
 
-    cleanpops(&(layout[lyidx]), &(exd<T>[lyidx]));
+    cleanpops(&(layout[lyidx]), &(Ex<T>::pos[lyidx]));
 
     int32_t* chk = reinterpret_cast<int32_t*>(out);
     int32_t foo = 0;
@@ -53,13 +59,16 @@ void cppaint(void* out, void** in){
     intT* edgesx = reinterpret_cast<intT*>(in[4]);
     intT* edgesy = reinterpret_cast<intT*>(in[5]);
     intT* edgesz = reinterpret_cast<intT*>(in[6]);
-    MPI_Comm comm = reinterpret_cast<MPI_Comm>(*reinterpret_cast<uintptr_t*>(in[7]));
+    // MPI_Comm comm = reinterpret_cast<MPI_Comm>(*reinterpret_cast<uintptr_t*>(in[7]));
+    // The above line works with OpenMPI because of what type MPI_Comm is,
+    // the line below is more general and works also with intelMPI (hopefully with no problems)
+    MPI_Comm comm = (MPI_Comm)(*reinterpret_cast<uintptr_t*>(in[7]));
     int32_t lyidx = *reinterpret_cast<int32_t*>(in[8]);
     bool useLayout = *reinterpret_cast<bool*>(in[9]);
 
     // Output (flattened, row-major)
     T* outp = reinterpret_cast<T*>(out);
-    ppaint<T, intT>(pos, Nparts, mass, Nmesh, edgesx, edgesy, edgesz, &outp, &(layout[lyidx]), &(exd<T>[lyidx]), useLayout, comm);
+    ppaint<T, intT>(pos, Nparts, mass, Nmesh, edgesx, edgesy, edgesz, &outp, &(layout[lyidx]), &(Ex<T>::pos[lyidx]), useLayout, comm);
 }
 
 template <typename T, typename intT>
@@ -75,20 +84,20 @@ void cpreadout(void* out, void** in){
     intT* edgesx = reinterpret_cast<intT*>(in[5]);
     intT* edgesy = reinterpret_cast<intT*>(in[6]);
     intT* edgesz = reinterpret_cast<intT*>(in[7]);
-    MPI_Comm comm = reinterpret_cast<MPI_Comm>(*reinterpret_cast<uintptr_t*>(in[8]));
+    MPI_Comm comm = (MPI_Comm)(*reinterpret_cast<uintptr_t*>(in[8]));
     int32_t lyidx = *reinterpret_cast<int32_t*>(in[9]);
     int32_t vjpdim = *reinterpret_cast<int32_t*>(in[10]);
 
     // Output
     T* outp = reinterpret_cast<T*>(out);
-    preadout<T, intT>(layout[lyidx], exd<T>[lyidx], Nparts, localfield, Nmesh, BoxSize, edgesx, edgesy, edgesz, &outp, comm, vjpdim);
+    preadout<T, intT>(layout[lyidx], Ex<T>::pos[lyidx], Nparts, localfield, Nmesh, BoxSize, edgesx, edgesy, edgesz, &outp, comm, vjpdim);
 }
 
 void cbuildplan(void* out, void** in){
     // Build plan for FFTW, saves it locally and returns useful variables for decomposition
     // Inputs
     int32_t* Nmesh = reinterpret_cast<int32_t*>(in[0]);
-    MPI_Comm comm = reinterpret_cast<MPI_Comm>(*reinterpret_cast<uintptr_t*>(in[1]));
+    MPI_Comm comm = (MPI_Comm)(*reinterpret_cast<uintptr_t*>(in[1]));
     // Outputs
     int32_t* localvars = reinterpret_cast<int32_t*>(out);
 
@@ -103,7 +112,7 @@ void cbuildplanf(void* out, void** in){
     // Float version of above
     // Inputs
     int32_t* Nmesh = reinterpret_cast<int32_t*>(in[0]);
-    MPI_Comm comm = reinterpret_cast<MPI_Comm>(*reinterpret_cast<uintptr_t*>(in[1]));
+    MPI_Comm comm = (MPI_Comm)(*reinterpret_cast<uintptr_t*>(in[1]));
     // Outputs
     int32_t* localvars = reinterpret_cast<int32_t*>(out);
 

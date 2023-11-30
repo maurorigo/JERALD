@@ -14,7 +14,7 @@ import sys
 
 tracemalloc.start()
 
-Ngrid=100
+Ngrid=10
 
 pm = PMesh(Ngrid, 205.)
 comm = pm.comm
@@ -53,13 +53,15 @@ if rank==0:
     print(f"Loss: {loss}, validation loss: {lossv}")
     sys.stdout.flush()
 
-loss, lossv, grad = model.lossv_and_grad(param)
-tim = time.time()
-loss, lossv, grad = model.lossv_and_grad(param)
+def foo(params):
+    a = model.LDL(params, pos, Nstep, True)
+    return jnp.sum(a**2)
+
+grd = grad(foo)(param)
 if rank==0:
-    print(f"Loss with gradient computed in {((time.time()-tim)*1000):.3f}ms")
+    print(f"Loss with gradient computed")
     print("Gradient:")
-    print(grad)
+    print(grd)
     sys.stdout.flush()
 
 snapshot = tracemalloc.take_snapshot()

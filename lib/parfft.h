@@ -45,13 +45,13 @@ void buildplan(int32_t& L, int32_t& M, int32_t& N, Planner* planner, MPI_Comm& c
     planner->planfwd = fftw_mpi_plan_dft_r2c_3d(L, M, N, real, cplx, comm, FFTW_ESTIMATE);
     planner->planbwd = fftw_mpi_plan_dft_c2r_3d(L, M, N, cplx, real, comm, FFTW_ESTIMATE);
     // Save things in planner
-    (*planner).localL = localL;
-    (*planner).localstart = localstart;
-    (*planner).real = real;
-    (*planner).cplx = cplx;
-    (*planner).L = L;
-    (*planner).M = M;
-    (*planner).N = N;
+    planner->localL = localL;
+    planner->localstart = localstart;
+    planner->real = real;
+    planner->cplx = cplx;
+    planner->L = L;
+    planner->M = M;
+    planner->N = N;
 }
 
 void buildplanf(int32_t& L, int32_t& M, int32_t& N, Plannerf* planner, MPI_Comm& comm){
@@ -66,15 +66,13 @@ void buildplanf(int32_t& L, int32_t& M, int32_t& N, Plannerf* planner, MPI_Comm&
 
     planner->planfwd = fftwf_mpi_plan_dft_r2c_3d(L, M, N, real, cplx, comm, FFTW_ESTIMATE);
     planner->planbwd = fftwf_mpi_plan_dft_c2r_3d(L, M, N, cplx, real, comm, FFTW_ESTIMATE);
-    (*planner).planfwd = planfwd;
-    (*planner).planbwd = planbwd;
-    (*planner).localL = localL;
-    (*planner).localstart = localstart;
-    (*planner).real = real;
-    (*planner).cplx = cplx;
-    (*planner).L = L;
-    (*planner).M = M;
-    (*planner).N = N;
+    planner->localL = localL;
+    planner->localstart = localstart;
+    planner->real = real;
+    planner->cplx = cplx;
+    planner->L = L;
+    planner->M = M;
+    planner->N = N;
 }
 
 void pfft(double*& data, Planner& planner){

@@ -27,12 +27,6 @@ struct Layout{
     int* recvdispl;
 };
 
-template <typename T>
-struct Exchanged{
-    // Struct for layout-exchanged quantities (only position actually, may just change to global T*)
-    T* pos;
-};
-
 void initLayout(Layout* layout, int comm_size){
     // Initializes layout parameters of input layout
     layout->sendcounts = new int[comm_size];
@@ -42,11 +36,11 @@ void initLayout(Layout* layout, int comm_size){
 }
 
 template <typename T>
-void cleanpops(Layout* layout, Exchanged<T>* ex){
+void cleanpops(Layout* layout, T** pos){
     // Cleans stored data to free memory of layout and exchanged positions
     // Doesn't really seem to work though
     delete[] layout->indices;
-    delete[] ex->pos;
+    delete[] (*pos);
 }
 
 template <typename T, typename intT>
@@ -326,7 +320,7 @@ void lreadout(T* pos, // (Nparts * 3) Flattened positions in mesh space
     bool inx, iny, inz, inpx, inpy, inpz;
     T mass;
     T ds[3], ts[3];
-    #pragma omp parallel for
+    //#pragma omp parallel for // Doesn't make any difference and intel doesn't like it anyway
     for(int p=0; p<Nparts; p++){
         i = int(pos[3*p]); // Should already be ex[0] <= part[0] < ex[1] unless ghost
         j = int(pos[3*p+1]);
@@ -383,7 +377,7 @@ void ppaint(T*& pos, // (Nparts * 3) Flattened positions (in mesh space)
             intT*& edgesz, // Same, for z
             T** outptr, // Flattened output pointer
 	    Layout* layout, // Output layout (to store it)
-	    Exchanged<T>* exd, // Exchanged particle positions (to store it)
+	    T** expos, // Exchanged particle positions (to store it)
 	    bool& useLayout, // Use pre-defined decomposition layout or no
 	    MPI_Comm& comm){ // MPI communicator
     // Parallel paint
@@ -403,8 +397,8 @@ void ppaint(T*& pos, // (Nparts * 3) Flattened positions (in mesh space)
     	decompose<T, intT>(pos, Nparts, Nmesh, edgesx, edgesy, edgesz, layout, comm);
     
     	// Exchange positions
-    	exd->pos = new T[layout->recvsize * 3];
-    	exchange<T>(pos, 3, *layout, &(exd->pos), comm);
+    	(*expos) = new T[layout->recvsize * 3];
+    	exchange<T>(pos, 3, *layout, expos, comm);
     }
 	
     // Exchange mass
@@ -418,13 +412,13 @@ void ppaint(T*& pos, // (Nparts * 3) Flattened positions (in mesh space)
     int outsize = (ex[1] - ex[0])*(ey[1] - ey[0])*(ez[1] - ez[0]);
     for (int i=0; i<outsize; i++) (*outptr)[i] = 0;
     // Paint locally
-    lpaint<T, intT>(exd->pos, layout->recvsize, exdmass, ex, ey, ez, Nmesh, outptr);
+    lpaint<T, intT>((*expos), layout->recvsize, exdmass, ex, ey, ez, Nmesh, outptr);
     delete[] exdmass;
 }
 
 template <typename T, typename intT>
 void preadout(Layout& layout, // Decomposition layout PPAINT CALL NEEDED
-	      Exchanged<T>& exd, // Exchanged positions PPAINT CALL NEEDED
+	      T* expos, // Exchanged positions PPAINT CALL NEEDED
 	      int64_t& Nparts, // Number of particles
 	      T*& localfield, // Flattened local field to readout from
               intT*& Nmesh, // (3, ) Mesh grid specs
@@ -450,7 +444,7 @@ void preadout(Layout& layout, // Decomposition layout PPAINT CALL NEEDED
     intT* ez = &(edgesz[2*comm_rank]);
     // Readout locally
     T* outmass = new T[layout.recvsize];
-    lreadout<T, intT>(exd.pos, layout.recvsize, localfield, ex, ey, ez, Nmesh, BoxSize, &outmass, vjpdim);
+    lreadout<T, intT>(expos, layout.recvsize, localfield, ex, ey, ez, Nmesh, BoxSize, &outmass, vjpdim);
 
     // Now gather the data back into its original rank
     for (int i=0; i<Nparts; i++) (*outptr)[i] = 0;

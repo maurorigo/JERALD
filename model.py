@@ -6,6 +6,7 @@ from jax import jit, vmap, grad, value_and_grad, custom_vjp
 from mpi4py import MPI
 import mpi4jax
 import gc
+import sys
 
 @custom_vjp
 def c2f(obj):
@@ -189,7 +190,7 @@ class LDLModel(object):
 
         # Paint particle overdensity field
         delta = self.pm.paint(X, 1.) * fact
-
+        
         if baryon:
             mu = params[5*Nstep]
             b1 = params[5*Nstep+1]
@@ -199,9 +200,10 @@ class LDLModel(object):
             mu = allbcast(mu, self.pm.comm)
             b1 = allbcast(b1, self.pm.comm)
             b0 = allbcast(b0, self.pm.comm)
-            return self.ReLU(b1 * (delta+1e-8) ** mu + b0) # Definition of b0 is different from the paper
+            return self.ReLU(b1 * (delta+1e-8)**mu + b0) # Definition of b0 is different from the paper
         else:
             return delta
+
 
     @jit
     def loss(self, params):
@@ -217,7 +219,7 @@ class LDLModel(object):
         """
 
         # Compute the LDL map
-        F = self.LDL(params, self.X, Nstep=self.Nstep, baryon=self.baryon) ** self.index
+        F = jnp.power(self.LDL(params, self.X, Nstep=self.Nstep, baryon=self.baryon), self.index)
 
         # Optionally multiply by second field
         if self.field2 is not None:
@@ -263,20 +265,20 @@ class LDLModel(object):
         gc.collect()
         return out1, out2
 
-    @jit
+    #@jit
     def lossv(self, params):
         """
         Same as above, but if validation mask was provided int set_loss_params,
         also computes validation loss and stores it as a class variable.
         """
-
+        
         F = self.LDL(params, self.X, Nstep=self.Nstep, baryon=self.baryon) ** self.index
-
+        
         if self.field2 is not None:
             F = F * self.field2
 
         residue = F - self.target
-
+        
         smoothingkernel = jnp.where(self.knorms==0, 1., self.knorms**(-self.n) + 1.)
         residuek = self.pm.r2c(residue)
         residuek *= smoothingkernel
@@ -287,7 +289,7 @@ class LDLModel(object):
             Npixel = jnp.sum(self.masktrain)
         else:
             Npixel = residue.size
-
+        
         if self.L1:
             loss = jnp.sum(residuel)
         else:
