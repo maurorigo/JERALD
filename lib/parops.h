@@ -16,7 +16,7 @@ using namespace std;
 namespace parops_jax {
 
 struct Layout{
-    int* indices; // Particles indices per rank, stacked vertically
+    int* indices = new int[10]; // Particles indices per rank, stacked vertically (with initializer)
     // Parameters for sending data using alltoallv
     int sendsize;
     int* sendcounts;
@@ -38,7 +38,6 @@ void initLayout(Layout* layout, int comm_size){
 template <typename T>
 void cleanpops(Layout* layout, T** pos){
     // Cleans stored data to free memory of layout and exchanged positions
-    // Doesn't really seem to work though
     delete[] layout->indices;
     delete[] (*pos);
 }
@@ -110,6 +109,7 @@ void decompose(T* pos, // (Nparts * 3) Flattened positions (in mesh space)
     }
 
     // Indices of particles for each rank, stacked vertically
+    delete[] layout->indices; // Delete the old one
     layout->indices = new int[layout->sendsize];
     int ctr = 0;
     for (int rank=0; rank<comm_size; rank++){
@@ -397,6 +397,7 @@ void ppaint(T*& pos, // (Nparts * 3) Flattened positions (in mesh space)
     	decompose<T, intT>(pos, Nparts, Nmesh, edgesx, edgesy, edgesz, layout, comm);
     
     	// Exchange positions
+	delete[] (*expos); // Delete the previous one
     	(*expos) = new T[layout->recvsize * 3];
     	exchange<T>(pos, 3, *layout, expos, comm);
     }

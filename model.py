@@ -92,6 +92,8 @@ class LDLModel(object):
         else:
             self.L1 = L1
 
+        pm.initLayouts(self.Nstep+1)
+
     @jit
     def potential_gradient(self, params, X):
         """
@@ -119,7 +121,7 @@ class LDLModel(object):
         kh = allbcast(kh, self.pm.comm)
         n = allbcast(n, self.pm.comm)
         knorms = jnp.where(self.knorms==0, 1e-8, self.knorms) # Correct norms that are null
-        filterk = -jnp.exp(-knorms**2/kl**2) * jnp.exp(-kh**2/knorms**2) * knorms**n # Idk why - sign, but it's just a multiplicative factor
+        filterk = jnp.exp(-knorms**2/kl**2) * jnp.exp(-kh**2/knorms**2) * knorms**n # Idk why - sign, but it's just a multiplicative factor
         filterk = c2f(filterk) # Compensates the fact that we only have ~half of the fft (for back pass)
 
         potk = deltak * filterk
@@ -160,7 +162,7 @@ class LDLModel(object):
         sz, _ = mpi4jax.allreduce(len(X), op=MPI.SUM, comm=self.pm.comm)
         fact = self.pm.Nmesh.prod() / sz # Normalization for density
 
-        for i in range(Nstep):
+        def body(i, X):
             
             alpha = params[5*i]
             gamma = params[5*i+1]
@@ -169,9 +171,12 @@ class LDLModel(object):
             n = params[5*i+4]
             
             alpha = allbcast(alpha, self.pm.comm)
-            X += alpha * self.potential_gradient((fact, gamma, kh, kl, n), X)
+            return X + alpha * self.potential_gradient((fact, gamma, kh, kl, n), X)
             
-        return X
+        # Using fori_loop because with normal for JAX can't compute the derivative wrt gamma
+        # in case len(X) is not divisible by pm.comm.size and with Nstep=1 (but with 2 yes,
+        # for some reason)
+        return jax.lax.fori_loop(0, Nstep, body, X)
 
     @staticmethod
     @jit

@@ -14,7 +14,7 @@ import sys
 
 tracemalloc.start()
 
-Ngrid=100
+Ngrid=400
 
 pm = PMesh(Ngrid, 205.)
 comm = pm.comm

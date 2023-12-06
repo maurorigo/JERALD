@@ -48,6 +48,10 @@ class PMesh(object):
                 int(self.edges[1, self.commrank, 1] - self.edges[1, self.commrank, 0]),
                 int(self.edges[2, self.commrank, 1] - self.edges[2, self.commrank, 0]))
 
+    def initLayouts(self, N):
+        for i in range(1, N):
+            jpo.initLayout(self.commsize, lyidx=i)
+
     def computeEdges(self):
         # Computes lower and upper limits along x, y, z for the local part of the field
         lls, _ = mpi4jax.allgather(self.localL, comm=self.comm)
@@ -62,19 +66,13 @@ class PMesh(object):
     
     @partial(jit, static_argnums=(0, 3))
     def paint(self, pos, mass, lyidx=0):
-
+        
         return jpo.ppaint(pos, mass, self.Nmesh, self.BoxSize, self.edges, self.paintdims, self.comm, lyidx)
 
-    @partial(jit, static_argnums=(0, 5))
-    def readout(self, pos, mesh, boxsize=None, comm=None, lyidx=0):
+    @partial(jit, static_argnums=(0, 3))
+    def readout(self, pos, mesh, lyidx=0):
 
-        if boxsize is None:
-            boxsize = self.BoxSize
-
-        if comm is None:
-            comm = self.comm
-
-        return jpo.preadout(pos, mesh, self.Nmesh, boxsize, self.edges, self.paintdims, comm, lyidx)
+        return jpo.preadout(pos, mesh, self.Nmesh, self.BoxSize, self.edges, self.paintdims, self.comm, lyidx)
     
     @staticmethod
     def clean(lyidx=0):
@@ -93,7 +91,7 @@ class PMesh(object):
         Returns:
             (array-like): Fourier transform of local input field (complex)
         """
-
+        
         return jpo.pfft(localreal, self.fftdims) / jnp.prod(self.Nmesh)
 
     @partial(jit, static_argnums=0)
@@ -108,6 +106,7 @@ class PMesh(object):
         Returns:
             out (array-like): Inverse Fourier transform of local input field (real)
         """
+
         return jpo.pifft(localcplx, self.fftdims)
 
     def mesh_coordinates(self):
