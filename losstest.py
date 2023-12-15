@@ -14,7 +14,7 @@ import sys
 
 tracemalloc.start()
 
-Ngrid=400
+Ngrid=100
 
 pm = PMesh(Ngrid, 205.)
 comm = pm.comm
@@ -24,7 +24,7 @@ if rank==0:
     print("Mesh initialized")
     sys.stdout.flush() # In case it's run with sbatch this may be needed
 
-np.random.seed(19)
+np.random.seed(83)
 pos = jnp.array(np.random.rand(Ngrid**3, 3)) * 205.
 randomvels = 10*jnp.cos(jnp.linalg.norm(pos, axis=1)/19).reshape((len(pos), 1))
 pos = pos.at[:].add(randomvels)
@@ -35,13 +35,13 @@ sys.stdout.flush()
 
 # Parameters for LDL
 Nstep = 1
-param = jnp.array([0.001, 0.5, 1., 8., 0.]*Nstep + [1., 1., 0.])
+param = jnp.array([.001, .5, 1., 8., 0.]*Nstep + [1., 1., 0.])
 target = jnp.array(np.random.rand(Ngrid, Ngrid, Ngrid))
 # Local target
 targetl = target[pm.localS:pm.localS+pm.localL, :, :]
 maskl = jnp.ones_like(targetl)
 maskl2 = jnp.array(np.random.randint(0, 2, target.shape)[pm.localS:pm.localS+pm.localL, :, :])
-model = LDLModel(pos, targetl, pm, Nstep=Nstep, baryon=True, masktrain=maskl, maskvalid=maskl2)
+model = LDLModel(pos, targetl, pm, Nstep=Nstep, baryon=False, masktrain=maskl, maskvalid=maskl2)
 
 # Compute a first time for JIT compilation
 loss, lossv = model.lossv(param)

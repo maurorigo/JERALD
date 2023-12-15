@@ -85,14 +85,12 @@ class LDLModel(object):
         self.n = n
         self.index = index
         self.field2 = field2
-        self.masktrain = masktrain if masktrain is not None else None
-        self.maskvalid = maskvalid if maskvalid is not None else None
+        self.masktrain = masktrain
+        self.maskvalid = maskvalid
         if L1 is None:
             self.L1 = baryon # Paper uses True for baryons and False otherwise
         else:
             self.L1 = L1
-
-        pm.initLayouts(self.Nstep+1)
 
     @jit
     def potential_gradient(self, params, X):
@@ -121,7 +119,7 @@ class LDLModel(object):
         kh = allbcast(kh, self.pm.comm)
         n = allbcast(n, self.pm.comm)
         knorms = jnp.where(self.knorms==0, 1e-8, self.knorms) # Correct norms that are null
-        filterk = jnp.exp(-knorms**2/kl**2) * jnp.exp(-kh**2/knorms**2) * knorms**n # Idk why - sign, but it's just a multiplicative factor
+        filterk = -jnp.exp(-knorms**2/kl**2) * jnp.exp(-kh**2/knorms**2) * knorms**n # Idk why - sign, but it's just a multiplicative factor
         filterk = c2f(filterk) # Compensates the fact that we only have ~half of the fft (for back pass)
 
         potk = deltak * filterk
@@ -292,6 +290,7 @@ class LDLModel(object):
             residuel = residue * self.masktrain
             Npixel = jnp.sum(self.masktrain)
         else:
+            residuel = residue
             Npixel = residue.size
         
         if self.L1:
