@@ -1,7 +1,7 @@
 # JAX BINDINGS FOR PARALLEL OPERATIONS
 # Big thanks to https://github.com/dfm/extending-jax/tree/main
 
-__all__ = ["initLayout", "clean", "ppaint", "preadout", "buildplan", "pfft", "pifft"]
+__all__ = ["initLayout", "clean", "ppaint", "preadout", "ppaint3D", "preadout3D", "buildplan", "pfft", "pifft"]
 
 from functools import partial
 
@@ -64,7 +64,7 @@ def _initLayout_abstract(commsize, lyidx):
 
 def _initLayout_lowering(ctx, commsize, lyidx):
 
-    comm = as_mhlo_constant(commsize, np.int32)
+    commsize = as_mhlo_constant(commsize, np.int32)
     lyidx = as_mhlo_constant(lyidx, np.int32)
 
     out_type = mlir.aval_to_ir_type(ctx.avals_out[0])
@@ -74,7 +74,7 @@ def _initLayout_lowering(ctx, commsize, lyidx):
         # Output types
         result_types=[out_type],
         # Inputs
-        operands=[comm, lyidx],
+        operands=[commsize, lyidx],
     ).results
 
 
@@ -236,10 +236,11 @@ def ppaint_fwd(pos, mass, Nmesh, BoxSize, edges, dims, comm, lyidx=0, bwd=False)
 def ppaint_bwd(Nmesh, BoxSize, edges, dims, comm, lyidx, bwd, res, vimg):
     pos, mass = res
     localedges = edges[:, comm.rank, :]
-    out1 = jnp.zeros(pos.shape)
-    out1 = out1.at[:, 0].set(preadout(pos, vimg, Nmesh, BoxSize, edges, dims, comm, lyidx, 0))
-    out1 = out1.at[:, 1].set(preadout(pos, vimg, Nmesh, BoxSize, edges, dims, comm, lyidx, 1))
-    out1 = out1.at[:, 2].set(preadout(pos, vimg, Nmesh, BoxSize, edges, dims, comm, lyidx, 2))
+    #out1 = jnp.zeros(pos.shape)
+    #out1 = out1.at[:, 0].set(preadout(pos, vimg, Nmesh, BoxSize, edges, dims, comm, lyidx, 0))
+    #out1 = out1.at[:, 1].set(preadout(pos, vimg, Nmesh, BoxSize, edges, dims, comm, lyidx, 1))
+    #out1 = out1.at[:, 2].set(preadout(pos, vimg, Nmesh, BoxSize, edges, dims, comm, lyidx, 2))
+    out1 = preadout3D(pos, vimg, Nmesh, BoxSize, edges, dims, comm, lyidx, True)
 
     out2 = preadout(pos, vimg, Nmesh, BoxSize, edges, dims, comm, lyidx)
 
@@ -349,10 +350,11 @@ def preadout_fwd(pos, field, Nmesh, BoxSize, edges, dims, comm, lyidx=0, vjpdim=
 
 def preadout_bwd(Nmesh, BoxSize, edges, dims, comm, lyidx, vjpdim, res, vmass):
     pos, field = res
-    out1 = jnp.zeros(pos.shape)
-    out1 = out1.at[:, 0].set(preadout(pos, field, Nmesh, BoxSize, edges, dims, comm, lyidx, 0))
-    out1 = out1.at[:, 1].set(preadout(pos, field, Nmesh, BoxSize, edges, dims, comm, lyidx, 1))
-    out1 = out1.at[:, 2].set(preadout(pos, field, Nmesh, BoxSize, edges, dims, comm, lyidx, 2))
+    #out1 = jnp.zeros(pos.shape)
+    #out1 = out1.at[:, 0].set(preadout(pos, field, Nmesh, BoxSize, edges, dims, comm, lyidx, 0))
+    #out1 = out1.at[:, 1].set(preadout(pos, field, Nmesh, BoxSize, edges, dims, comm, lyidx, 1))
+    #out1 = out1.at[:, 2].set(preadout(pos, field, Nmesh, BoxSize, edges, dims, comm, lyidx, 2))
+    out1 = preadout3D(pos, field, Nmesh, BoxSize, edges, dims, comm, lyidx, True)
 
     # Using True in bwd here leads to a speedup but one must use different decomposition layouts,
     # increasing the memory usage (because this ppaint re-defines the correct layout for bwd pass).
@@ -361,6 +363,231 @@ def preadout_bwd(Nmesh, BoxSize, edges, dims, comm, lyidx, vjpdim, res, vmass):
     return ((out1.T * vmass).T, out2)
 
 preadout.defvjp(preadout_fwd, preadout_bwd)
+
+
+# |#########|
+# | PAINT3D |
+# |#########|
+def ppaint3D(pos, mass, Nmesh, BoxSize, edges, dims, comm, lyidx=0):
+    """
+    3D VERSION
+    JAX binding of parallel Cloud-In-Cell (CIC) painter in C++.
+    Could do the type hinting at some point
+
+    Parameters:
+        pos (rrayLike): Local positions (Nparts/Nranks, 3) to paint
+        mass (ArrayLike): Local masses (3, Nparts/Nranks) associated to the particles
+        Nmesh (ArrayLike): Mesh sizes along x, y and z
+        BoxSize (ArrayLike): Simulation box size along x, y and z
+        edges (Array-like): (3, Nranks, 2) array specifying lower and upper limit along
+            each direction for each rank
+        dims (ArrayLike): Local dimensions of the output field
+        comm (MPI_Comm): MPI communicator
+        lyidx (int): Layout decomposition index (in case there are multiple, up to 4)
+    
+    Returns:
+        out (ArrayLike): Local painted field
+    """
+    if lyidx > 4:
+        raise Exception("lyidx needs to be smaller than 5")
+    if mass.shape[1] != 3:
+        raise Exception("Invalid input mass shape")
+
+    # Flatten row major
+    mass = mass.flatten()
+
+    pos = pos % BoxSize # PBC
+    pos /= (BoxSize / Nmesh) # Mesh coordinates
+    # Flatten everything for simplicity
+    pos = pos.flatten()
+    # Edges is (3, nranks, 2)
+    edgesx = edges[0, :, :].flatten()
+    edgesy = edges[1, :, :].flatten()
+    edgesz = edges[2, :, :].flatten()
+
+    # From https://github.com/google/jax/issues/3221
+    # Actually check mpi4jax, for instance in collective_ops (in _src), barrier
+    comm = HashableMPIType(comm)
+
+    out = _ppaint3D_prim.bind(pos, mass, Nmesh, edgesx, edgesy, edgesz, dims=dims, comm=comm, lyidx=lyidx)
+
+    return out.reshape((3, dims[0], dims[1], dims[2])) # Make it 3D
+
+# Abstract evaluation rule
+def _ppaint3D_abstract(pos, mass, Nmesh, edgesx, edgesy, edgesz, dims, comm, lyidx):
+    return (ShapedArray((3*dims[0]*dims[1]*dims[2], ), mass.dtype))
+
+# Lowering rule
+def _ppaint3D_lowering(ctx, pos, mass, Nmesh, edgesx, edgesy, edgesz, dims, comm, lyidx):
+
+    # Get value of hashable
+    comm = comm.wrapped
+
+    # Extract the numpy type of the inputs
+    pos_aval = ctx.avals_in[0]
+    np_dtype = np.dtype(pos_aval.dtype)
+
+    # Type of the output
+    out_type = mlir.aval_to_ir_type(ctx.avals_out[0])
+
+    # Number of particles is length of pos / 3
+    Nparts = (np.prod(pos_aval.shape) / 3).astype(np.int64)
+    lyidx = as_mhlo_constant(lyidx, np.int32)
+    # This dtype is int64 only for Nparts and int32 only for lyidx, all the other ints are variable
+    # int32_t or int64_t in C++ based on np_dtype (could also make more general)
+
+    # Dealing with comm as in mpi4jax, see for instance barrier.py in collective ops
+    comm = as_mhlo_constant(to_mpi_handle(comm), np.uintp)
+
+    # Different call based on dtype
+    if np_dtype == np.float32:
+        op_name = "ppaint3D_f32"
+    elif np_dtype == np.float64:
+        op_name = "ppaint3D_f64"
+    else:
+        raise NotImplementedError(f"Unsupported dtype {np_dtype}")
+
+    return custom_call(
+        op_name,
+        # Output types
+        result_types=[out_type],
+        # Inputs
+        operands=[pos, mlir.ir_constant(Nparts), mass, Nmesh, edgesx, edgesy, edgesz, comm, lyidx],
+    ).results
+
+
+# Register the op
+_ppaint3D_prim = core.Primitive("ppaint3D")
+_ppaint3D_prim.def_impl(partial(xla.apply_primitive, _ppaint3D_prim))
+_ppaint3D_prim.def_abstract_eval(_ppaint3D_abstract)
+
+# Connect the XLA translation rules for JIT compilation
+mlir.register_lowering(_ppaint3D_prim, _ppaint3D_lowering, platform="cpu")
+
+
+# |###########|
+# | READOUT3D |
+# |###########|
+@partial(custom_vjp, nondiff_argnums=(2, 3, 4, 5, 6, 7, 8))
+def preadout3D(pos, field, Nmesh, BoxSize, edges, dims, comm, lyidx=0, vjp=False):
+    """
+    JAX binding of parallel Cloud-In-Cell (CIC) 3D readout in C++.
+    Either for reading out a 3D field (x, y, z) of for vjp purposes with single field.
+    CAREFUL WITH THE USAGE, I may actually split it or add safety controls.
+
+    Parameters:
+        pos (rrayLike): Local positions (Nparts/Nranks, 3) to readout at
+        field (ArrayLike): Local field or fields to readout from. If 3 fields, should be a [3, sz1, sz2, sz3] array
+        Nmesh (ArrayLike): Mesh sizes along x, y and z
+        BoxSize (ArrayLike): Simulation box size along x, y and z
+        edges (Array-like): (3, Nranks, 2) array specifying lower and upper limit along
+            each direction for each rank
+        dims (ArrayLike): Local dimensions of the field (mostly for consistency with ppaint)
+        comm (MPI_Comm): MPI communicator
+        lyidx (int): Layout decomposition index (in case there are multiple, up to 4)
+        vjp (bool): Whether we're computing a vjp or not
+
+    Returns:
+        out (ArrayLike): (Nparts/Nranks, 3) array representing the local read-out values
+    """
+    if lyidx > 4:
+        raise Exception("lyidx needs to be smaller than 5")
+    if not vjp:
+        if len(field) != 3:
+            raise Exception("Invalid input field shape")
+
+    pos = pos % BoxSize # PBC
+    pos /= (BoxSize / Nmesh) # Mesh coordinates
+    # Flatten everything for simplicity
+    Nparts = pos.shape[0]
+    pos = pos.flatten()
+    field = field.flatten()
+    # Edges is (3, nranks, 2)
+    edgesx = edges[0, :, :].flatten()
+    edgesy = edges[1, :, :].flatten()
+    edgesz = edges[2, :, :].flatten()
+
+    # From https://github.com/google/jax/issues/3221
+    # Actually check mpi4jax, for instance in collective_ops (in _src), barrier
+    comm = HashableMPIType(comm)
+
+    out = _preadout3D_prim.bind(pos, field, Nmesh, BoxSize, edgesx, edgesy, edgesz, comm=comm, lyidx=lyidx, vjp=vjp)
+
+    return out.reshape((Nparts, 3))
+
+# Abstract evaluation rules
+def _preadout3D_abstract(pos, field, Nmesh, BoxSize, edgesx, edgesy, edgesz, comm, lyidx, vjp):
+    return (ShapedArray((int(pos.shape[0]), ), pos.dtype))
+
+# Lowering rules
+def _preadout3D_lowering(ctx, pos, field, Nmesh, BoxSize, edgesx, edgesy, edgesz, comm, lyidx, vjp):
+
+    # Get value of hashable
+    comm = comm.wrapped
+
+    # Extract the numpy type of the inputs
+    pos_aval = ctx.avals_in[0]
+    np_dtype = np.dtype(pos_aval.dtype)
+
+    out_type = mlir.aval_to_ir_type(ctx.avals_out[0])
+
+    # Number of particles is length of pos / 3
+    Nparts = (np.prod(pos_aval.shape) / 3).astype(np.int64)
+    lyidx = as_mhlo_constant(lyidx, np.int32)
+    vjp = as_mhlo_constant(vjp, bool)
+    # This dtype is int64 only for Nparts and int32 only for lyidx and vjpdim, all the
+    # other ints are int32_t or int64_t in C++ based on np_dtype (could also make more general)
+
+    # Dealing with comm as in mpi4jax, see for instance barrier.py in collective ops
+    comm = as_mhlo_constant(to_mpi_handle(comm), np.uintp)
+
+    # Different call based on dtype
+    if np_dtype == np.float32:
+        op_name = "preadout3D_f32"
+    elif np_dtype == np.float64:
+        op_name = "preadout3D_f64"
+    else:
+        raise NotImplementedError(f"Unsupported dtype {np_dtype}")
+
+    return custom_call(
+        op_name,
+        # Output types
+        result_types=[out_type],
+        # Inputs
+        operands=[pos, mlir.ir_constant(Nparts), field, Nmesh, BoxSize, edgesx, edgesy, edgesz, comm, lyidx, vjp],
+    ).results
+
+
+# Register the op
+_preadout3D_prim = core.Primitive("preadout3D")
+_preadout3D_prim.def_impl(partial(xla.apply_primitive, _preadout3D_prim))
+_preadout3D_prim.def_abstract_eval(_preadout3D_abstract)
+
+# Connect the XLA translation rules for JIT compilation
+mlir.register_lowering(_preadout3D_prim, _preadout3D_lowering, platform="cpu")
+
+# VJP definition for preadout (see notes for a derivation)
+def preadout3D_fwd(pos, field, Nmesh, BoxSize, edges, dims, comm, lyidx=0, vjp=False):
+    return preadout3D(pos, field, Nmesh, BoxSize, edges, dims, comm, lyidx, vjp), (pos, field)
+
+def preadout3D_bwd(Nmesh, BoxSize, edges, dims, comm, lyidx, vjp, res, vmass):
+    pos, field = res
+    if vjp:
+        raise Exception("custom_vjp not implemented for 3D readout with vjp = True")
+    out1 = jnp.zeros(pos.shape)
+    out1 = (preadout3D(pos, field[0], Nmesh, BoxSize, edges, dims, comm, lyidx, True).T * vmass[:, 0]).T
+    out1 += (preadout3D(pos, field[1], Nmesh, BoxSize, edges, dims, comm, lyidx, True).T * vmass[:, 1]).T
+    out1 += (preadout3D(pos, field[2], Nmesh, BoxSize, edges, dims, comm, lyidx, True).T * vmass[:, 2]).T
+
+    out2 = ppaint3D(pos, vmass, Nmesh, BoxSize, edges, dims, comm, lyidx)
+    #out2 = jnp.zeros((3, dims[0], dims[1], dims[2]))
+    #outs = out2.at[0, :, :, :].set(ppaint(pos, vmass[:, 0], Nmesh, BoxSize, edges, dims, comm, lyidx))
+    #out2 = out2.at[1, :, :, :].set(ppaint(pos, vmass[:, 1], Nmesh, BoxSize, edges, dims, comm, lyidx))
+    #out2 = out2.at[2, :, :, :].set(ppaint(pos, vmass[:, 2], Nmesh, BoxSize, edges, dims, comm, lyidx))
+
+    return (out1, out2)
+
+preadout3D.defvjp(preadout3D_fwd, preadout3D_bwd)
 
 
 # |###########|
@@ -532,4 +759,91 @@ def pifft_bwd(dims, res, v):
     return (jnp.conj(pfft(v, dims)),)
 
 pifft.defvjp(pifft_fwd, pifft_bwd)
+
+
+# |#################|
+# | LOCAL POSITIONS |
+# |#################|
+def local_positions(pos, Nout, Nmesh, BoxSize, edges, commsize, commrank):
+    """
+    JAX binding of a C++ method. Returns Nout particle positions: specifically, this method
+    checks which of the particles in pos are in the local part of the field, specified via
+    the edges parameter, and returns them up to Nout. If the number of particles is actually
+    larger than Nout, particles are scattered in other ranks, while if the number is lower,
+    the output contains particles that belong to other ranks. This is done in order to have
+    each rank processing its local particles as best as it can, without having ranks processing
+    a lot of particles and others processing very little.
+    Nout should sum to Nparts
+
+    Parameters:
+        pos (ArrayLike): Global positions (Nparts, 3) to divide into ranks
+        Nout (ArrayLike): Number of particles for each rank
+        Nmesh (ArrayLike): Mesh sizes along x, y and z
+        BoxSize (ArrayLike): Simulation box size along x, y and z
+        edges (ArrayLike): (3, Nranks, 2) array specifying lower and upper limit along
+            each direction for each rank
+        commsize (int): Size of MPI communicator
+        commrank (int): Local MPI rank index
+
+    Returns:
+        out (ArrayLike): (Nout[commrank], 3) array of local particles (real coordinates)
+    """
+
+    if Nout.sum() != len(pos):
+        raise Exception(f"The sum of local sizes should match the total number of particles, got {Nout.sum()} and {len(pos)} instead.")
+
+    pos = pos % BoxSize; # PBC
+    pos /= (BoxSize / Nmesh) # Mesh coordinates
+    # Flatten everything for simplicity
+    pos = pos.flatten()
+    # Edges is (3, nranks, 2)
+    edgesx = edges[0, :, :].flatten()
+    edgesy = edges[1, :, :].flatten()
+    edgesz = edges[2, :, :].flatten()
+    Nout = Nout.astype(np.int64)
+    lNout = int(Nout[commrank])
+
+    return _localpos_prim.bind(pos, Nout, Nmesh, edgesx, edgesy, edgesz, commsize=commsize, commrank=commrank, lNout=lNout) * (BoxSize / Nmesh)
+
+# Abstract evaluation rules
+def _localpos_abstract(pos, Nout, Nmesh, edgesx, edgesy, edgesz, commsize, commrank, lNout):
+    return (ShapedArray((lNout, 3), pos.dtype))
+
+# Lowering rules
+def _localpos_lowering(ctx, pos, Nout, Nmesh, edgesx, edgesy, edgesz, commsize, commrank, lNout):
+
+    # Extract the numpy type of the inputs
+    pos_aval = ctx.avals_in[0]
+    np_dtype = np.dtype(pos_aval.dtype)
+
+    out_type = mlir.aval_to_ir_type(ctx.avals_out[0])
+
+    # Number of particles is length of pos / 3
+    Nparts = (np.prod(pos_aval.shape) / 3).astype(np.int64)
+    commsize = as_mhlo_constant(commsize, np.int32)
+    commrank = as_mhlo_constant(commrank, np.int32)
+
+    # Different call based on dtype
+    if np_dtype == np.float32:
+        op_name = "localpositions_f32"
+    elif np_dtype == np.float64:
+        op_name = "localpositions_f64"
+    else:
+        raise NotImplementedError(f"Unsupported dtype {np_dtype}")
+
+    return custom_call(
+        op_name,
+        # Output types
+        result_types=[out_type],
+        # Inputs
+        operands=[pos, mlir.ir_constant(Nparts), Nmesh, edgesx, edgesy, edgesz, commsize, commrank, Nout],
+    ).results
+
+# Register the op
+_localpos_prim = core.Primitive("local_positions")
+_localpos_prim.def_impl(partial(xla.apply_primitive, _localpos_prim))
+_localpos_prim.def_abstract_eval(_localpos_abstract)
+
+# Connect the XLA translation rules for JIT compilation
+mlir.register_lowering(_localpos_prim, _localpos_lowering, platform="cpu")
 

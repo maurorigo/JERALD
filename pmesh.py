@@ -5,6 +5,7 @@ from functools import partial
 from jax import jit, vmap
 from mpi4py import MPI
 import mpi4jax
+import sys
 
 import jaxpops_bind as jpo
 
@@ -36,14 +37,14 @@ class PMesh(object):
         # Initialize decomposition layout
         jpo.initLayout(self.commsize)
 
-        # Compute fft partitioning of data (local x length and local start)
+        # Compute fft partitioning of data (local x length and local start, in mesh coordinates)
         self.localL, self.localS = jpo.buildplan(self.Nmesh, comm)
         self._Nmesh = (int(self.Nmesh[0]), int(self.Nmesh[1]), int(self.Nmesh[2])) # For kvals
         self.fftss = (int(self.localS), int(self.localS + self.localL)) # Start/stop for kvals x
         self.fftdims = (int(self.localL), int(self.Nmesh[1]), int(self.Nmesh[2]))
 
         # Values for painting/readout
-        self.edges = self.computeEdges()
+        self.edges = self.compute_edges()
         self.paintdims = (int(self.edges[0, self.commrank, 1] - self.edges[0, self.commrank, 0]),
                 int(self.edges[1, self.commrank, 1] - self.edges[1, self.commrank, 0]),
                 int(self.edges[2, self.commrank, 1] - self.edges[2, self.commrank, 0]))
@@ -52,8 +53,8 @@ class PMesh(object):
         for i in range(1, N):
             jpo.initLayout(self.commsize, lyidx=i)
 
-    def computeEdges(self):
-        # Computes lower and upper limits along x, y, z for the local part of the field
+    def compute_edges(self):
+        # Computes lower and upper limits along x, y, z for the local part of the field, in mesh coords
         lls, _ = mpi4jax.allgather(self.localL, comm=self.comm)
         lss, _ = mpi4jax.allgather(self.localS, comm=self.comm)
         edges = np.zeros((3, self.commsize, 2), dtype=int)
@@ -63,6 +64,17 @@ class PMesh(object):
             edges[0, i, 0] = lss[i]
             edges[0, i, 1] = lss[i] + lls[i]
         return jnp.array(edges)
+
+    def get_local_positions_vanilla(self, pos):
+        # Returns only the particels in pos that are within the limits of the local part of the field
+        pos = pos % self.BoxSize # PBC
+        # Check is performed in mesh coordinates
+        return pos[(pos[:, 0] / self.BoxSize[0] * self.Nmesh[0] >= self.edges[0, self.commrank, 0]) & \
+                (pos[:, 0] / self.BoxSize[0] * self.Nmesh[0] < self.edges[0, self.commrank, 1]), :]
+
+    def get_local_positions(self, pos, Nout):
+        # Similar to before, but see the jpo method
+        return jpo.local_positions(pos, Nout, self.Nmesh, self.BoxSize, self.edges, self.commsize, self.commrank)
     
     @partial(jit, static_argnums=(0, 3))
     def paint(self, pos, mass, lyidx=0):
@@ -73,6 +85,11 @@ class PMesh(object):
     def readout(self, pos, mesh, lyidx=0):
 
         return jpo.preadout(pos, mesh, self.Nmesh, self.BoxSize, self.edges, self.paintdims, self.comm, lyidx)
+
+    @partial(jit, static_argnums=(0, 3))
+    def readout3D(self, pos, meshes, lyidx=0):
+
+        return jpo.preadout3D(pos, meshes, self.Nmesh, self.BoxSize, self.edges, self.paintdims, self.comm, lyidx)
     
     @staticmethod
     def clean(lyidx=0):
@@ -126,8 +143,8 @@ class PMesh(object):
         Computes local grid coordinates as a (?, Nmesh[1], Nmesh[2], 3) array
         """
         x = jnp.arange(self.fftss[0], self.fftss[1]) / self.Nmesh[0] * self.BoxSize[0]
-        y = jnp.arange(self.Nmesh[1]) / self.Nmesh[1] * self.BoxSize[1]
-        z = jnp.arange(self.Nmesh[2]) / self.Nmesh[2] * self.BoxSize[2]
+        y = jnp.arange(self._Nmesh[1]) / self.Nmesh[1] * self.BoxSize[1]
+        z = jnp.arange(self._Nmesh[2]) / self.Nmesh[2] * self.BoxSize[2]
         X, Y, Z = jnp.meshgrid(x, y, z, indexing='ij')
         return jnp.stack((X, Y, Z), axis=-1)
 
@@ -187,4 +204,17 @@ class PMesh(object):
         fullfield = self.comm.allgather(localfield)
         out = np.concatenate(fullfield).reshape(fullsize)
         return out
+
+    def printr(self, strings, rank=0, flush=True):
+        """
+        Prints line(s) on only one rank and optionally flushes
+        """
+        if self.commrank==rank:
+            if isinstance(strings, list):
+                for string in strings:
+                    print(string)
+            else:
+                print(strings)
+            if flush:
+                sys.stdout.flush()
     

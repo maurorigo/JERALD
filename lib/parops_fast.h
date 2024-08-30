@@ -16,7 +16,9 @@ using namespace std;
 namespace parops_jax {
 
 struct Layout{
-    int* indices = new int[10]; // Particles indices per rank, stacked vertically (with initializer)
+    int* indices = new int[10]; // Particles indices per rank, stacked vertically (except self)
+    int* selfindices = new int[10]; // Particles in this rank belonging to itself (no need to move)
+    int selfsize;
     // Parameters for sending data using alltoallv
     int sendsize;
     int* sendcounts;
@@ -25,6 +27,9 @@ struct Layout{
     int recvsize;
     int* recvcounts;
     int* recvdispl;
+    // Total sizes
+    int totsend;
+    int totrecv;
 };
 
 void initLayout(Layout* layout, int comm_size){
@@ -66,8 +71,9 @@ void decompose(T*& pos, // (Nparts * 3) Flattened positions (in mesh space)
 		    {0, 1, 1},
 		    {1, 1, 1}};
 
-    int comm_size;
+    int comm_size, comm_rank;
     MPI_Comm_size(comm, &comm_size);
+    MPI_Comm_rank(comm, &comm_rank);
 
     // Array of vectors with particle indices for each rank (vector because size is unknown a priori)
     vector<int>* ppr = new vector<int>[comm_size];
@@ -75,6 +81,10 @@ void decompose(T*& pos, // (Nparts * 3) Flattened positions (in mesh space)
         ppr[rank].reserve(Nparts / comm_size); // Initialize vec to a sensible size to avoid realloc
 	layout->sendcounts[rank] = 0;
     }
+    // Indices of particles in this rank
+    vector<int> pself;
+    pself.reserve(Nparts);
+    layout->selfsize = 0;
 
     int i, j, k, i1, j1, k1;
     for (int64_t p=0; p<Nparts; p++){
@@ -89,13 +99,26 @@ void decompose(T*& pos, // (Nparts * 3) Flattened positions (in mesh space)
 		if ((unsigned)(i1 - edgesx[2*rank]) < (edgesx[2*rank+1] - edgesx[2*rank]) &&
                     (unsigned)(j1 - edgesy[2*rank]) < (edgesy[2*rank+1] - edgesy[2*rank]) &&
                     (unsigned)(k1 - edgesz[2*rank]) < (edgesz[2*rank+1] - edgesz[2*rank])){    
-		    ppr[rank].push_back(p); // Add particle index to this rank
-		    layout->sendcounts[rank]++; // Increment this rank counter
-		    break; // If this particle contributes to the rank, just exit (no doubles)
+		    if (rank == comm_rank){
+			pself.push_back(p); // Particles in this rank that belong to this rank
+			layout->selfsize++;
+			break;
+		    } else {
+		    	ppr[rank].push_back(p); // Add particle index to this rank
+		    	layout->sendcounts[rank]++; // Increment this rank counter
+		   	break; // If this particle contributes to the rank, just exit (no doubles)
+		    }
 		}
 	    }
 	}
     }
+
+    // Update the self indices in the layout
+    //pself.shrink_to_fit();
+    delete[] layout->selfindices;
+    layout->selfindices = new int[layout->selfsize];
+    for (int i=0; i<layout->selfsize; i++) layout->selfindices[i] = pself[i];
+    vector<int>().swap(pself); // Free vector memory
     
     // Layout counts and displacements should be already initialized
     // Send to each rank the size of the data coming from this
@@ -107,7 +130,7 @@ void decompose(T*& pos, // (Nparts * 3) Flattened positions (in mesh space)
     for (int rank=0; rank<comm_size; rank++){
 	layout->sendsize += layout->sendcounts[rank];
 	layout->recvsize += layout->recvcounts[rank];
-	ppr[rank].shrink_to_fit(); // Just to avoid memory spike when creating also indices
+	//ppr[rank].shrink_to_fit(); // Just to avoid memory spike when creating also indices
     }
     //cout << layout->sendsize << " " << layout-> recvsize << endl; // For testing memeory
 
@@ -131,6 +154,10 @@ void decompose(T*& pos, // (Nparts * 3) Flattened positions (in mesh space)
 	layout->senddispl[rank] = layout->senddispl[rank-1] + layout->sendcounts[rank-1];
 	layout->recvdispl[rank] = layout->recvdispl[rank-1] + layout->recvcounts[rank-1];
     }
+	
+    // Particles from own rank + from other ranks
+    layout->totsend=layout->selfsize + layout->sendsize;
+    layout->totrecv=layout->selfsize + layout->recvsize;
 }
 
 template <typename T>
@@ -145,6 +172,9 @@ void exchange(T*& data, int dims, Layout& layout, T** outdata, MPI_Comm comm=MPI
     for (int i=0; i<layout.sendsize; i++){
 	 for (int d=0; d<dims; d++) sendbuf[dims*i + d] = data[dims*layout.indices[i] + d];
     }
+
+    // Construct the receive buffer (because this is only particles from other ranks)
+    T* recvbuf = new T[layout.recvsize * dims];
 
     // Create datatype to send (contiguous T of dim length)
     MPI_Datatype dt;
@@ -162,13 +192,22 @@ void exchange(T*& data, int dims, Layout& layout, T** outdata, MPI_Comm comm=MPI
 		  layout.sendcounts,
 		  layout.senddispl,
 		  dt,
-		  (*outdata),
+		  recvbuf,
 		  layout.recvcounts,
 		  layout.recvdispl,
 		  dt,
 		  comm);
 
+    // Now build the output (particles from this rank + from other ranks)
+    for (int i=0; i<layout.selfsize; i++){
+         for (int d=0; d<dims; d++) (*outdata)[dims*i + d] = data[dims*layout.selfindices[i] + d];
+    }
+    for (int i=0; i<dims*layout.recvsize; i++){
+         (*outdata)[dims*layout.selfsize + i] = recvbuf[i];
+    }
+
     delete[] sendbuf;
+    delete[] recvbuf;
     MPI_Type_free(&dt);
 }
 
@@ -179,7 +218,8 @@ void exchange1D(T*& data, Layout& layout, T** outdata, MPI_Comm comm=MPI_COMM_WO
     T* sendbuf = new T[layout.sendsize];
     for (int i=0; i<layout.sendsize; i++) sendbuf[i] = data[layout.indices[i]];
 
-    // Choose datatype to send based on T
+    T* recvbuf = new T[layout.recvsize];
+
     MPI_Datatype dt;
     if (is_same<T, double>::value){
         dt = MPI_DOUBLE;
@@ -195,13 +235,21 @@ void exchange1D(T*& data, Layout& layout, T** outdata, MPI_Comm comm=MPI_COMM_WO
                   layout.sendcounts,
                   layout.senddispl,
                   dt,
-                  (*outdata), // recvbuf
+                  recvbuf,
                   layout.recvcounts,
                   layout.recvdispl,
                   dt,
                   comm);
 
+    for (int i=0; i<layout.selfsize; i++){
+         (*outdata)[i] = data[layout.selfindices[i]];
+    }
+    for (int i=0; i<layout.recvsize; i++){
+         (*outdata)[layout.selfsize + i] = recvbuf[i];
+    }
+
     delete[] sendbuf;
+    delete[] recvbuf;
     MPI_Type_free(&dt);
 }
 
@@ -212,6 +260,12 @@ void gather1D(T*& data, Layout& layout, T** outdata, MPI_Comm comm=MPI_COMM_WORL
     
     // This time we're receiving back original data, so receiving and sending parameters are flipped
     T* recvbuf = new T[layout.sendsize];
+
+    // Build send buffer to only contain things to send to other ranks
+    T* sendbuf = new T[layout.recvsize];
+    for (int i=0; i<layout.recvsize; i++){
+         sendbuf[i] = data[layout.selfsize + i];
+    }
 
     // Choose datatype to send based on T
     MPI_Datatype dt;
@@ -225,7 +279,7 @@ void gather1D(T*& data, Layout& layout, T** outdata, MPI_Comm comm=MPI_COMM_WORL
     MPI_Type_commit(&dt);
 
     // Fire back
-    MPI_Alltoallv(data,
+    MPI_Alltoallv(sendbuf,
 		  layout.recvcounts,
 		  layout.recvdispl,
 		  dt,
@@ -236,11 +290,13 @@ void gather1D(T*& data, Layout& layout, T** outdata, MPI_Comm comm=MPI_COMM_WORL
 		  comm);
 
     // Sum contributions of different ranks to each particle (with index indices[i])
-    int i = 0;
-    for_each(layout.indices, layout.indices+layout.sendsize, [&](int & index){
-    	(*outdata)[index] += recvbuf[i];
-     	i++;
-    });
+    for (int i=0; i<layout.selfsize; i++){
+	(*outdata)[layout.selfindices[i]] += data[i];
+    }
+    for (int i=0; i<layout.sendsize; i++){
+        (*outdata)[layout.indices[i]] += recvbuf[i];
+    }
+    delete[] sendbuf;
     delete[] recvbuf;
     MPI_Type_free(&dt);
 }
@@ -254,6 +310,12 @@ void gather(T*& data, int dims, Layout& layout, T** outdata, MPI_Comm comm=MPI_C
     // This time we're receiving back original data, so receiving and sending parameters are flipped
     T* recvbuf = new T[layout.sendsize * dims];
 
+    // Build send buffer because we don't gather all data, only the one
+    T* sendbuf = new T[layout.recvsize * dims];
+    for (int i=0; i<layout.recvsize; i++){
+         for (int d=0; d<dims; d++) sendbuf[dims*i + d] = data[dims*(layout.selfsize + i) + d];
+    }
+
     // Choose datatype to send based on T
     MPI_Datatype dt;
     if (is_same<T, double>::value){
@@ -266,7 +328,7 @@ void gather(T*& data, int dims, Layout& layout, T** outdata, MPI_Comm comm=MPI_C
     MPI_Type_commit(&dt);
 
     // Fire back
-    MPI_Alltoallv(data,
+    MPI_Alltoallv(sendbuf,
                   layout.recvcounts,
                   layout.recvdispl,
                   dt,
@@ -277,9 +339,13 @@ void gather(T*& data, int dims, Layout& layout, T** outdata, MPI_Comm comm=MPI_C
                   comm);
 
     // Sum contributions of different ranks to each particle (particles are in rows and row-major)
+    for(int i=0; i<layout.selfsize; i++){
+        for (int d=0; d<dims; d++) (*outdata)[dims*layout.selfindices[i] + d] += data[dims*i + d];
+    }
     for (int i=0; i<layout.sendsize; i++){
          for (int d=0; d<dims; d++) (*outdata)[dims*layout.indices[i] + d] += recvbuf[dims*i + d];
     }
+    delete[] sendbuf;
     delete[] recvbuf;
     MPI_Type_free(&dt);
 }
@@ -445,12 +511,12 @@ void ppaint(T*& pos, // (Nparts * 3) Flattened positions (in mesh space)
     
     	// Exchange positions
 	delete[] (*expos); // Delete the previous one
-    	(*expos) = new T[layout->recvsize * 3];
+    	(*expos) = new T[layout->totrecv * 3];
     	exchange<T>(pos, 3, *layout, expos, comm);
     }
 	
     // Exchange mass
-    T* exdmass = new T[layout->recvsize];
+    T* exdmass = new T[layout->totrecv];
     exchange1D<T>(mass, *layout, &exdmass, comm);
 
     // Now paint local field
@@ -460,7 +526,7 @@ void ppaint(T*& pos, // (Nparts * 3) Flattened positions (in mesh space)
     int outsize = (ex[1] - ex[0])*(ey[1] - ey[0])*(ez[1] - ez[0]);
     for (int i=0; i<outsize; i++) (*outptr)[i] = 0;
     // Paint locally
-    lpaint<T, intT>(*expos, layout->recvsize, exdmass, ex, ey, ez, Nmesh, outptr);
+    lpaint<T, intT>(*expos, layout->totrecv, exdmass, ex, ey, ez, Nmesh, outptr);
     delete[] exdmass;
 }
 
@@ -491,8 +557,8 @@ void preadout(Layout& layout, // Decomposition layout PPAINT CALL NEEDED
     intT* ey = &(edgesy[2*comm_rank]);
     intT* ez = &(edgesz[2*comm_rank]);
     // Readout locally
-    T* outmass = new T[layout.recvsize];
-    lreadout<T, intT>(expos, layout.recvsize, localfield, ex, ey, ez, Nmesh, BoxSize, &outmass, vjpdim);
+    T* outmass = new T[layout.totrecv];
+    lreadout<T, intT>(expos, layout.totrecv, localfield, ex, ey, ez, Nmesh, BoxSize, &outmass, vjpdim);
 
     // Now gather the data back into its original rank
     for (int i=0; i<Nparts; i++) (*outptr)[i] = 0;
@@ -639,11 +705,11 @@ void ppaint3D(T*& pos, // (Nparts * 3) Flattened positions (in mesh space)
 
     // Exchange positions
     delete[] (*expos); // Delete the previous one
-    *expos = new T[layout->recvsize * 3];
+    *expos = new T[layout->totrecv * 3];
     exchange<T>(pos, 3, *layout, expos, comm);
 
     // Exchange mass
-    T* exdmass = new T[3 * layout->recvsize];
+    T* exdmass = new T[3 * layout->totrecv];
     exchange<T>(mass, 3, *layout, &exdmass, comm);
 
     // Now paint local field
@@ -654,7 +720,7 @@ void ppaint3D(T*& pos, // (Nparts * 3) Flattened positions (in mesh space)
     int outsize = 3*(ex[1] - ex[0])*(ey[1] - ey[0])*(ez[1] - ez[0]);
     for (int i=0; i<outsize; i++) (*outptr)[i] = 0;
     // Paint locally
-    lpaint3D<T, intT>(*expos, layout->recvsize, exdmass, ex, ey, ez, Nmesh, outptr);
+    lpaint3D<T, intT>(*expos, layout->totrecv, exdmass, ex, ey, ez, Nmesh, outptr);
     delete[] exdmass;
 }
 
@@ -781,8 +847,8 @@ void preadout3D(Layout& layout, // Decomposition layout PPAINT CALL NEEDED
     intT* ey = &(edgesy[2*comm_rank]);
     intT* ez = &(edgesz[2*comm_rank]);
     // Readout locally
-    T* outmasses = new T[3 * layout.recvsize];
-    lreadout3D<T, intT>(expos, layout.recvsize, localfield, ex, ey, ez, Nmesh, BoxSize, &outmasses, vjp);
+    T* outmasses = new T[3 * layout.totrecv];
+    lreadout3D<T, intT>(expos, layout.totrecv, localfield, ex, ey, ez, Nmesh, BoxSize, &outmasses, vjp);
 
     // Now gather the data back into its original rank
     for (int i=0; i<3*Nparts; i++) (*outptr)[i] = 0;

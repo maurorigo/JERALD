@@ -16,7 +16,7 @@ using namespace std;
 namespace parops_jax {
 
 struct Layout{
-    int* indices = new int[10]; // Particles indices per rank, stacked vertically (with initializer)
+    vector<int> indices; // Particles indices per rank, stacked vertically (vector in order to reuse it)
     // Parameters for sending data using alltoallv
     int sendsize;
     int* sendcounts;
@@ -36,15 +36,14 @@ void initLayout(Layout* layout, int comm_size){
 }
 
 template <typename T>
-void cleanpops(Layout* layout, T** pos){
+void cleanpops(Layout* layout, vector<T>* pos){
     // Cleans stored data to free memory of layout and exchanged positions
-    delete[] layout->indices;
-    delete[] (*pos);
+    vector<int>().swap(layout->indices);
+    vector<T>().swap(*pos);
 }
 
-// Passing big inputs by reference to save memory
 template <typename T, typename intT>
-void decompose(T*& pos, // (Nparts * 3) Flattened positions (in mesh space)
+void decompose(T* pos, // (Nparts * 3) Flattened positions (in mesh space)
 	       int64_t Nparts, // Number of particles
 	       intT* Nmesh, // (3, ) Mesh grid specs
 	       intT* edgesx, // (comm_size, 2) Flattened limit grid indices along x for each rank
@@ -67,7 +66,7 @@ void decompose(T*& pos, // (Nparts * 3) Flattened positions (in mesh space)
 		    {1, 1, 1}};
 
     int comm_size;
-    MPI_Comm_size(comm, &comm_size);
+    MPI_Comm_size(MPI_COMM_WORLD, &comm_size);
 
     // Array of vectors with particle indices for each rank (vector because size is unknown a priori)
     vector<int>* ppr = new vector<int>[comm_size];
@@ -105,24 +104,23 @@ void decompose(T*& pos, // (Nparts * 3) Flattened positions (in mesh space)
     layout->sendsize = 0;
     layout->recvsize = 0;
     for (int rank=0; rank<comm_size; rank++){
+	ppr[rank].shrink_to_fit(); // To avoid memory spikes together with expansion of indices
 	layout->sendsize += layout->sendcounts[rank];
 	layout->recvsize += layout->recvcounts[rank];
-	ppr[rank].shrink_to_fit(); // Just to avoid memory spike when creating also indices
     }
-    //cout << layout->sendsize << " " << layout-> recvsize << endl; // For testing memeory
 
     // Indices of particles for each rank, stacked vertically
-    delete[] layout->indices; // Delete the old one
-    layout->indices = new int[layout->sendsize];
+    layout->indices.resize(layout->sendsize); // Make sure not many preallocations are needed
     int ctr = 0;
     for (int rank=0; rank<comm_size; rank++){
         for (int p : ppr[rank]){
-  	    layout->indices[ctr] = p;
+  	    layout->indices.at(ctr) = p;
 	    ctr++;
 	}
 	vector<int>().swap(ppr[rank]); // Free vector memory
     }
-    delete[] ppr;
+    layout->indices.shrink_to_fit(); // Also avoid extra memory, not sure if necessary
+    delete[] ppr; // Delete also this for good measure
 
     // Compute send and receive displacements for alltoallv
     layout->senddispl[0] = 0;
@@ -134,13 +132,14 @@ void decompose(T*& pos, // (Nparts * 3) Flattened positions (in mesh space)
 }
 
 template <typename T>
-void exchange(T*& data, int dims, Layout& layout, T** outdata, MPI_Comm comm=MPI_COMM_WORLD){
+void exchange(T* data, int dims, Layout layout, vector<T>& outdata, MPI_Comm comm=MPI_COMM_WORLD){
     // Sends what's in "data" (flattened) to the correct ranks to perform CIC operations.
     // dims is the dimensionality of data
     // layout is the decomposition layout.
     // Sets the value in outdata to the "data" each rank have assigned to this (including self).
 
     // Construct the array that contains the data to send
+
     T* sendbuf = new T[layout.sendsize * dims];
     for (int i=0; i<layout.sendsize; i++){
 	 for (int d=0; d<dims; d++) sendbuf[dims*i + d] = data[dims*layout.indices[i] + d];
@@ -162,7 +161,7 @@ void exchange(T*& data, int dims, Layout& layout, T** outdata, MPI_Comm comm=MPI
 		  layout.sendcounts,
 		  layout.senddispl,
 		  dt,
-		  (*outdata),
+		  &outdata.front(), // This to get pointer to beginning of vector
 		  layout.recvcounts,
 		  layout.recvdispl,
 		  dt,
@@ -173,7 +172,7 @@ void exchange(T*& data, int dims, Layout& layout, T** outdata, MPI_Comm comm=MPI
 }
 
 template <typename T>
-void exchange1D(T*& data, Layout& layout, T** outdata, MPI_Comm comm=MPI_COMM_WORLD){
+void exchange1D(T* data, Layout layout, T** outdata, MPI_Comm comm=MPI_COMM_WORLD){
     // 1D version of above for convenience
     
     T* sendbuf = new T[layout.sendsize];
@@ -206,7 +205,7 @@ void exchange1D(T*& data, Layout& layout, T** outdata, MPI_Comm comm=MPI_COMM_WO
 }
 
 template <typename T>
-void gather1D(T*& data, Layout& layout, T** outdata, MPI_Comm comm=MPI_COMM_WORLD){
+void gather1D(T* data, Layout layout, T** outdata, MPI_Comm comm=MPI_COMM_WORLD){
     // Gathers decomposed data, sending it back to the original rank,
     // and summing contributions of ghosts, based on decomposition layout
     
@@ -237,16 +236,16 @@ void gather1D(T*& data, Layout& layout, T** outdata, MPI_Comm comm=MPI_COMM_WORL
 
     // Sum contributions of different ranks to each particle (with index indices[i])
     int i = 0;
-    for_each(layout.indices, layout.indices+layout.sendsize, [&](int & index){
+    for (int index : layout.indices){
     	(*outdata)[index] += recvbuf[i];
      	i++;
-    });
+    }
     delete[] recvbuf;
     MPI_Type_free(&dt);
 }
 
 template <typename T>
-void gather(T*& data, int dims, Layout& layout, T** outdata, MPI_Comm comm=MPI_COMM_WORLD){
+void gather(T* data, int dims, Layout layout, T** outdata, MPI_Comm comm=MPI_COMM_WORLD){
     // Gathers decomposed data, sending it back to the original rank,
     // and summing contributions of ghosts, based on decomposition layout
     // This is a ND version of above, in case one uses the 3D readout
@@ -285,9 +284,9 @@ void gather(T*& data, int dims, Layout& layout, T** outdata, MPI_Comm comm=MPI_C
 }
 
 template <typename T, typename intT>
-void lpaint(T*& pos, // (Nparts * 3) Flattened positions in mesh space
+void lpaint(vector<T> pos, // (Nparts * 3) Flattened positions in mesh space
 	    intT Nparts, // Number of particles
-	    T*& mass, // Mass of each particle
+	    T* mass, // Mass of each particle
 	    intT ex[2], // Limits along x of grid for local part of the field
 	    intT ey[2], // Along y
 	    intT ez[2], // Along z
@@ -345,9 +344,9 @@ void lpaint(T*& pos, // (Nparts * 3) Flattened positions in mesh space
 }
 
 template <typename T, typename intT>
-void lreadout(T*& pos, // (Nparts * 3) Flattened positions in mesh space
+void lreadout(vector<T> pos, // (Nparts * 3) Flattened positions in mesh space
 	      intT Nparts, // Number of particles
-              T*& field, // Flattened local field to read from
+              T* field, // Flattened local field to read from
 	      intT ex[2], // Limits along x of grid for local part of the field
 	      intT ey[2], // Along y
 	      intT ez[2], // Along z
@@ -424,7 +423,7 @@ void ppaint(T*& pos, // (Nparts * 3) Flattened positions (in mesh space)
             intT*& edgesz, // Same, for z
             T** outptr, // Flattened output pointer
 	    Layout* layout, // Output layout (to store it)
-	    T** expos, // Exchanged particle positions (to store it)
+	    vector<T>& expos, // Exchanged particle positions (to store it)
 	    bool& useLayout, // Use pre-defined decomposition layout or no
 	    MPI_Comm& comm){ // MPI communicator
     // Parallel paint
@@ -437,16 +436,16 @@ void ppaint(T*& pos, // (Nparts * 3) Flattened positions (in mesh space)
     // Optionally does CIC using pre-existing decomposition layout and exchanged positions
     
     int comm_rank;
-    MPI_Comm_rank(comm, &comm_rank);
+    MPI_Comm_rank(MPI_COMM_WORLD, &comm_rank);
 
     if (!useLayout){
     	// Find layout decomposition
     	decompose<T, intT>(pos, Nparts, Nmesh, edgesx, edgesy, edgesz, layout, comm);
     
     	// Exchange positions
-	delete[] (*expos); // Delete the previous one
-    	(*expos) = new T[layout->recvsize * 3];
+	expos.resize(layout->recvsize * 3); // Vector to reuse it
     	exchange<T>(pos, 3, *layout, expos, comm);
+	expos.shrink_to_fit();
     }
 	
     // Exchange mass
@@ -460,13 +459,13 @@ void ppaint(T*& pos, // (Nparts * 3) Flattened positions (in mesh space)
     int outsize = (ex[1] - ex[0])*(ey[1] - ey[0])*(ez[1] - ez[0]);
     for (int i=0; i<outsize; i++) (*outptr)[i] = 0;
     // Paint locally
-    lpaint<T, intT>(*expos, layout->recvsize, exdmass, ex, ey, ez, Nmesh, outptr);
+    lpaint<T, intT>(expos, layout->recvsize, exdmass, ex, ey, ez, Nmesh, outptr);
     delete[] exdmass;
 }
 
 template <typename T, typename intT>
 void preadout(Layout& layout, // Decomposition layout PPAINT CALL NEEDED
-	      T*& expos, // Exchanged positions PPAINT CALL NEEDED
+	      vector<T> expos, // Exchanged positions PPAINT CALL NEEDED
 	      int64_t& Nparts, // Number of particles
 	      T*& localfield, // Flattened local field to readout from
               intT*& Nmesh, // (3, ) Mesh grid specs
@@ -484,7 +483,7 @@ void preadout(Layout& layout, // Decomposition layout PPAINT CALL NEEDED
     // Stores resulting local part of density field in outptr
         
     int comm_rank;
-    MPI_Comm_rank(comm, &comm_rank);
+    MPI_Comm_rank(MPI_COMM_WORLD, &comm_rank);
 
     // Readout at exchanged positions
     intT* ex = &(edgesx[2*comm_rank]); // Edges for this rank
@@ -520,7 +519,7 @@ void preadout_nolayout(T**& pos, // (Nparts, 3) Particle positions (in mesh spac
     // Stores resulting local part of density field in outptr
 
     int comm_rank;
-    MPI_Comm_rank(comm, &comm_rank);
+    MPI_Comm_rank(MPI_COMM_WORLD, &comm_rank);
 
     // Find decomposition layout
     Layout layout;
@@ -546,124 +545,12 @@ void preadout_nolayout(T**& pos, // (Nparts, 3) Particle positions (in mesh spac
     (*outptr) = mass;
 }*/
 
-template <typename T, typename intT>
-void lpaint3D(T*& pos, // (Nparts * 3) Flattened positions in mesh space
-            intT Nparts, // Number of particles
-            T*& mass, // Mass of each particle * 3 (flattened from (Nparts, 3))
-            intT ex[2], // Limits along x of grid for local part of the field
-            intT ey[2], // Along y
-            intT ez[2], // Along z
-            intT* Nmesh, // Mesh sizes, needed for ghosts
-            T** field){ // Flattened output field, thrice
-    // Computes the local part of the field using CIC, assuming the
-    // positions in "pos" are the result of an "exchange" operation.
-
-    intT szx = ex[1] - ex[0];
-    intT szy = ey[1] - ey[0];
-    intT szz = ez[1] - ez[0];
-    intT size = szx * szy * szz;
-    T dx, dy, dz, tx, ty, tz;
-    int i, j, k, ip1, jp1, kp1;
-    bool inx, iny, inz, inpx, inpy, inpz;
-    T pmass;
-    for (int p=0; p<Nparts; p++){
-        i = int(pos[3*p]); // Should already be ex[0] <= part[0] < ex[1] unless ghost
-        j = int(pos[3*p+1]);
-        k = int(pos[3*p+2]);
-        dx = pos[3*p] - i;
-        dy = pos[3*p+1] - j;
-        dz = pos[3*p+2] - k;
-        tx = 1 - dx;
-        ty = 1 - dy;
-        tz = 1 - dz;
-
-        // Neighbors for CIC
-        ip1 = (i+1) % Nmesh[0];
-        jp1 = (j+1) % Nmesh[1];
-        kp1 = (k+1) % Nmesh[2];
-        // The following bools are for ghosts
-        inx = (unsigned)(i - ex[0]) < szx; // If false, ghost from below
-        iny = (unsigned)(j - ey[0]) < szy; // Just checking if it's in range in an efficient way
-        inz = (unsigned)(k - ez[0]) < szz;
-        inpx = (unsigned)(ip1 - ex[0]) < szx; // If false, ghost from above
-        inpy = (unsigned)(jp1 - ey[0]) < szy;
-        inpz = (unsigned)(kp1 - ez[0]) < szz;
-        i = abs((i - ex[0]) % szx); // Make sure value is always in limits of out field
-        j = abs((j - ey[0]) % szy); // If it's negative it's a ghost, so don't care
-        k = abs((k - ez[0]) % szz); // Bools deal with setting the wrong contribution of ghosts to 0
-        ip1 = abs((ip1 - ex[0]) % szx);
-        jp1 = abs((jp1 - ey[0]) % szy);
-        kp1 = abs((kp1 - ez[0]) % szz);
-	for (int d=0; d<3; d++){
-            pmass = mass[3*p + d];
-            // CIC update
-            (*field)[d*size + i*szy*szz + j*szz + k] += tx*ty*tz*pmass * inx*iny*inz;
-            (*field)[d*size + ip1*szy*szz + j*szz + k] += dx*ty*tz*pmass * inpx*iny*inz;
-            (*field)[d*size + i*szy*szz + jp1*szz + k] += tx*dy*tz*pmass * inx*inpy*inz;
-            (*field)[d*size + i*szy*szz + j*szz + kp1] += tx*ty*dz*pmass * inx*iny*inpz;
-            (*field)[d*size + ip1*szy*szz + jp1*szz + k] += dx*dy*tz*pmass * inpx*inpy*inz;
-            (*field)[d*size + ip1*szy*szz + j*szz + kp1] += dx*ty*dz*pmass * inpx*iny*inpz;
-            (*field)[d*size + i*szy*szz + jp1*szz + kp1] += tx*dy*dz*pmass * inx*inpy*inpz;
-            (*field)[d*size + ip1*szy*szz + jp1*szz + kp1] += dx*dy*dz*pmass * inpx*inpy*inpz;
-	}
-    }
-}
-
-template <typename T, typename intT>
-void ppaint3D(T*& pos, // (Nparts * 3) Flattened positions (in mesh space)
-            int64_t& Nparts, // Number of particles
-            T*& mass, // Particle masses (flattened from (Nparts, 3))
-            intT*& Nmesh, // (3, ) Mesh grid specs
-            intT*& edgesx, // (comm_size, 2) Flattened limiting grid indices along x for each rank
-            intT*& edgesy, // Same, for y
-            intT*& edgesz, // Same, for z
-            T** outptr, // Flattened output pointer (3 * local_size)
-            Layout* layout, // Output layout (to store it)
-            T** expos, // Exchanged particle positions (to store it)
-            MPI_Comm& comm){ // MPI communicator
-    // 3D VERSION
-    // Parallel paint
-    // Moves particles with relative masses from all ranks around ranks to bring those
-    // contributing to local part of the field (as specified in edges) in this rank,
-    // then computes local part of field using CIC. Also deals with ghosts, which are
-    // particles at the edges of the field limits that only partially contribute here
-    // Stores resulting local part of density field in outptr, as well as
-    // decomposition layout and exchanged positions to make preadout faster
-    // Optionally does CIC using pre-existing decomposition layout and exchanged positions
-
-    int comm_rank;
-    MPI_Comm_rank(comm, &comm_rank);
-
-    // Find layout decomposition
-    decompose<T, intT>(pos, Nparts, Nmesh, edgesx, edgesy, edgesz, layout, comm);
-
-    // Exchange positions
-    delete[] (*expos); // Delete the previous one
-    *expos = new T[layout->recvsize * 3];
-    exchange<T>(pos, 3, *layout, expos, comm);
-
-    // Exchange mass
-    T* exdmass = new T[3 * layout->recvsize];
-    exchange<T>(mass, 3, *layout, &exdmass, comm);
-
-    // Now paint local field
-    intT* ex = &(edgesx[2*comm_rank]); // Edges for this rank
-    intT* ey = &(edgesy[2*comm_rank]);
-    intT* ez = &(edgesz[2*comm_rank]);
-    // Field is 3 times as big now
-    int outsize = 3*(ex[1] - ex[0])*(ey[1] - ey[0])*(ez[1] - ez[0]);
-    for (int i=0; i<outsize; i++) (*outptr)[i] = 0;
-    // Paint locally
-    lpaint3D<T, intT>(*expos, layout->recvsize, exdmass, ex, ey, ez, Nmesh, outptr);
-    delete[] exdmass;
-}
-
 // TODO
 // COULD ALSO USE SINGLE FUNCTION BOTH FOR READOUT OF 1 FIELD AND 3 FIELDS + VJP
 template <typename T, typename intT>
-void lreadout3D(T*& pos, // (Nparts * 3) Flattened positions in mesh space
+void lreadout3D(vector<T> pos, // (Nparts * 3) Flattened positions in mesh space
                 intT Nparts, // Number of particles
-                T*& field, // Flattened local field(s) to read from (can be Nmesh ** 3 or 3 * Nmesh**3)
+                T* field, // Flattened local field(s) to read from (can be Nmesh ** 3 or 3 * Nmesh**3)
                 intT ex[2], // Limits along x of grid for local part of the field
                 intT ey[2], // Along y
                 intT ez[2], // Along z
@@ -756,7 +643,7 @@ void lreadout3D(T*& pos, // (Nparts * 3) Flattened positions in mesh space
 
 template <typename T, typename intT>
 void preadout3D(Layout& layout, // Decomposition layout PPAINT CALL NEEDED
-                T*& expos, // Exchanged positions PPAINT CALL NEEDED
+                vector<T> expos, // Exchanged positions PPAINT CALL NEEDED
                 int64_t& Nparts, // Number of particles
                 T*& localfield, // Flattened local field (or fields) to readout from
                 intT*& Nmesh, // (3, ) Mesh grid specs
@@ -774,7 +661,7 @@ void preadout3D(Layout& layout, // Decomposition layout PPAINT CALL NEEDED
     // Stores resulting local part of density field in outptr
 
     int comm_rank;
-    MPI_Comm_rank(comm, &comm_rank);
+    MPI_Comm_rank(MPI_COMM_WORLD, &comm_rank);
 
     // Readout at exchanged positions
     intT* ex = &(edgesx[2*comm_rank]); // Edges for this rank
@@ -788,74 +675,6 @@ void preadout3D(Layout& layout, // Decomposition layout PPAINT CALL NEEDED
     for (int i=0; i<3*Nparts; i++) (*outptr)[i] = 0;
     gather(outmasses, 3, layout, outptr, comm);
     delete[] outmasses;
-}
-
-template <typename T, typename intT>
-void localpositions(T*& pos, // (Nparts, 3) Positions to shuffle (flattened, in mesh space)
-		    int64_t& Nparts, // Number of particles
-		    intT*& Nmesh, // (3, ) Mesh grid specs
-		    intT*& edgesx, // Flattened (comm_size, 2) limit grid indices along x for each rank
-                    intT*& edgesy, // Same, for y
-                    intT*& edgesz, // Same, for z
-		    int comm_size, // MPI communicator size
-		    int comm_rank, // MPI rank of this process
-		    T** outpos, // (Npartsout[comm_rank], 3) Output pointer (flattened)
-		    int64_t*& Npartsout){ // (comm_size, ) Number of output particles for each rank
-    // Selects positions that are within limits of local field, to speed up the painting.
-    // Does so until Npartsout, usually Nparts / comm_size, particles have been selected,
-    // otherwise moves them to other ranks that haven't reached Npartsout.
-    // Every rank calls this, even though it's not parallel, because it's convenient and
-    // it doesn't really make sense that only one calls it while the others wait anyway.
-    
-    int* rankcounts = new int[comm_size]; // How many particles are assigned to this rank (max Npartsout)
-    bool* assigned = new bool[Nparts]; // Whether the particle was successfully assigned or not
-    for (int rank=0; rank<comm_size; rank++) rankcounts[rank] = 0;
-    int i, j, k;
-
-    // First loop to assign as many particles as possible to this rank
-    for (int p=0; p<Nparts; p++){
-	i = int(pos[3*p+0]) % Nmesh[0];
-        j = int(pos[3*p+1]) % Nmesh[1];
-        k = int(pos[3*p+2]) % Nmesh[2];
-	for (int rank=0; rank<comm_size; rank++){
-	    if ((unsigned)(i - edgesx[2*rank]) < (edgesx[2*rank+1] - edgesx[2*rank]) &&
-                (unsigned)(j - edgesy[2*rank]) < (edgesy[2*rank+1] - edgesy[2*rank]) &&
-                (unsigned)(k - edgesz[2*rank]) < (edgesz[2*rank+1] - edgesz[2*rank])){
-		if (rankcounts[rank] < Npartsout[rank]){ // If can assign do
-		    if (rank == comm_rank){ // Only store particles if it's this rank
-		    	(*outpos)[3*rankcounts[rank]+0] = pos[3*p+0];
-		    	(*outpos)[3*rankcounts[rank]+1] = pos[3*p+1];
-		    	(*outpos)[3*rankcounts[rank]+2] = pos[3*p+2];
-		    }
-		    assigned[p] = true; // p was stored either in this rank or in another
-                    rankcounts[rank]++; // Increment this rank counter
-		} else { // Else set it to not assigned
-		    assigned[p] = false;
-		}
-		break; // Rank of correct local part of the field is found, just stop looping over ranks
-            }
-	}
-    }
-
-    // Loop to assign remaining particles in random rank
-    for (int p=0; p<Nparts; p++){
-	if (!assigned[p]) {
-	    for (int rank=0; rank<comm_size; rank++){ // Look up which rank can host more particles
-		if (rankcounts[rank] < Npartsout[rank]){ // Assign it to this rank
-		    if (rank == comm_rank){ // Only store particles if it's this rank
-			(*outpos)[3*rankcounts[rank]+0] = pos[3*p+0];
-                    	(*outpos)[3*rankcounts[rank]+1] = pos[3*p+1];
-                    	(*outpos)[3*rankcounts[rank]+2] = pos[3*p+2];
-		    }
-		    rankcounts[rank]++;
-		    break; // Particle was assigned in this or in another rank, just break rank loop
-		}
-	    }
-	}
-    }
-
-    delete[] rankcounts;
-    delete[] assigned;
 }
 
 } // namespace parops_jax

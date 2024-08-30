@@ -37,6 +37,7 @@ def allbcast(val, comm):
         the field in different ranks, the backward pass has its own value of these
         variables (I guess?), this sets it back to correct.
         In the forward pass, all values should already be the same, so just return val
+        Also works for a jnp array of parameters (recommended in order to guarantee correct order of ops)
     """
     return val
 
@@ -48,6 +49,16 @@ def allbcast_bwd(comm, res, v):
     return (v,)
 
 allbcast.defvjp(allbcast_fwd, allbcast_bwd)
+
+@jit
+def ReLU(x, low=1e-12):
+    # Just ReLU in jax
+    return jnp.where(x > low, x, low)
+
+@jit
+def lReLU(x, alpha=.1):
+    # Leaky ReLU in jax
+    return jnp.where(x > 0, x, alpha*x)
 
 
 @jax.tree_util.register_pytree_node_class
@@ -108,18 +119,14 @@ class LDLModel(object):
 
         # Density
         delta = self.pm.paint(X, 1.) * fact # Normalized density rho/bar(rho)
-        gamma = allbcast(gamma, self.pm.comm)
         delta = (delta+1e-8) ** gamma
 
         # Density in Fourier space
         deltak = self.pm.r2c(delta)
         
         # Green's operator in Fourier space
-        kl = allbcast(kl, self.pm.comm)
-        kh = allbcast(kh, self.pm.comm)
-        n = allbcast(n, self.pm.comm)
         knorms = jnp.where(self.knorms==0, 1e-8, self.knorms) # Correct norms that are null
-        filterk = -jnp.exp(-knorms**2/kl**2) * jnp.exp(-kh**2/knorms**2) * knorms**n # Idk why - sign, but it's just a multiplicative factor
+        filterk = -jnp.exp(-knorms**2/kl**2) * jnp.exp(-kh**2/knorms**2) * knorms**n # Attractive so -
         filterk = c2f(filterk) # Compensates the fact that we only have ~half of the fft (for back pass)
 
         potk = deltak * filterk
@@ -128,7 +135,8 @@ class LDLModel(object):
         # Note that we only have the values at some grid points, so we need to use a finite difference approach (see overleaf)
         # Compare the FT of this (convolution) with an order 2 finite difference formula (https://en.wikipedia.org/wiki/Numerical_differentiation)
         step = self.pm.BoxSize / self.pm.Nmesh
-        coeff = 1 / (6 * step) * (8 * jnp.sin(self.kvals * step) - jnp.sin(2 * self.kvals * step)) # (Nx, Ny, Nz, 3)
+        #coeff = 1 / (6 * step) * (8 * jnp.sin(self.kvals * step) - jnp.sin(2 * self.kvals * step)) # (Nx, Ny, Nz, 3)
+        coeff = 1 / (30 * step) * (45 * jnp.sin(self.kvals * step) - 9 * jnp.sin(2 * self.kvals * step) + jnp.sin(3 * self.kvals * step))
 
         # This gives gradient at grid positions, but we need it at particle positions, so we interpolate (see overleaf)
         potgradk = -1j * coeff[:, :, :, 0] * potk # x component (using same array to save memory)
@@ -137,11 +145,19 @@ class LDLModel(object):
         potgrady = self.pm.c2r(potgradk)
         potgradk = -1j * coeff[:, :, :, 2] * potk # z component
         potgradz = self.pm.c2r(potgradk)
-
+        
         # Use CIC interpolation
         return jnp.stack((self.pm.readout(X, potgradx),
             self.pm.readout(X, potgrady),
             self.pm.readout(X, potgradz)), axis=-1)
+
+        """potgradk = -1j * coeff[:, :, :, 0] * potk # x component (using same array to save memory)
+        potgradx = self.pm.c2r(potgradk)
+        potgradk = -1j * coeff[:, :, :, 1] * potk # y component
+        potgrady = self.pm.c2r(potgradk)
+        potgradk = -1j * coeff[:, :, :, 2] * potk # z component
+        potgradz = self.pm.c2r(potgradk)
+        return self.pm.readout3D(X, jnp.stack((potgradx, potgrady, potgradz), axis=0))"""
 
     @partial(jit, static_argnums=3)
     def displace(self, params, X, Nstep):
@@ -168,19 +184,12 @@ class LDLModel(object):
             kl = params[5*i+3]
             n = params[5*i+4]
             
-            alpha = allbcast(alpha, self.pm.comm)
             return X + alpha * self.potential_gradient((fact, gamma, kh, kl, n), X)
             
         # Using fori_loop because with normal for JAX can't compute the derivative wrt gamma
         # in case len(X) is not divisible by pm.comm.size and with Nstep=1 (but with 2 yes,
         # for some reason)
         return jax.lax.fori_loop(0, Nstep, body, X)
-
-    @staticmethod
-    @jit
-    def ReLU(x):
-        # Just ReLU in JAX
-        return jnp.where(x >= 0, x, 0)
 
     @partial(jit, static_argnums=(3, 4))
     def LDL(self, params, X, Nstep, baryon):
@@ -194,15 +203,13 @@ class LDLModel(object):
         delta = self.pm.paint(X, 1.) * fact
         
         if baryon:
-            mu = params[5*Nstep]
+            mu = params[5*Nstep+0]
             b1 = params[5*Nstep+1]
             b0 = params[5*Nstep+2]
+            b2 = params[5*Nstep+3]
         
             # Field transformation
-            mu = allbcast(mu, self.pm.comm)
-            b1 = allbcast(b1, self.pm.comm)
-            b0 = allbcast(b0, self.pm.comm)
-            return self.ReLU(b1 * (delta+1e-8)**mu + b0) # Definition of b0 is different from the paper
+            return self.lReLU(b1 * self.ReLU(delta + b2)**mu + b0)
         else:
             return delta
 
@@ -219,6 +226,8 @@ class LDLModel(object):
         Returns:
             loss (float): LDL model loss
         """
+        # First allbcast the parameters
+        params = allbcast(params, self.pm.comm)
 
         # Compute the LDL map
         F = self.LDL(params, self.X, Nstep=self.Nstep, baryon=self.baryon) ** self.index
@@ -233,6 +242,8 @@ class LDLModel(object):
         # Smooth the field
         # !!! NO C2F HERE AS PER ORIGINAL CODE !!!
         smoothingkernel = jnp.where(self.knorms==0, 1., self.knorms**(-self.n) + 1.)
+        #smoothingkernel = jnp.exp(-self.n * self.knorms)
+        #smoothingkernel = (self.knorms + 1.)**(-self.n)
         residuek = self.pm.r2c(residue)
         residuek *= smoothingkernel
         residue = jnp.abs(self.pm.c2r(residuek))
@@ -270,21 +281,23 @@ class LDLModel(object):
     @jit
     def lossv(self, params):
         """
-        Same as above, but if validation mask was provided int set_loss_params,
-        also computes validation loss and stores it as a class variable.
+        Same as above, but if validation mask was provided,
+        also computes validation loss and returns it.
         """
+        params = allbcast(params, self.pm.comm)
         
         F = self.LDL(params, self.X, Nstep=self.Nstep, baryon=self.baryon) ** self.index
         
         if self.field2 is not None:
-            F = F * self.field2
+            F *= self.field2
 
         residue = F - self.target
         
-        smoothingkernel = jnp.where(self.knorms==0, 1., self.knorms**(-self.n) + 1.)
-        residuek = self.pm.r2c(residue)
-        residuek *= smoothingkernel
-        residue = jnp.abs(self.pm.c2r(residuek))
+        #smoothingkernel = jnp.where(self.knorms==0, 1., self.knorms**(-self.n) + 1.)
+        #residuek = self.pm.r2c(residue)
+        #residuek *= smoothingkernel
+        #residue = jnp.abs(self.pm.c2r(residuek))
+        residue = jnp.abs(residue)
         
         if self.masktrain is not None:
             residuel = residue * self.masktrain
@@ -338,20 +351,24 @@ class LDLModel(object):
     def tree_unflatten(cls, aux_data, children):
         return cls(*(children[:2]), *aux_data, *(children[2:]))
 
+
 class RMSProp(object):
     """
     RMSprop optimizer class
     """
-    def __init__(self, Nparams, LR=0.01, beta=0.99):
+    def __init__(self, LR=0.01, beta=0.999, eps=1e-8, eps_root=0.):
         """
-            Nparams (int): number of parameters to optimize for
-            LR (float): learning rate
+            LR (float, array-like or callable): learning rate
             beta (float): exponential decay rate of RMSprop
         """
         self.LR = LR
         self.beta = beta
-        self.v = jnp.zeros(Nparams)
-        self.itr = 1
+        self.eps = eps
+        self.eps_root = eps_root
+
+    def init(self, params0):
+        self.v = jnp.zeros(len(params0))
+        self.itr = 0
 
     def step(self, params, gradient):
         """
@@ -364,7 +381,51 @@ class RMSProp(object):
         Returns:
             Updated parameters
         """
-        self.v = self.beta * self.v + (1. - self.beta) * gradient**2
-        vh = jnp.sqrt(self.v / (1. - self.beta**self.itr))
+        if callable(self.LR):
+            LR = self.LR(self.itr)
+        else:
+            LR = self.LR
+        self.v = (1 - self.beta) * gradient**2 + self.beta * self.v
         self.itr += 1
-        return params - self.LR * gradient / (vh + 1e-8)
+        vh = jnp.sqrt(self.v / (1. - self.beta**self.itr) + self.eps_root)
+        update = gradient / (vh + self.eps)
+        return params - LR * update
+
+class Adam(object):
+    """
+    Adam optimizer class
+    """
+    def __init__(self, LR=0.01, b1=0.9, b2=0.999, eps=1e-8, eps_root=0.):
+        self.LR = LR
+        self.b1 = b1
+        self.b2 = b2
+        self.eps = eps
+        self.eps_root = eps_root
+
+    def init(self, params0):
+        self.mu = jnp.zeros(len(params0))
+        self.nu = jnp.zeros(len(params0))
+        self.itr = 0
+
+    def step(self, params, gradient):
+        """
+        Computes an Adam update of the parameters
+
+        Parameters:
+            params (array-like): Parameters to optimize
+            gradient (array-like): Gradient of loss with respect to parameters
+
+        Returns:
+            Updated parameters
+        """
+        if callable(self.LR):
+            LR = self.LR(self.itr)
+        else:
+            LR = self.LR
+        self.mu = self.b1 * self.mu + (1. - self.b1) * gradient
+        self.nu = self.b2 * self.nu + (1. - self.b2) * gradient**2
+        self.itr += 1
+        muh = self.mu / (1. - self.b1**self.itr)
+        nuh = self.nu / (1. - self.b2**self.itr)
+        update = muh / (jnp.sqrt(nuh + self.eps_root) + self.eps)
+        return params - LR * update

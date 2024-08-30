@@ -5,12 +5,17 @@
 import codecs
 import os
 import subprocess
+import shutil
 
 from setuptools import Extension, find_packages, setup
 from setuptools.command.build_ext import build_ext
 
 HERE = os.path.dirname(os.path.realpath(__file__))
 
+srcpath=f"{HERE}/src"
+if os.path.exists(srcpath):
+    shutil.rmtree(srcpath)
+os.makedirs(srcpath)
 
 def read(*parts):
     with codecs.open(os.path.join(HERE, *parts), "rb", "utf-8") as f:
@@ -96,7 +101,7 @@ extensions = [
 
 setup(
     name="jaxpops",
-    version="0.0.1",
+    version="0.0.2",
     author="Mauro Rigo",
     author_email="mrigo@sissa.it",
     description=(

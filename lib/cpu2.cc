@@ -3,7 +3,7 @@
 // For handling the MPI communicator, I'm using:
 // https://github.com/mpi4jax/mpi4jax/blob/master/mpi4jax/_src/xla_bridge/mpi_xla_bridge_cpu.pyx
 
-#include "parops_fast.h"
+#include "parops2.h"
 #include "parfft.h"
 #include <pybind11/pybind11.h>
 #include <cstdint> // For MPI comm handle and int types
@@ -16,10 +16,10 @@ Layout layout[5]; // General decomposition layouts (at most 5 can be saved)
 // Intel compiler wants static data members to make a global variable with arbitrary type
 template <typename T>
 struct Ex{
-    static T* pos[5]; // Exchanged positions
+    static vector<T> pos[5]; // Exchanged positions
 };
 template <typename T>
-T* Ex<T>::pos[5]; // Exchanged positions (at most 5 can be saved)
+vector<T> Ex<T>::pos[5]; // Exchanged positions (at most 5 can be saved)
 
 Planner planner; // fft double planner
 Plannerf plannerf; // fft float planner
@@ -68,7 +68,7 @@ void cppaint(void* out, void** in){
 
     // Output (flattened, row-major)
     T* outp = reinterpret_cast<T*>(out);
-    ppaint<T, intT>(pos, Nparts, mass, Nmesh, edgesx, edgesy, edgesz, &outp, &(layout[lyidx]), &(Ex<T>::pos[lyidx]), useLayout, comm);
+    ppaint<T, intT>(pos, Nparts, mass, Nmesh, edgesx, edgesy, edgesz, &outp, &(layout[lyidx]), Ex<T>::pos[lyidx], useLayout, comm);
 }
 
 template <typename T, typename intT>
@@ -91,28 +91,6 @@ void cpreadout(void* out, void** in){
     // Output
     T* outp = reinterpret_cast<T*>(out);
     preadout<T, intT>(layout[lyidx], Ex<T>::pos[lyidx], Nparts, localfield, Nmesh, BoxSize, edgesx, edgesy, edgesz, &outp, comm, vjpdim);
-}
-
-template <typename T, typename intT>
-void cppaint3D(void* out, void** in){
-    // Parallel painter, also build decomposition layout
-    // Parse inputs (flattened for simplicity, row-major order)
-    T* pos = reinterpret_cast<T*>(in[0]);
-    int64_t Nparts = *reinterpret_cast<int64_t*>(in[1]);
-    T* mass = reinterpret_cast<T*>(in[2]);
-    intT* Nmesh = reinterpret_cast<intT*>(in[3]);
-    intT* edgesx = reinterpret_cast<intT*>(in[4]);
-    intT* edgesy = reinterpret_cast<intT*>(in[5]);
-    intT* edgesz = reinterpret_cast<intT*>(in[6]);
-    // MPI_Comm comm = reinterpret_cast<MPI_Comm>(*reinterpret_cast<uintptr_t*>(in[7]));
-    // The above line works with OpenMPI because of what type MPI_Comm is,
-    // the line below is more general and works also with intelMPI (hopefully with no problems)
-    MPI_Comm comm = (MPI_Comm)(*reinterpret_cast<uintptr_t*>(in[7]));
-    int32_t lyidx = *reinterpret_cast<int32_t*>(in[8]);
-
-    // Output (flattened, row-major)
-    T* outp = reinterpret_cast<T*>(out);
-    ppaint3D<T, intT>(pos, Nparts, mass, Nmesh, edgesx, edgesy, edgesz, &outp, &(layout[lyidx]), &(Ex<T>::pos[lyidx]), comm);
 }
 
 template <typename T, typename intT>
@@ -244,24 +222,6 @@ void cpifftf(void* out, void** in){
     }
 }
 
-template <typename T, typename intT>
-void clocalpositions(void* out, void** in){
-    // Get positions belonging to local part of the field (truncated or with extra up to Npartsout)
-    T* pos = reinterpret_cast<T*>(in[0]);
-    int64_t Nparts = *reinterpret_cast<int64_t*>(in[1]);
-    intT* Nmesh = reinterpret_cast<intT*>(in[2]);
-    intT* edgesx = reinterpret_cast<intT*>(in[3]);
-    intT* edgesy = reinterpret_cast<intT*>(in[4]);
-    intT* edgesz = reinterpret_cast<intT*>(in[5]);
-    int32_t commsize = *reinterpret_cast<int32_t*>(in[6]);
-    int32_t commrank = *reinterpret_cast<int32_t*>(in[7]);
-    int64_t* Npartsout = reinterpret_cast<int64_t*>(in[8]);
-
-    // Output
-    T* outp = reinterpret_cast<T*>(out);
-    localpositions<T, intT>(pos, Nparts, Nmesh, edgesx, edgesy, edgesz, commsize, commrank, &outp, Npartsout);
-}
-
 template <typename T>
 pybind11::capsule EncapsulateFunction(T* fn) {
     return pybind11::capsule((void*)fn, "xla._CUSTOM_CALL_TARGET");
@@ -277,8 +237,6 @@ pybind11::dict Registrations(){
     dict["ppaint_f64"] = EncapsulateFunction(cppaint<double, int64_t>);
     dict["preadout_f32"] = EncapsulateFunction(cpreadout<float, int32_t>);
     dict["preadout_f64"] = EncapsulateFunction(cpreadout<double, int64_t>);
-    dict["ppaint3D_f32"] = EncapsulateFunction(cppaint3D<float, int32_t>);
-    dict["ppaint3D_f64"] = EncapsulateFunction(cppaint3D<double, int64_t>);
     dict["preadout3D_f32"] = EncapsulateFunction(cpreadout3D<float, int32_t>);
     dict["preadout3D_f64"] = EncapsulateFunction(cpreadout3D<double, int64_t>);
     dict["buildplan_f64"] = EncapsulateFunction(cbuildplan);
@@ -287,8 +245,6 @@ pybind11::dict Registrations(){
     dict["pfft_f32"] = EncapsulateFunction(cpfftf);
     dict["pifft_f64"] = EncapsulateFunction(cpifft);
     dict["pifft_f32"] = EncapsulateFunction(cpifftf);
-    dict["localpositions_f32"] = EncapsulateFunction(clocalpositions<float, int32_t>);
-    dict["localpositions_f64"] = EncapsulateFunction(clocalpositions<double, int64_t>);
     return dict;
 }
 

@@ -292,7 +292,7 @@ def loaddata(TNGpath, snapNum, nChunks, kind, pm, f32=True, CICmap=True, local=T
         sys.stdout.flush()
 
     h = 0.6774 # From TNG website
-    XH = 0.76 # What is this?
+    XH = 0.76 # Hydrogen mass fraction
     mp = 1.6726219e-27
     Msun10 = 1.989e40 # (*1e10)
     Mpc_cm = 3.085678e24
@@ -313,6 +313,8 @@ def loaddata(TNGpath, snapNum, nChunks, kind, pm, f32=True, CICmap=True, local=T
         del Xe, u
     elif kind == 'nHI':
         a = scalefactor(TNGpath, snapNum)
+        # unit (1e10 * solar mass / h) * comoving total mass density of gas cell * XH/mp * abundance
+        # a * BoxSize/Nmesh is comoving size of cell (1D), Mpc_cm/h unit
         mass = Msun10/h / (a*BoxSize/Nmesh*Mpc_cm/h)**3 * mass*XH/mp*XHI # From n_cm3
         del XHI
     elif kind == 'neVz':
