@@ -4,13 +4,13 @@ on:
     branches: [ "main" ]
 
 jobs:
-  import-image:
+  test-fftwimg:
     runs-on: ubuntu-latest
-    container: maurorigo/ldlimg:firsttest
+    container: maurorigo/fftwimg:first
 
     steps:
-        uses: actions/checkout@v3
-      - name: Run a test fastpm
+      - uses: actions/checkout@v4
+      - name: Just testing new image
         run: |
           pwd
           python3 --version
