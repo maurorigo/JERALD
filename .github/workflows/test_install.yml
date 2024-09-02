@@ -6,7 +6,7 @@ on:
 jobs:
   test-package-installation:
     runs-on: ubuntu-latest
-    container: maurorigo/fftwimg:first
+    container: maurorigo/fftwimg:latest
 
     steps:
       - uses: actions/checkout@v4
