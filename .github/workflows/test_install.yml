@@ -10,8 +10,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Try to install package (for now define FFTW_INC and FFTW_LIB)
+      - name: Try to install package
         run: |
           python3 -m venv JERALDvenv
           . JERALDvenv/bin/activate
           pip install .
+          python3 losstest.py
