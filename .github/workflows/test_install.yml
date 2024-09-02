@@ -1,0 +1,17 @@
+name: Check package install
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    container: maurorigo/fftwimg:first
+
+    steps:
+    - name: Testing image
+    - run: |
+          pwd
+          python3 --version
+
