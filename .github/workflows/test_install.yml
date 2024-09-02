@@ -10,8 +10,9 @@ jobs:
     container: maurorigo/fftwimg:first
 
     steps:
+      uses: actions/checkout@v4
     - name: Testing image
-    - run: |
+      run: |
           pwd
           python3 --version
 
