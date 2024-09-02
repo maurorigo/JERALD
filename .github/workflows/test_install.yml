@@ -12,8 +12,6 @@ jobs:
       - uses: actions/checkout@v4
       - name: Try to install package (for now define FFTW_INC and FFTW_LIB)
         run: |
-          export FFTW_INC=/usr/local/include
-          export FFTW_LIB=/usr/local/lib
           python3 -m venv JERALDvenv
           . JERALDvenv/bin/activate
           pip install .

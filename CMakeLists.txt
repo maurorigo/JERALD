@@ -9,7 +9,7 @@ find_package(MPI REQUIRED)
 find_package(PkgConfig REQUIRED) # For fftw
 pkg_search_module(FFTW REQUIRED fftw3 IMPORTED_TARGET)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I$ENV{FFTW_INC} -L$ENV{FFTW_LIB} -std=c++17 -O3 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I${FFTW_INCLUDEDIR} -L${FFTW_LIBDIR} -std=c++17 -O3 -lfftw3 -lfftw3f -lfftw3_mpi -lfftw3f_mpi")
 
 include_directories(${CMAKE_CURRENT_LIST_DIR}/lib)
 include_directories(${MPI_INCLUDE_PATH})

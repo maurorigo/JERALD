@@ -13,11 +13,7 @@ To install the package, clone the repo and run:
 ```
 pip install .
 ```
-On the C++ side, installation requires FFTW with MPI support (which should generally be available on clusters). The installation should not have problems if the environment variables for the headers (```$FFTW_INC```) and libraries (```$FFTW_LIB```) paths of MPI-enabled FFTW are correctly defined. In case these environment variables are not set (for example if FFTW was not present and thus installed manually), you may get the error:
-```
-catastrophic error: cannot open source file "fftw3-mpi.h"
-```
-In the future I may provide a ```FindFFTW.cmake``` file to allow compilation also when FFTW was manually installed in a system.
+On the C++ side, installation requires FFTW with MPI support (which should generally be available on clusters). The installation requires ```PkgConfig``` to link FFTW (which should also be available on clusters). In the future I may provide a simple ```FindFFTW.cmake``` file to allow compilation also when ```PkgConfig``` is missing.
 
 On the Python side installation requires JAX and mpi4jax (see the related READMEs for installation), as well as [pybind11](https://github.com/pybind/pybind11) for binding C++ code to Python.
 CUDA support isn't required, as for the time being the package only runs on CPU. In the future this may change.
