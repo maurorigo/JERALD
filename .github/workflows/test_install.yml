@@ -4,13 +4,14 @@ on:
     branches: [ "main" ]
 
 jobs:
-  test-fftwimg:
+  test-package-installation:
     runs-on: ubuntu-latest
     container: maurorigo/fftwimg:first
 
     steps:
       - uses: actions/checkout@v4
-      - name: Just testing new image
+      - name: Try to install package (for now define FFTW_INC and FFTW_LIB)
         run: |
-          pwd
-          python3 --version
+          export FFTW_INC=/usr/local/include
+          export FFTW_LIB=/usr/local/lib
+          pip install .
