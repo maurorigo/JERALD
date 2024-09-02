@@ -1,4 +1,4 @@
-name: Check package install
+name: Check package installation
 on:
   push:
     branches: [ "main" ]
