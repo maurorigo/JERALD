@@ -1,22 +1,4 @@
 name: Check package install
-
-on:
-  push:
-    branches: [ "main" ]
-
-jobs:
-  install:
-    runs-on: ubuntu-latest
-    container: maurorigo/fftwimg:first
-
-    steps:
-      uses: actions/checkout@v4
-    - name: Testing image
-      run: |
-          pwd
-          python3 --version
-
-name: Check package install
 on:
   push:
     branches: [ "main" ]
