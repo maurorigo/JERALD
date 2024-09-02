@@ -16,3 +16,19 @@ jobs:
           pwd
           python3 --version
 
+name: Check package install
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  import-image:
+    runs-on: ubuntu-latest
+    container: maurorigo/ldlimg:firsttest
+
+    steps:
+        uses: actions/checkout@v3
+      - name: Run a test fastpm
+        run: |
+          pwd
+          python3 --version
