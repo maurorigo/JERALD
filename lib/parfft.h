@@ -32,6 +32,7 @@ struct Plannerf{ // Same as above, for float
 
 void buildplan(int32_t& L, int32_t& M, int32_t& N, Planner* planner, MPI_Comm& comm){
     // Build fft and ifft plans and find partitioning
+    fftw_init();
     fftw_mpi_init();	
     ptrdiff_t alloclocal, localL, localstart;
 
