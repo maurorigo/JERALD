@@ -7,7 +7,6 @@ find_package(Python COMPONENTS Interpreter Development REQUIRED)
 find_package(pybind11 CONFIG REQUIRED)
 find_package(MPI REQUIRED)
 find_package(PkgConfig REQUIRED) # For fftw
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 pkg_search_module(FFTW REQUIRED fftw3 IMPORTED_TARGET)
 # E.g. marconi has problems because fftw.h is also in another folder, but env variables are set correctly
 if(DEFINED ENV{FFTW_INC})
@@ -26,7 +25,7 @@ include_directories(PkgConfig::FFTW)
 # CPU op library
 pybind11_add_module(cpu ${CMAKE_CURRENT_LIST_DIR}/lib/cpu.cc)
 target_link_libraries(cpu PRIVATE MPI::MPI_CXX)
-target_link_libraries(cpu PRIVATE PkgConfig::FFTW)
+target_link_libraries(cpu PUBLIC PkgConfig::FFTW)
 
 install(TARGETS cpu DESTINATION jaxpops)
 
