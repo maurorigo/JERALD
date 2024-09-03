@@ -5,7 +5,7 @@ import numpy as np
 import time
 import jax.numpy as jnp
 from jax import config, grad
-config.update("jax_enable_x64", True)
+#config.update("jax_enable_x64", True)
 from mpi4py import MPI
 import mpi4jax
 import tracemalloc
