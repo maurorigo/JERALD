@@ -11,12 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Try to install package
+      - name: Try to install package and run test
         run: |
           python3 -m venv JERALDvenv
           . JERALDvenv/bin/activate
           pip install .
-
-      - name: Run test
-        run: |
           python3 losstest.py
