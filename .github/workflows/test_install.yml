@@ -15,5 +15,6 @@ jobs:
         run: |
           python3 -m venv JERALDvenv
           . JERALDvenv/bin/activate
+          ls /usr/local/lib
           pip install .
           python3 losstest.py
