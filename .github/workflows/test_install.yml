@@ -15,8 +15,5 @@ jobs:
         run: |
           python3 -m venv JERALDvenv
           . JERALDvenv/bin/activate
-          #pip install .
-          #python3 losstest.py
-          printf "#include <fftw3-mpi.h>\n int main(int argc, char **argv){ MPI_Init(&argc, &argv); fftw_mpi_init(); MPI_Finalize(); }" >> test.cpp
-          mpic++ test.cpp -lfftw3 -lfftw3_mpi -o testing
-          ./testing
+          pip install .
+          python3 losstest.py
