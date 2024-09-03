@@ -25,7 +25,7 @@ include_directories(PkgConfig::FFTW)
 # CPU op library
 pybind11_add_module(cpu ${CMAKE_CURRENT_LIST_DIR}/lib/cpu.cc)
 target_link_libraries(cpu PRIVATE MPI::MPI_CXX)
-target_link_libraries(cpu PUBLIC PkgConfig::FFTW)
+target_link_libraries(cpu PRIVATE PkgConfig::FFTW "${FFTW_LIBDIR}/libfftw3_mpi.so" "${FFTW_LIBDIR}/libfftw3f_mpi.so")
 
 install(TARGETS cpu DESTINATION jaxpops)
 
