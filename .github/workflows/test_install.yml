@@ -16,5 +16,4 @@ jobs:
           python3 -m venv JERALDvenv
           . JERALDvenv/bin/activate
           pip install .
-          export LD_LIBRARY_PATH=/usr/local/lib
           python3 losstest.py
