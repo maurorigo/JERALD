@@ -114,6 +114,7 @@ setup(
     install_requires=[
         "jax>=0.4.16,<=0.4.20",
         "jaxlib>=0.4.16,<=0.4.20",
+        "numpy<2",
         "mpi4jax>=0.4.0"
     ],
     ext_modules=extensions,
