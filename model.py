@@ -209,7 +209,7 @@ class LDLModel(object):
             b2 = params[5*Nstep+3]
         
             # Field transformation
-            return self.lReLU(b1 * self.ReLU(delta + b2)**mu + b0)
+            return lReLU(b1 * ReLU(delta + b2)**mu + b0)
         else:
             return delta
 
