@@ -112,8 +112,8 @@ setup(
     package_dir={"": "src"},
     include_package_data=True,
     install_requires=[
-        "jax>=0.4.16,<=0.4.20",
-        "jaxlib>=0.4.16,<=0.4.20",
+        "jax>=0.4.16,<=0.4.23",
+        "jaxlib>=0.4.16,<=0.4.23",
         "numpy<2",
         "mpi4jax>=0.4.0"
     ],
