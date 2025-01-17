@@ -6,7 +6,7 @@
 
 JERALD is a code, based on the [Lagrangian Deep Learning](https://arxiv.org/abs/2010.02926) idea of Dai and Seljak, to paint baryons and related quantities on top of N-body only simulations with machine learning.
 
-The package is based on [JAX](https://github.com/google/jax) and [mpi4jax](https://github.com/mpi4jax/mpi4jax/tree/master), and it uses MPI to implement parallel Cloud-In-Cell (CIC) painting and interpolation algorithms as well as parallel forward and backward Fourier transforms via [FFTW](https://www.fftw.org/).
+The package is based on [JAX](https://github.com/google/jax) and [mpi4jax](https://github.com/mpi4jax/mpi4jax/tree/master), and it uses MPI to implement parallel Cloud-In-Cell (CIC) painting and interpolation algorithms as well as parallel forward and backward Fourier transforms via [FFTW](https://www.fftw.org/). The paper is available [here](https://arxiv.org/abs/2501.09168).
 
 ## Installation
 To install the package, clone the repo and run:
