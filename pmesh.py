@@ -26,9 +26,9 @@ class PMesh(object):
             self.Nmesh = jnp.array(Nmesh, dtype=int)
 
         if np.size(BoxSize)==1:
-            self.BoxSize = jnp.array((BoxSize, BoxSize, BoxSize))
+            self.BoxSize = jnp.array((BoxSize, BoxSize, BoxSize), dtype=float)
         else:
-            self.BoxSize = jnp.array(BoxSize)
+            self.BoxSize = jnp.array(BoxSize, dtype=float)
 
         self.comm = comm
         self.commrank = self.comm.rank

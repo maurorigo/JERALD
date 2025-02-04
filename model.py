@@ -110,21 +110,25 @@ class JERALDModel(object):
         self.masktrain = masktrain
         self.maskvalid = maskvalid
         if L1 is None:
-            self.L1 = baryon # Paper uses True for baryons and False otherwise
+            # As LDL we use True for baryons and False otherwise
+            if self.kind == "dm":
+                self.L1 = False
+            else:
+                self.L1 = True
         else:
             self.L1 = L1
 
         self.starmap = starmap
-        if starmap:
+        if starmap is not None:
             self.starmapk = self.pm.r2c(self.starmap)
         elif kind == "HI":
             raise Exception("Star map required for HI target")
 
         # Number of parameters in the potential for different targets
-        if self.kind in ["dm", "sm"]:
-            self.Npot = 5
-        elif self.kind == "HI":
+        if self.kind == "HI":
             self.Npot = 10
+        else:
+            self.Npot = 5
 
     @jit
     def potential_gradient_dm(self, params, X):
@@ -258,22 +262,22 @@ class JERALDModel(object):
 
         def body(i, X):
             
-            alpha = params[Npot*i+0]
-            gamma = params[Npot*i+1]
-            kh = params[Npot*i+2]
-            kl = params[Npot*i+3]
-            nu = params[Npot*i+4]
+            alpha = params[self.Npot*i+0]
+            gamma = params[self.Npot*i+1]
+            kh = params[self.Npot*i+2]
+            kl = params[self.Npot*i+3]
+            nu = params[self.Npot*i+4]
 
             if self.kind == "dm":
                 return X + self.potential_gradient_dm((fact, alpha, gamma, kh, kl, nu), X)
             elif self.kind == "sm":
                 return X + self.potential_gradient_sm((fact, alpha, gamma, kh, kl, nu), X)
             elif self.kind == "HI":
-                alpha2 = params[Npot*i+5]
-                gamma2 = params[Npot*i+6]
-                kh2 = params[Npot*i+7]
-                kl2 = params[Npot*i+8]
-                nu2 = params[Npot*i+9]
+                alpha2 = params[self.Npot*i+5]
+                gamma2 = params[self.Npot*i+6]
+                kh2 = params[self.Npot*i+7]
+                kl2 = params[self.Npot*i+8]
+                nu2 = params[self.Npot*i+9]
                 return X + self.potential_gradient_HI((fact, alpha, gamma, kh, kl, nu, alpha2, gamma2, kh2, kl2, nu2), X)
             
         # Using fori_loop because with normal for JAX can't compute the derivative wrt gamma
@@ -281,7 +285,7 @@ class JERALDModel(object):
         # for some reason, not sure why)
         return jax.lax.fori_loop(0, Nstep, body, X)
 
-    @partial(jit, static_argnums=(3, 4))
+    @partial(jit, static_argnums=(3,))
     def evaluate(self, params, X, Nstep):
         """
         Evaluates dm, sm or HI map according to the JERALD model
@@ -358,7 +362,7 @@ class JERALDModel(object):
         F = self.evaluate(params, self.X, Nstep=self.Nstep) ** self.index
 
         # Optionally multiply by second field (for compatibility with LDL)
-        if self.field2:
+        if self.field2 is not None:
             F = F * self.field2
 
         # Residue field
@@ -375,7 +379,7 @@ class JERALDModel(object):
             diff = jnp.abs(diff)
         
         # Apply mask
-        if self.masktrain:
+        if self.masktrain is not None:
             diff *= self.masktrain
             Npixel = jnp.sum(self.masktrain)
         else:
@@ -414,7 +418,7 @@ class JERALDModel(object):
         
         F = self.evaluate(params, self.X, Nstep=self.Nstep) ** self.index
         
-        if self.field2:
+        if self.field2 is not None:
             F *= self.field2
 
         diff = F - self.target
@@ -427,7 +431,7 @@ class JERALDModel(object):
         else:
             diff = jnp.abs(diff)
 
-        if self.masktrain:
+        if self.masktrain is not None:
             diffl = diff * self.masktrain
             Npixel = jnp.sum(self.masktrain)
         else:
@@ -445,7 +449,7 @@ class JERALDModel(object):
 
         # Optionally compute and store validation loss
         lossv = 0.
-        if self.maskvalid:
+        if self.maskvalid is not None:
             diff *= self.maskvalid
             Npixelv = jnp.sum(self.maskvalid)
             if self.L1:
@@ -625,7 +629,7 @@ class Adam(object):
                 warnings.warn(f"Parameters not found in {filename}")
                 return False, 0
 
-        def save_state(self, filename, params=None):
+    def save_state(self, filename, params=None):
         """
         Saves to "filename" the current state of the optimizer,
         optionally adding parameters being optimized, if passed
