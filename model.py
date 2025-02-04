@@ -2,17 +2,18 @@ import jax.numpy as jnp
 import numpy as np
 import jax
 from functools import partial
-from jax import jit, vmap, grad, value_and_grad, custom_vjp
+from jax import jit, grad, value_and_grad, custom_vjp
 from mpi4py import MPI
 import mpi4jax
 import gc
+import warnings
 
 @custom_vjp
 def c2f(obj):
     """
-        This compensates the fact that we only have int(Nmesh[2]/2)+1 of the fft
-        along z due to symmetry. The problem is not present on the forward pass,
-        but when computing derivatives it becomes significant.
+        This function compensates the fact that we only have int(Nmesh[2]/2)+1
+        of the fft along z due to symmetry. The problem is not present on the
+        forward pass, but when computing derivatives it becomes significant.
     """
     return obj
 
@@ -22,7 +23,6 @@ def c2f_fwd(obj):
 def c2f_bwd(res, v):
     # Assuming the second dimension of the fft is the correct one,
     # but this can be done more general if needed
-    # Don't ask me why exactly it's like this
     # The indices that aren't self conjugate need this treatment 
     sz = v.shape[1]
     v = v.at[:, :, 1:int(sz/2)].add(jnp.conj(v[:, :, 1:int(sz/2)]))
@@ -35,9 +35,10 @@ def allbcast(val, comm):
     """
         Pretty much the inverse of allreduce. When dealing with different parts of
         the field in different ranks, the backward pass has its own value of these
-        variables (I guess?), this sets it back to correct.
+        variables (I believe), this sets it back to correct.
         In the forward pass, all values should already be the same, so just return val
-        Also works for a jnp array of parameters (recommended in order to guarantee correct order of ops)
+        !!!  Also works for a jnp array of parameters (recommended in order to guarantee
+        !!!  correct order of ops)
     """
     return val
 
@@ -62,23 +63,28 @@ def lReLU(x, alpha=.1):
 
 
 @jax.tree_util.register_pytree_node_class
-class LDLModel(object):
+class JERALDModel(object):
     """
-    Model for Lagrangian Deep Learning
+    JERALD model for dark matter, stellar mass and neutral hydrogen
     """
-    def __init__(self, X, target, pm, Nstep=1, baryon=False, n=1., index=1., L1=None, field2=None, masktrain=None, maskvalid=None):
+    def __init__(self, X, target, pm, Nstep=2, kind="dm", n=None, index=1., L1=None, field2=None, masktrain=None, maskvalid=None, starmap=None):
         """
-            pm (PMesh object): PMesh that performs fft, paint, readout
             X (array-like): (?, 3) array of local input positions
             target (array-like): (?, Ny, Nz) array of local target map
+            pm (PMesh object): PMesh that performs fft, paint, readout
             Nstep (int): Number of displacement steps
-            baryon (bool): Baryonic observables or no
-            n (float): Smoothing kernel exponent, see LDL paper
-            index (float): Exponent for LDL map, see LDL paper
-            field2 (array-like): Additional (?, Ny, Nz) map to be multiplied to LDL output
+            kind (str): Quantity to model ("dm", "sm", "HI", potentially also LDL ones, using sm model)
+            n (float): Smoothing kernel exponent (if None no smoothing)
+            index (float): Exponent for second map (for compatibility with LDL)
+            field2 (array-like): Additional (?, Ny, Nz) map to be multiplied to output
+                                 (for compatibility with LDL)
             masktrain (array-like): (?, Ny, Nz) local array of 0s and 1s for selecting training pixels
             maskvalid (array-like): As above, for validation
             L1 (bool): L1 or L2 norm loss
+            starmap (array-like): (?, Ny, Nz) array of local stellar mass map (required for HI)
+
+            !! NOTE: X and target are only needed at initialization for training. When evaluating only,
+            they can be passed directly to model.evaluate() or model.displace()
 
             NOTE: initializing everything here to make compilation of class faster via pytrees,
             avoiding constant folding of huge arrays which can lead to massive slowdowns.
@@ -86,13 +92,18 @@ class LDLModel(object):
         self.pm = pm
         self.X = X
         self.target = target
+
         # Useful later
         self.kvals = self.pm.compute_wavevectors()
         self.knorms = jnp.linalg.norm(self.kvals, axis=-1)
+        self.knorms = jnp.where(self.knorms==0, 1e-8, self.knorms) # To avoid nan's when k**-1
 
         # Loss parameters
         self.Nstep = Nstep
-        self.baryon = baryon
+        self.kind = kind
+        # For unknown cases just use the stellar mass model (as LDL basically)
+        if self.kind not in ["dm", "sm", "HI"]:
+            self.kind = "sm"
         self.n = n
         self.index = index
         self.field2 = field2
@@ -103,37 +114,46 @@ class LDLModel(object):
         else:
             self.L1 = L1
 
+        self.starmap = starmap
+        if starmap:
+            self.starmapk = self.pm.r2c(self.starmap)
+        elif kind == "HI":
+            raise Exception("Star map required for HI target")
+
+        # Number of parameters in the potential for different targets
+        if self.kind in ["dm", "sm"]:
+            self.Npot = 5
+        elif self.kind == "HI":
+            self.Npot = 10
+
     @jit
-    def potential_gradient(self, params, X):
+    def potential_gradient_dm(self, params, X):
         """
-        Computes gradient of LDL potential following https://github.com/biweidai/LDL/tree/master
+        Computes gradient of potential for JERALD for dark matter
 
         Parameters:
-            params (tuple): Parameters of LDL
-            X (array-like): (N, 3) array representing particle positions
+            params (tuple): Parameters of Green's function and delta exponent
+            X (array-like): (N, 3) array of particle positions
 
         Returns:
             Gradient of LDL potential with shape (Nx, Ny, Nz, 3)
         """
-        fact, gamma, kh, kl, n = params
+        fact, alpha, gamma, kh, kl, nu = params
 
         # Density
-        delta = self.pm.paint(X, 1.) * fact # Normalized density rho/bar(rho)
-        delta = (delta+1e-8) ** gamma
-
-        # Density in Fourier space
-        deltak = self.pm.r2c(delta)
+        rho = self.pm.paint(X, 1.) * fact # Normalized density rho/bar(rho)
+        # Power of density in Fourier space
+        rhok = self.pm.r2c((rho+1e-8) ** gamma)
         
         # Green's operator in Fourier space
-        knorms = jnp.where(self.knorms==0, 1e-8, self.knorms) # Correct norms that are null
-        filterk = -jnp.exp(-knorms**2/kl**2) * jnp.exp(-kh**2/knorms**2) * knorms**n # Attractive so -
-        filterk = c2f(filterk) # Compensates the fact that we only have ~half of the fft (for back pass)
+        greenk = -jnp.exp(-self.knorms/kl -kh/self.knorms) * self.knorms**nu # Attractive so -
+        greenk = c2f(greenk) # Compensates the fact that we only have ~half of the fft (for back pass)
 
-        potk = deltak * filterk
+        potk = 1e-2 * alpha * rhok * greenk
 
         # Now we need to compute the spacial derivative of this object on each point
-        # Note that we only have the values at some grid points, so we need to use a finite difference approach (see overleaf)
-        # Compare the FT of this (convolution) with an order 2 finite difference formula (https://en.wikipedia.org/wiki/Numerical_differentiation)
+        # Note that we only have the values at some grid points, so we need to use a finite difference approach
+        # Compare the FT of this (convolution) with an order (2 commented) 3 finite difference formula (https://en.wikipedia.org/wiki/Numerical_differentiation)
         step = self.pm.BoxSize / self.pm.Nmesh
         #coeff = 1 / (6 * step) * (8 * jnp.sin(self.kvals * step) - jnp.sin(2 * self.kvals * step)) # (Nx, Ny, Nz, 3)
         coeff = 1 / (30 * step) * (45 * jnp.sin(self.kvals * step) - 9 * jnp.sin(2 * self.kvals * step) + jnp.sin(3 * self.kvals * step))
@@ -151,21 +171,81 @@ class LDLModel(object):
             self.pm.readout(X, potgrady),
             self.pm.readout(X, potgradz)), axis=-1)
 
-        """potgradk = -1j * coeff[:, :, :, 0] * potk # x component (using same array to save memory)
+        # !!! WIP: This is faster but for now I'm passing gradient components stacked and it's
+        # expensive from a memory point of view, I'll change this in the future
+        # return self.pm.readout3D(X, jnp.stack((potgradx, potgrady, potgradz), axis=0))
+
+    @jit
+    def potential_gradient_sm(self, params, X):
+        """
+        Same as above, for stellar mass
+        """
+        fact, alpha, gamma, kh, kl, nu = params
+
+        rho = self.pm.paint(X, 1.) * fact
+        rhok = self.pm.r2c((rho+1e-8) ** gamma)
+
+        greenk = -jnp.exp(-self.knorms**2/kl**2 -kh**2/self.knorms**2) * self.knorms**nu
+        greenk = c2f(greenk)
+
+        potk = 1e-2 * alpha * rhok * greenk
+
+        step = self.pm.BoxSize / self.pm.Nmesh
+        coeff = 1 / (30 * step) * (45 * jnp.sin(self.kvals * step) - 9 * jnp.sin(2 * self.kvals * step) + jnp.sin(3 * self.kvals * step))
+
+        potgradk = -1j * coeff[:, :, :, 0] * potk
         potgradx = self.pm.c2r(potgradk)
-        potgradk = -1j * coeff[:, :, :, 1] * potk # y component
+        potgradk = -1j * coeff[:, :, :, 1] * potk
         potgrady = self.pm.c2r(potgradk)
-        potgradk = -1j * coeff[:, :, :, 2] * potk # z component
+        potgradk = -1j * coeff[:, :, :, 2] * potk
         potgradz = self.pm.c2r(potgradk)
-        return self.pm.readout3D(X, jnp.stack((potgradx, potgrady, potgradz), axis=0))"""
+
+        return jnp.stack((self.pm.readout(X, potgradx),
+            self.pm.readout(X, potgrady),
+            self.pm.readout(X, potgradz)), axis=-1)
+
+    @jit
+    def potential_gradient_HI(self, params, X):
+        """
+        Same as above, for HI (this time more parameters are needed)
+        """
+        fact, alpha1, gamma1, kh1, kl1, nu1, alpha2, gamma2, kh2, kl2, nu2 = params
+
+        rho = self.pm.paint(X, 1.) * fact
+        rhok = self.pm.r2c((rho+1e-8) ** gamma1)
+
+        greenk1 = -jnp.exp(-self.knorms**2/kl1**2 -kh1**2/self.knorms**2) * self.knorms**nu1
+        greenk1 = c2f(greenk1)
+
+        # Same as above but for stellar mass map
+        starmapk = self.pm.r2c(self.starmap ** gamma2)
+
+        greenk2 = jnp.exp(-self.knorms**2/kl2**2 -kh2**2/self.knorms**2) * self.knorms**nu2
+        greenk2 = c2f(greenk2)
+
+        potk = 1e-3 * (alpha1 * greenk1 * rhok + alpha2 * greenk2 * starmapk)
+
+        step = self.pm.BoxSize / self.pm.Nmesh
+        coeff = 1 / (30 * step) * (45 * jnp.sin(self.kvals * step) - 9 * jnp.sin(2 * self.kvals * step) + jnp.sin(3 * self.kvals * step))
+
+        potgradk = -1j * coeff[:, :, :, 0] * potk
+        potgradx = self.pm.c2r(potgradk)
+        potgradk = -1j * coeff[:, :, :, 1] * potk
+        potgrady = self.pm.c2r(potgradk)
+        potgradk = -1j * coeff[:, :, :, 2] * potk
+        potgradz = self.pm.c2r(potgradk)
+
+        return jnp.stack((self.pm.readout(X, potgradx),
+            self.pm.readout(X, potgrady),
+            self.pm.readout(X, potgradz)), axis=-1)
 
     @partial(jit, static_argnums=3)
     def displace(self, params, X, Nstep):
         """
-        Displaces particles according to LDL model.
+        Displaces particles according to JERALD model
 
         Parameters:
-            params (array-like): Parameters for LDL
+            params (array-like): Model parameters
             X (array-like): Particle positions (divided into different ranks)
             Nstep (int): Number of displacement layers
         
@@ -178,21 +258,42 @@ class LDLModel(object):
 
         def body(i, X):
             
-            alpha = params[5*i]
-            gamma = params[5*i+1]
-            kh = params[5*i+2]
-            kl = params[5*i+3]
-            n = params[5*i+4]
-            
-            return X + alpha * self.potential_gradient((fact, gamma, kh, kl, n), X)
+            alpha = params[Npot*i+0]
+            gamma = params[Npot*i+1]
+            kh = params[Npot*i+2]
+            kl = params[Npot*i+3]
+            nu = params[Npot*i+4]
+
+            if self.kind == "dm":
+                return X + self.potential_gradient_dm((fact, alpha, gamma, kh, kl, nu), X)
+            elif self.kind == "sm":
+                return X + self.potential_gradient_sm((fact, alpha, gamma, kh, kl, nu), X)
+            elif self.kind == "HI":
+                alpha2 = params[Npot*i+5]
+                gamma2 = params[Npot*i+6]
+                kh2 = params[Npot*i+7]
+                kl2 = params[Npot*i+8]
+                nu2 = params[Npot*i+9]
+                return X + self.potential_gradient_HI((fact, alpha, gamma, kh, kl, nu, alpha2, gamma2, kh2, kl2, nu2), X)
             
         # Using fori_loop because with normal for JAX can't compute the derivative wrt gamma
         # in case len(X) is not divisible by pm.comm.size and with Nstep=1 (but with 2 yes,
-        # for some reason)
+        # for some reason, not sure why)
         return jax.lax.fori_loop(0, Nstep, body, X)
 
     @partial(jit, static_argnums=(3, 4))
-    def LDL(self, params, X, Nstep, baryon):
+    def evaluate(self, params, X, Nstep):
+        """
+        Evaluates dm, sm or HI map according to the JERALD model
+
+        Parameters:
+            params (array-like): Model parameters
+            X (array-like): Particle positions (divided into different ranks)
+            Nstep (int): Number of displacement layers
+
+        Returns:
+            dm, sm or HI map
+        """
 
         sz, _ = mpi4jax.allreduce(len(X), op=MPI.SUM, comm=self.pm.comm)
         fact = self.pm.Nmesh.prod() / sz
@@ -200,66 +301,91 @@ class LDLModel(object):
         X = self.displace(params, X, Nstep=Nstep)
 
         # Paint particle overdensity field
-        delta = self.pm.paint(X, 1.) * fact
+        rho = self.pm.paint(X, 1.) * fact
         
-        if baryon:
-            mu = params[5*Nstep+0]
-            b1 = params[5*Nstep+1]
-            b0 = params[5*Nstep+2]
-            b2 = params[5*Nstep+3]
+        if self.kind == "HI":
+            mu = params[self.Npot*Nstep+0]
+            w = params[self.Npot*Nstep+1]
+            b = params[self.Npot*Nstep+2]
+
+            beta1 = params[self.Npot*Nstep+3]
+            khi = params[self.Npot*Nstep+4]
+            kli = params[self.Npot*Nstep+5]
+            nui = params[self.Npot*Nstep+6]
+            beta2 = params[self.Npot*Nstep+7]
+            gamma3 = params[self.Npot*Nstep+8]
+
+            xi = params[self.Npot*Nstep+9]
+            eta = params[self.Npot*Nstep+10]
+
+            # Field transformation
+            starmapk = self.pm.r2c(self.starmap)
+            filterk = jnp.exp(-self.knorms/kli -khi/self.knorms)*self.knorms**nui + xi
+            filterk = c2f(filterk)
+
+            depletion = ReLU(beta1 * self.pm.c2r(starmapk*filterk) + eta) + beta2*self.starmap**gamma3
+
+            return ReLU(w * (rho+1e-8)**mu - depletion + b)
+
+        elif self.kind == "sm":
+            mu = params[self.Npot*Nstep+0]
+            w = params[self.Npot*Nstep+1]
+            b = params[self.Npot*Nstep+2]
         
             # Field transformation
-            return lReLU(b1 * ReLU(delta + b2)**mu + b0)
-        else:
-            return delta
+            return ReLU(w * (rho+1e-8)**mu + b)
+
+        elif self.kind == "dm":
+            return rho
 
 
     @jit
     def loss(self, params):
         """
-        LDL loss function
+        JERALD loss function
         No validation, could be much faster if validation is not needed
 
         Parameters:
-            params (array-like): Parameters of LDL model
+            params (array-like): Parameters of model
 
         Returns:
-            loss (float): LDL model loss
+            loss (float): Model loss
         """
         # First allbcast the parameters
         params = allbcast(params, self.pm.comm)
 
-        # Compute the LDL map
-        F = self.LDL(params, self.X, Nstep=self.Nstep, baryon=self.baryon) ** self.index
+        # Compute the map (index is for compatibility with LDL code)
+        F = self.evaluate(params, self.X, Nstep=self.Nstep) ** self.index
 
-        # Optionally multiply by second field
-        if self.field2 is not None:
+        # Optionally multiply by second field (for compatibility with LDL)
+        if self.field2:
             F = F * self.field2
 
         # Residue field
-        residue = F - self.target
+        diff = F - self.target
 
         # Smooth the field
-        # !!! NO C2F HERE AS PER ORIGINAL CODE !!!
-        smoothingkernel = jnp.where(self.knorms==0, 1., self.knorms**(-self.n) + 1.)
-        #smoothingkernel = jnp.exp(-self.n * self.knorms)
-        #smoothingkernel = (self.knorms + 1.)**(-self.n)
-        residuek = self.pm.r2c(residue)
-        residuek *= smoothingkernel
-        residue = jnp.abs(self.pm.c2r(residuek))
+        if self.n:
+            # !!! NO C2F HERE AS PER ORIGINAL CODE !!!
+            smoothingkernel = jnp.where(self.knorms==0, 1., self.knorms**(-self.n) + 1.)
+            diffk = self.pm.r2c(diff)
+            diffk *= smoothingkernel
+            diff = jnp.abs(self.pm.c2r(diffk))
+        else:
+            diff = jnp.abs(diff)
         
         # Apply mask
-        if self.masktrain is not None:
-            residue *= self.masktrain
+        if self.masktrain:
+            diff *= self.masktrain
             Npixel = jnp.sum(self.masktrain)
         else:
-            Npixel = residue.size
+            Npixel = diff.size
 
         # Compute loss (could also change L1 to a float exponent directly)
         if self.L1:
-            loss = jnp.sum(residue)
+            loss = jnp.sum(diff)
         else:
-            loss = jnp.sum(residue**2)
+            loss = jnp.sum(diff**2)
 
         # Collect losses and number of pixels from all ranks
         loss, _ = mpi4jax.allreduce(loss, op=MPI.SUM, comm=self.pm.comm)
@@ -286,30 +412,32 @@ class LDLModel(object):
         """
         params = allbcast(params, self.pm.comm)
         
-        F = self.LDL(params, self.X, Nstep=self.Nstep, baryon=self.baryon) ** self.index
+        F = self.evaluate(params, self.X, Nstep=self.Nstep) ** self.index
         
-        if self.field2 is not None:
+        if self.field2:
             F *= self.field2
 
-        residue = F - self.target
+        diff = F - self.target
         
-        #smoothingkernel = jnp.where(self.knorms==0, 1., self.knorms**(-self.n) + 1.)
-        #residuek = self.pm.r2c(residue)
-        #residuek *= smoothingkernel
-        #residue = jnp.abs(self.pm.c2r(residuek))
-        residue = jnp.abs(residue)
-        
-        if self.masktrain is not None:
-            residuel = residue * self.masktrain
+        if self.n:
+            smoothingkernel = jnp.where(self.knorms==0, 1., self.knorms**(-self.n) + 1.)
+            diffk = self.pm.r2c(diff)
+            diffk *= smoothingkernel
+            diff = jnp.abs(self.pm.c2r(diffk))
+        else:
+            diff = jnp.abs(diff)
+
+        if self.masktrain:
+            diffl = diff * self.masktrain
             Npixel = jnp.sum(self.masktrain)
         else:
-            residuel = residue
-            Npixel = residue.size
+            diffl = diff
+            Npixel = diff.size
         
         if self.L1:
-            loss = jnp.sum(residuel)
+            loss = jnp.sum(diffl)
         else:
-            loss = jnp.sum(residuel**2)
+            loss = jnp.sum(diffl**2)
 
         loss, _ = mpi4jax.allreduce(loss, op=MPI.SUM, comm=self.pm.comm)
         Npixel, _ = mpi4jax.allreduce(Npixel, op=MPI.SUM, comm=self.pm.comm)
@@ -317,13 +445,13 @@ class LDLModel(object):
 
         # Optionally compute and store validation loss
         lossv = 0.
-        if self.maskvalid is not None:
-            residue *= self.maskvalid
+        if self.maskvalid:
+            diff *= self.maskvalid
             Npixelv = jnp.sum(self.maskvalid)
             if self.L1:
-                lossv = jnp.sum(residue)
+                lossv = jnp.sum(diff)
             else:
-                lossv = jnp.sum(residue**2)
+                lossv = jnp.sum(diff**2)
             lossv, _ = mpi4jax.allreduce(lossv, op=MPI.SUM, comm=self.pm.comm)
             Npixelv, _ = mpi4jax.allreduce(Npixelv, op=MPI.SUM, comm=self.pm.comm)
             lossv /= Npixelv
@@ -342,9 +470,10 @@ class LDLModel(object):
         gc.collect()
         return out1, out2, out3
     
+    # Things needed to compile class
     def tree_flatten(self):
-        children = (self.X, self.target, self.field2, self.masktrain, self.maskvalid)
-        aux_data = (self.pm, self.Nstep, self.baryon, self.n, self.index, self.L1)
+        children = (self.X, self.target, self.field2, self.masktrain, self.maskvalid, self.starmap)
+        aux_data = (self.pm, self.Nstep, self.kind, self.n, self.index, self.L1)
         return (children, aux_data)
 
     @classmethod
@@ -360,6 +489,8 @@ class RMSProp(object):
         """
             LR (float, array-like or callable): learning rate
             beta (float): exponential decay rate of RMSprop
+            eps (float): const for stability
+            eps_root (float): const for stability
         """
         self.LR = LR
         self.beta = beta
@@ -396,6 +527,13 @@ class Adam(object):
     Adam optimizer class
     """
     def __init__(self, LR=0.01, b1=0.9, b2=0.999, eps=1e-8, eps_root=0.):
+        """
+            LR (float, array-like or callable): learning rate
+            b1 (float): momentum
+            b2 (float): exponential decay rate
+            eps (float): const for stability
+            eps_root (float): const for stability
+        """
         self.LR = LR
         self.b1 = b1
         self.b2 = b2
@@ -429,3 +567,85 @@ class Adam(object):
         nuh = self.nu / (1. - self.b2**self.itr)
         update = muh / (jnp.sqrt(nuh + self.eps_root) + self.eps)
         return params - LR * update
+
+    def get_state(self):
+        """
+        Prints current value of internal parameters of Adam and current learning rate
+        """
+        if callable(self.LR):
+            LR = self.LR(self.itr)
+        else:
+            LR = self.LR
+        return self.mu, self.nu, self.itr, LR
+
+    def import_state(self, filename, paramsreq=False):
+        """
+        Imports Adam state from file "filename" and optionally some pre-saved parameters (if paramsreq)
+        """
+        paramsfound = False
+        params = []
+        with open(filename) as f:
+            lines = f.readlines()
+            state = 0
+            mu = []
+            nu = []
+            for line in lines:
+                line = line.rstrip()
+                if state == 0:
+                    if line == "mu":
+                        state = 1
+                elif state == 1:
+                    if line == "nu":
+                        state = 2
+                    else:
+                        mu.append(float(line))
+                elif state == 2:
+                    if line == "itr":
+                        state = 3
+                    else:
+                        nu.append(float(line))
+                elif state == 3:
+                    itr = int(line)
+                    state = 4
+                elif state == 4:
+                    if line == "params":
+                        state = 5
+                        paramsfound = True
+                elif state == 5:
+                    params.append(float(line))
+
+            self.mu = jnp.array(mu)
+            self.nu = jnp.array(nu)
+            self.itr = itr
+
+        if paramsreq:
+            if paramsfound:
+                return True, jnp.array(params)
+            else:
+                warnings.warn(f"Parameters not found in {filename}")
+                return False, 0
+
+        def save_state(self, filename, params=None):
+        """
+        Saves to "filename" the current state of the optimizer,
+        optionally adding parameters being optimized, if passed
+        """
+        if callable(self.LR):
+            LR = self.LR(self.itr)
+        else:
+            LR = self.LR
+        with open(filename, "w") as f:
+            f.write("mu\n")
+            np.savetxt(f, self.mu)
+            f.write("nu\n")
+            np.savetxt(f, self.nu)
+            f.write("itr\n")
+            f.write(str(self.itr) + "\n")
+            f.write("LR\n")
+            if len(LR) > 0:
+                np.savetxt(f, LR)
+            else:
+                f.write(str(LR) + "\n")
+            if params:
+                f.write("params\n")
+                np.savetxt(f, params)
