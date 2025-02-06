@@ -11,7 +11,9 @@ import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../')
 from pmesh import PMesh
 
-__all__ = ["psavefield", "preadfield", "makefield"]
+from utils import MpiExceptionHandler
+
+__all__ = ["psavefield", "preadfield"]
 
 # Just for readability if run in parallel
 def printr(string, comm=MPI.COMM_WORLD):
@@ -49,9 +51,9 @@ def loadfield(path, comm=MPI.COMM_WORLD, local=False, pm=None):
     if pm:
         comm = pm.comm
 
-    try:
+    with MpiExceptionHandler(comm):
         with bigfile.FileMPI(comm=comm, filename=path)['Field'] as ff: # Just expect a Field
-            printr(f"Field found at {path}")
+            printr(f"Field found at {path}", comm)
             attrs = {}
             for key in ff.attrs:
                 v = ff.attrs[key]
@@ -64,15 +66,12 @@ def loadfield(path, comm=MPI.COMM_WORLD, local=False, pm=None):
 
             out = np.empty(np.prod(attrs['Nmesh']), dtype=dtype)
             out[...] = ff[...]
-            out, Nmesh, BoxSize = out.reshape(attrs['Nmesh']), attrs['Nmesh'], attrs['BoxSize']
+            out = out.reshape(attrs['Nmesh'])
 
             if local:
                 if not pm:
                     pm = PMesh(Nmesh=Nmesh, BoxSize=BoxSize, comm=comm)
-                return out[pm.fftss[0]:pm.fftss[1], :, :]
+                return out[pm.fftss[0]:pm.fftss[1], :, :], attrs['Nmesh'], attrs['BoxSize']
             
-            return out
-
-    except:
-        raise Exception(f"No map found at {path}")
+            return out, attrs['Nmesh'], attrs['BoxSize']
 

@@ -1,6 +1,3 @@
-# LDL
-# Code is very similar to https://github.com/biweidai/LDL/blob/master/LDL.py
-# Everything is float32
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/..')
@@ -14,6 +11,7 @@ from bigfile import File
 from mpi4py import MPI
 import jax.numpy as jnp
 import inspect
+from utils import MpiExceptionHandler
 
 from jax import config
 config.update("jax_enable_x64", True)
@@ -41,16 +39,18 @@ args = parser.parse_args()
 pm = PMesh(args.Nmesh, args.BoxSize)
 comm = pm.comm
 pm.printr("Mesh initialized.")
-pm.printr([f"JERALD for {target} at redshift {args.redshift}",
+pm.printr([f"JERALD for {args.target} at redshift {args.redshift}",
     f"Mesh size: {args.Nmesh}",
     f"Using {args.Nstep} steps and n = {args.n}"])
 
 # Load input data
-X = File(args.Nbodypath)['Position']
+with MpiExceptionHandler(comm):
+    X = File(args.Nbodypath)['Position']
 # Local positions
 # fancy: import to this rank mostly particles belonging to the part of the CIC map to paint that
 # is processed in this rank, to minimize communications when painting
-fancy = False
+# Takes a bit more to import but can bring 10%-20% gain in time
+fancy = True
 if fancy:
     starts = np.arange(comm.size) * X.size // comm.size
     ends = (np.arange(comm.size) + 1) * X.size // comm.size
@@ -66,7 +66,8 @@ NpartTot = comm.allreduce(len(X))
 # Can also save improved positions but this way I can keep track of time for full pipeline
 if args.improvepath:
     pm.printr("Improving small scales in FastPM.")
-    params = np.loadtxt(args.improvepath) # Compatible with LDL
+    with MpiExceptionHandler(comm):
+        params = np.loadtxt(args.improvepath) # Compatible with LDL
     if len(params) % 5 != 0:
         raise Exception("Number of parameters for dm improve should be a multiple of 5")
     Nstep = len(params) // 5 # Infer number of steps from the number of parameters
@@ -75,12 +76,12 @@ if args.improvepath:
     X = model.displace(params, X, Nstep)
     comm.Barrier()
     pm.printr(f"Done in {(time.time()-times):.2f}s.")
-    del displmodel
+    del model
 
 # Import stellar mass map for HI
 if args.target == 'HI':
     pm.printr("Loading stellar mass map...")
-    starmap = loadfield(args.Mstarpath, local=True, pm=pm)
+    starmap, _, __ = loadfield(args.Mstarpath, local=True, pm=pm)
     # Basically ReLU, just so that dividing by this and raising it to powers doesn't give nan's
     starmap = jnp.where(starmap < 1e-12, 1e-12, starmap)
     starmapmean = comm.allreduce(starmap.sum()) / comm.allreduce(np.prod(starmap.shape))
@@ -93,7 +94,7 @@ if not args.evalpath:
     # Target map
     pm.printr("Loading target map...")
     
-    targetmap = loadfield(args.refpath, local=True, pm=pm)
+    targetmap, _, __ = loadfield(args.refpath, local=True, pm=pm)
     if args.target == 'HI':
         # Depending on redshift HI is very different in range for Sherwood-Relics
         # Normalize maps around unity
@@ -138,14 +139,15 @@ if not args.evalpath:
     pm.printr("Model created.")
 
     # Initial params
+    avgfact = comm.allreduce(targetmap.sum()) / NpartTot
     if args.target == 'dm':
         params0 = [1, 0.5, 1, 8, 0] * args.Nstep
     elif args.target == 'Mstar':
         params0 = [1, 0.5, 1, 8, 0] * args.Nstep
-        params0 += [1, comm.allreduce(targetmap.sum()) / NpartTot, 0, 0]
+        params0 += [1, avgfact, 0, 0]
     elif args.target == 'HI':
         params0 = [1, 0.5, 1, 8, 0, 1, 0.5, 1, 8, 0] * args.Nstep
-        params0 += [1, p1, -.1, 0.6, 1, 8, .01, 0, .1, 1, 0., zshift, 0.]
+        params0 += [1, avgfact, -.1, 0.6, 1, 8, .01, 0, .1, 1, 0., zshift]
     params0 = jnp.array(params0)
     
     # Bounds (optimizer doesn't really do anything with them, they're just used to clip parameters)
@@ -161,16 +163,16 @@ if not args.evalpath:
                   (None, None), (None, None), (0., None), (0.1, None), (None, None)] * args.Nstep
         #          mu           w             b             beta1         khi         kli
         bounds += [(0.1, None), (1e-5, None), (None, None), (None, None), (0., None), (0.1, None),
-        #          nui           beta2         gamma3        xi            eta 
-                   (None, None), (None, None), (None, None), (None, None), (None, None)]
+        #          nui           beta2         gamma3        xi            eta           zshift
+                   (None, None), (None, None), (None, None), (None, None), (None, None), (None, None)]
 
     # Train
-    Nopt = 300
+    Nopt = 10
     # Path to save optimizer state in case one wants to continue training
     optf = f"{args.outpath}/{args.target}_Nmesh{args.Nmesh}_Nstep{args.Nstep}_n{args.n:.2f}_optstate.txt"
     pm.printr(f"Nopt: {Nopt}")
     def LRschedule(i, LRi=0.002, LRf=0.02, tau=100):
-        LRt = (LRf-LRi) * (2/(np.exp(-i/tauLR)+1)-1) + LRi
+        LRt = (LRf-LRi) * (2/(np.exp(-i/tau)+1)-1) + LRi
         LRs = LRt * jnp.ones_like(params0)
         return LRs
     pm.printr("LR schedule:")
@@ -204,8 +206,11 @@ if not args.evalpath:
             bestvloss = vloss
             bestparams = params
             beststep = i+1
-            if comm.rank==0:
-                np.savetxt(paramsave, bestparams) # Save best parameters up to now
+            # Save best parameters up to now
+            with MpiExceptionHandler(comm): 
+                if comm.rank == 0:
+                    np.savetxt(paramsave, bestparams)
+
         pm.printr([f"Step {i+1}:",
             f"Train loss = {tloss:.5f}, validation loss = {vloss:.5f}, max gradient = {np.max(np.abs(tgrad)):.5f}, completed in {(time.time()-stime):.3f}s",
             "Params:",
@@ -216,14 +221,16 @@ if not args.evalpath:
         # Advance optimizer
         params = optimizer.step(params, tgrad)
 
-    pm.printr(["Finished optimization in {(time.time()-tstime):.0f}s.", 
+    pm.printr([f"Finished optimization in {(time.time()-tstime):.0f}s.", 
         f"Best validation loss: {bestvloss}, at step {beststep}",
         "Best parameters:",
         f"{bestparams}"])
-    if comm.rank == 0:
-        print("Saving optimizer state...")
-        optimizer.save_state(optf, params)
-        print("Done.")
+    with MpiExceptionHandler(comm):
+        if comm.rank == 0:
+            print("Saving optimizer state...")
+            optimizer.save_state(optf, params)
+            print("Done.")
+    
     params = bestparams
     del model
 
@@ -242,11 +249,11 @@ else: # Only evaluate model
 # Evaluate
 stime = time.time()
 pm.printr(f"Producing {args.target} map...")
-model = JERALDModel(None, None, pm, kind=args.target)
+model = JERALDModel(None, None, pm, kind=args.target, starmap=starmap)
 outmap = model.evaluate(params, X, args.Nstep)
 
 pm.printr(f"Done in {(time.time()-stime):.2f}s. Saving field...")
 savef = f"{args.outpath}/{args.target}_Nmesh{args.Nmesh}_Nstep{args.Nstep}_n{args.n:.2f}_map"
-savefield(outmap, save, pm)
+savefield(outmap, savef, pm)
 pm.printr(f"Done.")
 

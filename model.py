@@ -67,7 +67,7 @@ class JERALDModel(object):
     """
     JERALD model for dark matter, stellar mass and neutral hydrogen
     """
-    def __init__(self, X, target, pm, Nstep=2, kind="dm", n=None, index=1., L1=None, field2=None, masktrain=None, maskvalid=None, starmap=None):
+    def __init__(self, X, target, pm, Nstep=2, kind="dm", n=0, index=1., L1=None, field2=None, masktrain=None, maskvalid=None, starmap=None):
         """
             X (array-like): (?, 3) array of local input positions
             target (array-like): (?, Ny, Nz) array of local target map
@@ -85,6 +85,9 @@ class JERALDModel(object):
 
             !! NOTE: X and target are only needed at initialization for training. When evaluating only,
             they can be passed directly to model.evaluate() or model.displace()
+
+            ! NOTE: to save time, one could also split the model and have one for each target. Here
+            I'm keeping them all together just for convenience (splitting can lead to 10% gain in time)
 
             NOTE: initializing everything here to make compilation of class faster via pytrees,
             avoiding constant folding of huge arrays which can lead to massive slowdowns.
@@ -321,6 +324,7 @@ class JERALDModel(object):
 
             xi = params[self.Npot*Nstep+9]
             eta = params[self.Npot*Nstep+10]
+            zs = params[self.Npot*Nstep+11]
 
             # Field transformation
             starmapk = self.pm.r2c(self.starmap)
@@ -329,7 +333,7 @@ class JERALDModel(object):
 
             depletion = ReLU(beta1 * self.pm.c2r(starmapk*filterk) + eta) + beta2*self.starmap**gamma3
 
-            return ReLU(w * (rho+1e-8)**mu - depletion + b)
+            return ReLU(w * ReLU(rho + zs)**mu - depletion + b)
 
         elif self.kind == "sm":
             mu = params[self.Npot*Nstep+0]
@@ -369,7 +373,7 @@ class JERALDModel(object):
         diff = F - self.target
 
         # Smooth the field
-        if self.n:
+        if self.n > 0:
             # !!! NO C2F HERE AS PER ORIGINAL CODE !!!
             smoothingkernel = jnp.where(self.knorms==0, 1., self.knorms**(-self.n) + 1.)
             diffk = self.pm.r2c(diff)
@@ -423,7 +427,7 @@ class JERALDModel(object):
 
         diff = F - self.target
         
-        if self.n:
+        if self.n > 0:
             smoothingkernel = jnp.where(self.knorms==0, 1., self.knorms**(-self.n) + 1.)
             diffk = self.pm.r2c(diff)
             diffk *= smoothingkernel
@@ -650,6 +654,6 @@ class Adam(object):
                 np.savetxt(f, LR)
             else:
                 f.write(str(LR) + "\n")
-            if params:
+            if params is not None:
                 f.write("params\n")
                 np.savetxt(f, params)
